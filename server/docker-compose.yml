@@ -1,0 +1,26 @@
+version: "3"
+services:
+    api:
+        container_name: 'yournamespaceapi'
+        build: "./Your.Namespace.Api"
+        restart: 'unless-stopped'
+        ports:
+            - "9080:9080"
+            - "9081:9081"
+        volumes:
+            - ${HOME}/.aspnet/https:/https
+        # depends_on:
+        #     - identityserver
+        environment:
+            ASPNETCORE_ENVIRONMENT: Development
+    identityserver:
+        container_name: yournamespaceidentityserver
+        build: "./Your.Namespace.IdentityServer"
+        restart: 'unless-stopped'
+        environment:
+            ASPNETCORE_ENVIRONMENT: Development
+        volumes:
+            - ${HOME}/.aspnet/https:/https
+        ports:
+            - "9083:9083"
+            - "9084:9084"

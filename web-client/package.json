@@ -1,0 +1,66 @@
+{
+    "name": "im-lazy",
+    "version": "0.3.1",
+    "private": true,
+    "scripts": {
+        "s": "npm run start",
+        "start": "npm-run-all -p start-js",
+        "start-js": "cross-env HTTPS=true react-scripts start",
+        "build": "react-scripts build && npm run generate-docs",
+        "test": "react-scripts test --env=jsdom",
+        "eject": "react-scripts eject",
+        "prettier-watch": "onchange '**/*.js' -- prettier --write {{changed}}",
+        "generate-docs": "jsdoc src -c .jsdoc.json --recurse"
+    },
+    "eslintConfig": {
+        "extends": "react-app"
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "dependencies": {
+        "@babel/runtime": "^7.8.7",
+        "@fortawesome/fontawesome-free": "^5.12.1",
+        "@types/bluebird": "^3.5.30",
+        "@types/jest": "25.1.4",
+        "@types/jquery": "^3.3.33",
+        "@types/node": "^13.9.2",
+        "@types/react": "16.9.23",
+        "@types/react-dom": "16.9.5",
+        "@types/react-notification-system": "^0.2.39",
+        "@types/react-router-dom": "^5.1.3",
+        "axios": "^0.19.2",
+        "bluebird": "^3.7.2",
+        "bootstrap": "^4.4.1",
+        "jquery": "^3.4.1",
+        "oidc-client": "^1.10.1",
+        "popper.js": "^1.16.1",
+        "react": "^16.13.0",
+        "react-dom": "^16.13.0",
+        "react-notification-system": "^0.3.0",
+        "react-router-dom": "^5.1.2",
+        "typescript": "3.8.3"
+    },
+    "devDependencies": {
+        "cross-env": "^7.0.2",
+        "docdash": "^1.2.0",
+        "eslint-config-prettier": "^6.10.0",
+        "eslint-plugin-prettier": "^3.1.2",
+        "jsdoc": "^3.6.3",
+        "minami": "^1.2.3",
+        "node-sass-chokidar": "^1.4.0",
+        "npm-run-all": "^4.1.5",
+        "onchange": "^6.1.0",
+        "prettier": "^1.19.1",
+        "react-scripts": "^3.4.0"
+    }
+}
