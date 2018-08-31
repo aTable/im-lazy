@@ -1,0 +1,51 @@
+{
+  "name": "im-lazy",
+  "version": "0.3.0",
+  "homepage": ".",
+  "private": true,
+  "dependencies": {
+    "@fortawesome/fontawesome-free-webfonts": "^1.0.9",
+    "axios": "^0.18.0",
+    "bluebird": "^3.5.1",
+    "bootstrap": "^4.1.3",
+    "jquery": "^3.3.1",
+    "mobx": "^5.1.0",
+    "mobx-react": "^5.2.5",
+    "mobx-state-tree": "^3.2.4",
+    "mobx-utils": "^5.0.1",
+    "moment": "^2.22.2",
+    "popper.js": "^1.14.4",
+    "prop-types": "^15.6.2",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "react-notification-system": "^0.2.17",
+    "react-router-dom": "^4.3.1"
+  },
+  "scripts": {
+    "build-css": "node-sass-chokidar src/ -o src/",
+    "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
+    "s": "npm run start",
+    "start": "npm-run-all -p watch-css start-js",
+    "start-js": "cross-env REACT_APP_BUILD_ENVIRONMENT=Debug HTTPS=true react-scripts start",
+    "build-Dev": "npm run build-css && cross-env REACT_APP_BUILD_ENVIRONMENT=Dev react-scripts build && npm run generate-docs",
+    "build-Release": "npm run build-css && cross-env REACT_APP_BUILD_ENVIRONMENT=Release react-scripts build && npm run generate-docs",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "prettier-watch": "onchange '**/*.js' -- prettier --write {{changed}}",
+    "generate-docs": "jsdoc src -c .jsdoc.json --recurse"
+  },
+  "devDependencies": {
+    "cross-env": "^5.2.0",
+    "docdash": "^1.0.0",
+    "eslint-config-prettier": "^3.0.1",
+    "eslint-plugin-prettier": "^2.6.2",
+    "jsdoc": "^3.5.5",
+    "minami": "^1.2.3",
+    "mobx-react-devtools": "^6.0.3",
+    "node-sass-chokidar": "^1.3.3",
+    "npm-run-all": "^4.1.3",
+    "onchange": "^4.1.0",
+    "prettier": "^1.14.2",
+    "react-scripts": "^1.1.5"
+  }
+}
