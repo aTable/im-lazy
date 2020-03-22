@@ -32,7 +32,7 @@ Building will also auto-generate front end documentation.
 
 - [ ] convert Implicit grant to PKCE
 - [ ] upgrade IdentityServer to be https:// (resolve cross platform cert situation)
-- [ ] consider replacing `axios`. The repo is on the still alive [kinda](https://github.com/axios/axios/issues/1965)
+- [ ] consider replacing `axios`. The repo is still alive [kinda](https://github.com/axios/axios/issues/1965)
 - [ ] add `terraform` per deployable project
 - [ ] add `Docker` per deployable project
 - [ ] convert `docker-compose.yml` to `Kubernetes`
