@@ -30,7 +30,7 @@ Building will also auto-generate front end documentation.
 
 ## Future
 
-- [ ] convert Implicit grant to PCKE
+- [ ] convert Implicit grant to PKCE
 - [ ] upgrade IdentityServer to be https:// (resolve cross platform cert situation)
 - [ ] consider replacing `axios`. The repo is on the still alive [kinda](https://github.com/axios/axios/issues/1965)
 - [ ] add `terraform` per deployable project
