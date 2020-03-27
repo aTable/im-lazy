@@ -12,6 +12,7 @@ import Oidc from 'oidc-client'
 import config from './config'
 import { setBearer } from './api'
 import { authKeys } from './constants'
+import { AuthContextProvider } from './stores/AuthContext'
 
 if (!window.location.protocol.includes('https')) window.location.protocol = 'https:'
 
@@ -65,18 +66,20 @@ const App: FC<IAppProps> = props => {
 
     return (
         <Router>
-            <div id="application">
-                <NotificationSystem ref={notificationSystemRef} />
+            <AuthContextProvider>
+                <div id="application">
+                    <NotificationSystem ref={notificationSystemRef} />
 
-                <Navbar />
-                <Switch>
-                    <Route path="/login" component={Login} />
+                    <Navbar />
+                    <Switch>
+                        <Route path="/login" component={Login} />
 
-                    <Route path="/protected" component={Protected} />
-                    <Route path="/" component={Home} />
-                    <Route component={NotFound} />
-                </Switch>
-            </div>
+                        <Route path="/protected" component={Protected} />
+                        <Route path="/" component={Home} />
+                        <Route component={NotFound} />
+                    </Switch>
+                </div>
+            </AuthContextProvider>
         </Router>
     )
 }
