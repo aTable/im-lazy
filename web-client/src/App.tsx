@@ -1,20 +1,16 @@
-import React, { FC, createRef } from 'react'
+import React, { FC } from 'react'
 import { HashRouter as Router, Route, Switch } from 'react-router-dom'
-import NotificationSystem from 'react-notification-system'
-import uiStore from './stores/UiStore'
 import Navbar from './components/Navbar'
 // import PrivateRoute from './components/hocs/PrivateRoute'
 import NotFound from './pages/NotFound'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Protected from './pages/Protected'
+import Unauthorized from './pages/Unauthorized'
 import Oidc from 'oidc-client'
 import config from './config'
-import { setBearer } from './api'
 import { authKeys } from './constants'
 import { AuthContextProvider } from './stores/AuthContext'
-
-if (!window.location.protocol.includes('https')) window.location.protocol = 'https:'
 
 const mgr = new Oidc.UserManager(config.oidc)
 // @ts-ignore
@@ -30,13 +26,10 @@ if (window.location.hash.includes('id_token')) {
         }, {})
 
     // @ts-ignore
-    console.log('access token', params.access_token)
-
-    // @ts-ignore
     localStorage.setItem(authKeys.token, params.access_token)
-    // @ts-ignore
-    setBearer(params.access_token)
 
+    //------------------------------------
+    // TODO: why is this still here?
     // @ts-ignore
     window.mgr
         .signinRedirectCallback()
@@ -54,33 +47,25 @@ if (window.location.hash.includes('id_token')) {
         .catch((err: any) => {
             console.error(err)
         })
-} else {
-    const cachedToken = localStorage.getItem(authKeys.token)
-    if (cachedToken) setBearer(cachedToken)
+    //------------------------------------
 }
 
 interface IAppProps {}
-const App: FC<IAppProps> = props => {
-    const notificationSystemRef: React.RefObject<any> = createRef()
-    uiStore.init(notificationSystemRef)
-
+const App: FC<IAppProps> = () => {
     return (
-        <Router>
-            <AuthContextProvider>
-                <div id="application">
-                    <NotificationSystem ref={notificationSystemRef} />
+        <AuthContextProvider>
+            <Router>
+                <Navbar />
+                <Switch>
+                    <Route path="/login" component={Login} />
 
-                    <Navbar />
-                    <Switch>
-                        <Route path="/login" component={Login} />
-
-                        <Route path="/protected" component={Protected} />
-                        <Route path="/" component={Home} />
-                        <Route component={NotFound} />
-                    </Switch>
-                </div>
-            </AuthContextProvider>
-        </Router>
+                    <Route path="/unauthorized" component={Unauthorized} />
+                    <Route path="/protected" component={Protected} />
+                    <Route path="/" component={Home} />
+                    <Route component={NotFound} />
+                </Switch>
+            </Router>
+        </AuthContextProvider>
     )
 }
 

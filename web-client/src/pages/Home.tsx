@@ -1,22 +1,23 @@
-import React, { useContext, useEffect } from 'react'
-import { AuthContext } from '../stores/AuthContext'
+import React, { useEffect, useState } from 'react'
+import { IWeatherForecast } from '../types/server'
+import { getWeather } from '../api'
+import ShowWeatherForecast from '../components/ShowWeatherForecast'
 
 interface IHomeProps {
     store: any
 }
 
 const Home = (_: IHomeProps) => {
-    const { state, dispatch } = useContext(AuthContext)
+    const [weather, setWeather] = useState<IWeatherForecast[]>()
+
     useEffect(() => {
-        setTimeout(() => {
-            dispatch({ type: 'SET_TOKEN', payload: 'token value!' })
-        }, 2000)
-    }, [state, dispatch])
+        getWeather().then(setWeather)
+    }, [])
     return (
         <div className="container">
             <h1>A boilerplate ...</h1>
             <p>... to let you build things quicker</p>
-            <p>Token: {state.token}</p>
+            <ShowWeatherForecast weather={weather} />
         </div>
     )
 }

@@ -31,7 +31,7 @@
       "name": "identityserver",
       "type": "coreclr",
       "request": "launch",
-      "preLaunchTask": "build",
+      "preLaunchTask": "build-identity-server",
       "program": "${workspaceFolder}/Your.Namespace.IdentityServer/bin/Debug/netcoreapp3.1/Your.Namespace.IdentityServer.dll",
       "args": [],
       "envFile": "${workspaceFolder}/Your.Namespace.IdentityServer/.env",

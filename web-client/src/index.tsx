@@ -9,6 +9,8 @@ import '@fortawesome/fontawesome-free/css/regular.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import './css/base.scss'
 
+if (!window.location.protocol.includes('https')) window.location.protocol = 'https:'
+
 // TODO: replace bootstrap with TailwindCSS, Bulma or bootstrap-v5-alpha
 /* Shim to provide dependent plugins without ejecting create-react-app */
 // @ts-ignore

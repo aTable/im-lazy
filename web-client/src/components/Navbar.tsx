@@ -1,10 +1,14 @@
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import { withRouter, Link } from 'react-router-dom'
 import NavItem from './NavItem'
+import AuthContext from '../stores/AuthContext'
 
 export interface INavBarProps {}
-
 const NavBar: FC<INavBarProps> = () => {
+    const { state, dispatch } = useContext(AuthContext)
+    const logout = () => {
+        dispatch({ type: 'LOGOUT' })
+    }
     return (
         <nav className="navbar navbar-expand-sm navbar-light bg-light">
             <Link className="navbar-brand" to="/">
@@ -30,12 +34,11 @@ const NavBar: FC<INavBarProps> = () => {
                     </NavItem>
                     <NavItem to="/protected">Protected</NavItem>
                 </ul>
-                <form className="form-inline my-2 my-lg-0">
-                    <input className="form-control mr-sm-2" type="search" placeholder="Search" />
-                    <button className="btn btn-outline-success my-2 my-sm-0" type="submit">
-                        Search
+                {state.token && (
+                    <button onClick={logout} className="btn btn-secondary">
+                        Logout <i className="fa fa-times" />
                     </button>
-                </form>
+                )}
             </div>
         </nav>
     )
