@@ -24,17 +24,8 @@ namespace Your.Namespace.Api
 
     public void ConfigureServices(IServiceCollection services)
     {
-      services.Configure<AppSettings>(Configuration.GetSection("App"));
-      services.AddSingleton(provider => provider.GetService<IOptions<AppSettings>>().Value);
-      var appSettings = new AppSettings();
-      Configuration.Bind("App", appSettings);
-
-      var logger = new LoggerConfiguration()
-                  .ReadFrom.Configuration(Configuration)
-                  .CreateLogger();
-      Log.Logger = logger;
-      services.AddSingleton<ILogger>(provider => logger);
-
+      var appSettings = ConfigureAppSettings(services);
+      var logger = ConfigureLogger(services);
 
       services.AddCors(options =>
        {
@@ -61,7 +52,7 @@ namespace Your.Namespace.Api
               {
                 options.Authority = appSettings.AuthorizationServerUri;
                 options.RequireHttpsMetadata = false; // TODO: figure cross platform cert shenanigans for https during dev
-                options.ApiName = "MyAwesome-API";
+                options.ApiName = appSettings.ApiName;
                 options.Validate();
               });
 
@@ -100,6 +91,24 @@ namespace Your.Namespace.Api
         endpoints.MapControllers();
       });
       app.UseMetricServer();
+    }
+
+    private AppSettings ConfigureAppSettings(IServiceCollection services)
+    {
+      services.Configure<AppSettings>(Configuration.GetSection("App"));
+      services.AddSingleton(provider => provider.GetService<IOptions<AppSettings>>().Value);
+      var appSettings = new AppSettings();
+      Configuration.Bind("App", appSettings);
+      return appSettings;
+    }
+    private ILogger ConfigureLogger(IServiceCollection services)
+    {
+      var logger = new LoggerConfiguration()
+                  .ReadFrom.Configuration(Configuration)
+                  .CreateLogger();
+      Log.Logger = logger; // needed for the middlewares on UseSerilog() and UseSerilogRequestLogging()
+      services.AddSingleton<ILogger>(provider => logger);
+      return logger;
     }
   }
 }

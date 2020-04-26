@@ -7,6 +7,7 @@ namespace Your.Namespace.Api
 {
   public class AppSettings
   {
+    public string ApiName { get; set; }
     public string CorsPolicyName { get; set; }
     public string WebClientOrigin { get; set; }
     public string AuthorizationServerUri { get; set; }
