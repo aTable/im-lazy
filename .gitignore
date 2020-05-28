@@ -369,3 +369,5 @@ server/Your.Namespace.IdentityServer/logs
 terraform.tfstate
 terraform.tfstate.backup
 tempkey.rsa
+coverage.json
+coverage.*.xml
