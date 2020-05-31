@@ -10,14 +10,22 @@ Ensure you have the EF tools installed
 dotnet tool install --global dotnet-ef
 ```
 
+If on linux, you may need to
+
+```
+export PATH=$PATH:/path/to/your/home/.dotnet/tools
+```
+
 ### Script migrations
 
+Note `--idempotent` is not supported by SQLite.
+
 ```bash
-dotnet ef migrations script --idempotent -v --output "identity-server-migrations.sql" --context Your.Namespace.IdentityServer.DataAccess.Context --configuration Debug
+dotnet ef migrations script -v --output "identity-server-App-migrations.sql" --context Your.Namespace.IdentityServer.DataAccess.Context --configuration Debug
 
-dotnet ef migrations script --idempotent -v --output "identity-server-PersistedGrant-migrations-.sql" --context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext --configuration Debug
+dotnet ef migrations script -v --output "identity-server-PersistedGrant-migrations.sql" --context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext --configuration Debug
 
-dotnet ef migrations script --idempotent -v --output "identity-server-Configuration-migrations-.sql" --context IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext --configuration Debug
+dotnet ef migrations script -v --output "identity-server-Configuration-migrations.sql" --context IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext --configuration Debug
 ```
 
 ### Apply migrations
@@ -28,4 +36,12 @@ dotnet ef database update --context Your.Namespace.IdentityServer.DataAccess.Con
 dotnet ef database update --context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext
 
 dotnet ef database update --context IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext
+```
+
+## Running
+
+Remember to apply the seed (on by default). You may want to turn this off in production.
+
+```
+dotnet run -p Your.Namespace.IdentityServer
 ```

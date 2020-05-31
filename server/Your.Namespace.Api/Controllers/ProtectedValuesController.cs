@@ -10,55 +10,55 @@ using Your.Namespace.Api;
 
 namespace Your.Namespace.Api.Controllers
 {
-  [Route("api/[controller]")]
-  [ApiController]
-  [Authorize]
-  public class ProtectedValuesController : ControllerBase
-  {
-    public ILogger Logger { get; }
-    public AppSettings AppSettings { get; }
-
-    public ProtectedValuesController(ILogger logger, AppSettings appSettings)
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize]
+    public class ProtectedValuesController : ControllerBase
     {
-      Logger = logger;
-      AppSettings = appSettings;
-    }
+        public ILogger Logger { get; }
+        public AppSettings AppSettings { get; }
 
-    // GET api/values
-    [HttpGet]
-    public ActionResult<IEnumerable<string>> Get()
-    {
-      Logger.Information("protected values were requested");
-      return new string[] { "value1", "value2" };
-    }
+        public ProtectedValuesController(ILogger logger, AppSettings appSettings)
+        {
+            Logger = logger;
+            AppSettings = appSettings;
+        }
 
-    // GET api/values/5
-    [HttpGet("{id}")]
-    [Authorize(Policy = "CanReadPolicy")]
-    public ActionResult<string> Get(int id)
-    {
-      return "value";
-    }
+        // GET api/values
+        [HttpGet]
+        public ActionResult<IEnumerable<string>> Get()
+        {
+            Logger.Information("protected values were requested");
+            return new string[] { "value1", "value2" };
+        }
 
-    // POST api/values
-    [HttpPost]
-    [Authorize(Policy = "CanWritePolicy")]
-    public void Post([FromBody] string value)
-    {
-    }
+        // GET api/values/5
+        [HttpGet("{id}")]
+        [Authorize(Policy = "CanReadPolicy")]
+        public ActionResult<string> Get(int id)
+        {
+            return "value";
+        }
 
-    // PUT api/values/5
-    [HttpPut("{id}")]
-    [Authorize(Policy = "CanWritePolicy")]
-    public void Put(int id, [FromBody] string value)
-    {
-    }
+        // POST api/values
+        [HttpPost]
+        [Authorize(Policy = "CanWritePolicy")]
+        public void Post([FromBody] string value)
+        {
+        }
 
-    // DELETE api/values/5
-    [HttpDelete("{id}")]
-    [Authorize(Policy = "CanWritePolicy")]
-    public void Delete(int id)
-    {
+        // PUT api/values/5
+        [HttpPut("{id}")]
+        [Authorize(Policy = "CanWritePolicy")]
+        public void Put(int id, [FromBody] string value)
+        {
+        }
+
+        // DELETE api/values/5
+        [HttpDelete("{id}")]
+        [Authorize(Policy = "CanWritePolicy")]
+        public void Delete(int id)
+        {
+        }
     }
-  }
 }

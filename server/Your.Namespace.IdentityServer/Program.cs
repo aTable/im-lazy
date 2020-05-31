@@ -23,7 +23,6 @@ namespace Your.Namespace.IdentityServer
                         config.Bind("App", appSettings);
                         if (hostingContext.HostingEnvironment.IsProduction())
                         {
-
                             configurationBuilder.AddAzureKeyVault(
                                 vault: appSettings.AzureKeyVault.Uri.ToString(),
                                 clientId: appSettings.AzureOIDC.ClientId,

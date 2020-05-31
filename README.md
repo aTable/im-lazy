@@ -43,6 +43,10 @@ Building will also auto-generate front end documentation.
 
 ## Development setup
 
+Code-OSS on Arch doesn't seem to execute the .vscode/launch.json file which is quite problematic for local development.
+
+Install the tools via:
+
 ```shell
 pacman -S dotnet-sdk aspnet-runtime
 ```

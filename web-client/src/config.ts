@@ -15,14 +15,15 @@ const config: IConfig = {
     routerBasename: process.env.REACT_APP_CLIENT_SIDE_ROUTER_BASENAME!,
     oidc: {
         authority: process.env.REACT_APP_OIDC_AUTHORIZATION_SERVER_URI,
-        client_id: 'single-page-app',
+        client_id: process.env.REACT_APP_OIDC_CLIENT_ID,
         redirect_uri: process.env.REACT_APP_OIDC_REDIRECT_URI,
-        response_type: 'id_token token',
-        scope: 'openid profile email myawesomeapi.full_access myawesomeapi.app_access',
+        response_type: process.env.REACT_APP_OIDC_RESPONSE_TYPE,
+        scope: process.env.REACT_APP_OIDC_SCOPE,
         post_logout_redirect_uri: process.env.REACT_APP_OIDC_LOGOUT_REDIRECT_URI,
         // automaticSilentRenew: false,
         // silent_redirect_uri: "https://localhost:3000/silent-renew"
     },
 }
+
 
 export default config

@@ -363,8 +363,10 @@ override.tf.json
 # End of https://www.gitignore.io/api/windows,visualstudio,visualstudiocode,terraform
 *.orig
 build
-server/Your.Namespace.IdentityServer/identity-server.db
+server/Your.Namespace.IdentityServer/yournamespace-sts.db
 server/Your.Namespace.IdentityServer/logs
+server/Your.Namespace.Api/yournamespace.db
+
 .terraform/
 terraform.tfstate
 terraform.tfstate.backup
