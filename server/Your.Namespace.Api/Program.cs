@@ -20,6 +20,10 @@ namespace Your.Namespace.Api
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.ConfigureKestrel(options =>
+                    {
+                        options.AllowSynchronousIO = true;
+                    });
                     webBuilder.UseStartup<Startup>();
                 })
                 .ConfigureAppConfiguration(builder =>

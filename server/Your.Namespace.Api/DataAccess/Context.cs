@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Your.Namespace.Api.Entities;
 
 namespace Your.Namespace.Api.DataAccess
 {
@@ -13,7 +14,8 @@ namespace Your.Namespace.Api.DataAccess
         {
         }
 
-        public DbSet<PersonEntity> People { get; set; }
+        public DbSet<StoreEntity> Stores { get; set; }
+        public DbSet<ProductEntity> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
