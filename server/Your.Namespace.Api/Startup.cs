@@ -101,7 +101,7 @@ namespace Your.Namespace.Api
             }
             app.UseSerilogRequestLogging();
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors(appSettings.CorsPolicyName);
             app.UseAuthentication();

@@ -49,6 +49,115 @@
         "/consoleloggerparameters:NoSummary"
       ],
       "problemMatcher": "$msCompile"
+    },
+    {
+      "type": "docker-build",
+      "label": "docker-build Your.Namespace.Api: debug",
+      "dependsOn": ["build"],
+      "dockerBuild": {
+        "tag": "yournamespaceapi:debug",
+        "target": "base",
+        "dockerfile": "${workspaceFolder}/Your.Namespace.Api/Dockerfile",
+        "context": "${workspaceFolder}",
+        "pull": true
+      },
+      "netCore": {
+        "appProject": "${workspaceFolder}/Your.Namespace.Api/Your.Namespace.Api.csproj"
+      }
+    },
+    {
+      "type": "docker-build",
+      "label": "docker-build Your.Namespace.Api: release",
+      "dependsOn": ["build"],
+      "dockerBuild": {
+        "tag": "yournamespaceapi:latest",
+        "dockerfile": "${workspaceFolder}/Your.Namespace.Api/Dockerfile",
+        "context": "${workspaceFolder}",
+        "pull": true
+      },
+      "netCore": {
+        "appProject": "${workspaceFolder}/Your.Namespace.Api/Your.Namespace.Api.csproj"
+      }
+    },
+    {
+      "type": "docker-run",
+      "label": "docker-run Your.Namespace.Api: debug",
+      "dependsOn": ["docker-build Your.Namespace.Api: debug"],
+      "dockerRun": {
+        "containerName": "yournamespaceapi-debug",
+        "image": "yournamespaceapi:debug",
+        "ports": [
+          {
+            "hostPort": 9080,
+            "containerPort": 9080
+          },
+          {
+            "hostPort": 9081,
+            "containerPort": 9081
+          }
+        ]
+      },
+      "netCore": {
+        "appProject": "${workspaceFolder}/Your.Namespace.Api/Your.Namespace.Api.csproj",
+        "enableDebugging": true
+      }
+    },
+    {
+      "type": "docker-run",
+      "label": "docker-run Your.Namespace.Api: release",
+      "dependsOn": ["docker-build: release"],
+      "dockerRun": {},
+      "netCore": {
+        "appProject": "${workspaceFolder}/Your.Namespace.Api/Your.Namespace.Api.csproj"
+      }
+    },
+    {
+      "type": "docker-build",
+      "label": "docker-build Your.Namespace.IdentityServer: debug",
+      "dependsOn": ["build-identity-server"],
+      "dockerBuild": {
+        "tag": "server:dev",
+        "target": "base",
+        "dockerfile": "${workspaceFolder}/Your.Namespace.IdentityServer/Dockerfile",
+        "context": "${workspaceFolder}",
+        "pull": true
+      },
+      "netCore": {
+        "appProject": "${workspaceFolder}/Your.Namespace.IdentityServer/Your.Namespace.IdentityServer.csproj"
+      }
+    },
+    {
+      "type": "docker-build",
+      "label": "docker-build Your.Namespace.IdentityServer: release",
+      "dependsOn": ["build"],
+      "dockerBuild": {
+        "tag": "server:latest",
+        "dockerfile": "${workspaceFolder}/Your.Namespace.IdentityServer/Dockerfile",
+        "context": "${workspaceFolder}",
+        "pull": true
+      },
+      "netCore": {
+        "appProject": "${workspaceFolder}/Your.Namespace.IdentityServer/Your.Namespace.IdentityServer.csproj"
+      }
+    },
+    {
+      "type": "docker-run",
+      "label": "docker-run Your.Namespace.IdentityServer: debug",
+      "dependsOn": ["docker-build Your.Namespace.IdentityServer: debug"],
+      "dockerRun": {},
+      "netCore": {
+        "appProject": "${workspaceFolder}/Your.Namespace.IdentityServer/Your.Namespace.IdentityServer.csproj",
+        "enableDebugging": true
+      }
+    },
+    {
+      "type": "docker-run",
+      "label": "docker-run Your.Namespace.IdentityServer: release",
+      "dependsOn": ["docker-build: release"],
+      "dockerRun": {},
+      "netCore": {
+        "appProject": "${workspaceFolder}/Your.Namespace.IdentityServer/Your.Namespace.IdentityServer.csproj"
+      }
     }
   ]
 }

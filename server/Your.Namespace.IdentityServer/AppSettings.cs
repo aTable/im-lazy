@@ -8,6 +8,7 @@ namespace Your.Namespace.IdentityServer
     public class AppSettings
     {
         public string WebClientOrigin { get; set; }
+        public bool IsRunMigrations { get; set; }
         public bool IsRunSeed { get; set; }
         public AzureOIDC AzureOIDC { get; set; }
         public AzureKeyVault AzureKeyVault { get; set; }

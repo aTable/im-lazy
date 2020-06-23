@@ -3,12 +3,19 @@
   "compounds": [
     {
       "name": "Compound",
-      "configurations": ["api", "identityserver"]
+      "configurations": ["Your.Namespace.Api", "Your.Namespace.IdentityServer"]
+    },
+    {
+      "name": "Compound-Docker",
+      "configurations": [
+        "Your.Namespace.Api-docker",
+        "Your.Namespace.IdentityServer-docker"
+      ]
     }
   ],
   "configurations": [
     {
-      "name": "api",
+      "name": "Your.Namespace.Api",
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
@@ -28,7 +35,7 @@
       }
     },
     {
-      "name": "identityserver",
+      "name": "Your.Namespace.IdentityServer",
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build-identity-server",
@@ -52,6 +59,40 @@
       "type": "coreclr",
       "request": "attach",
       "processId": "${command:pickProcess}"
+    },
+    {
+      "name": "Your.Namespace.Api-docker",
+      "type": "docker",
+      "request": "launch",
+      "preLaunchTask": "docker-run Your.Namespace.Api: debug",
+      "netCore": {
+        "appProject": "${workspaceFolder}/Your.Namespace.Api/Your.Namespace.Api.csproj"
+      }
+    },
+    {
+      "name": "Your.Namespace.IdentityServer-docker",
+      "type": "docker",
+      "request": "launch",
+      "preLaunchTask": "docker-run Your.Namespace.IdentityServer: debug",
+      "netCore": {
+        "appProject": "${workspaceFolder}/Your.Namespace.IdentityServer/Your.Namespace.IdentityServer.csproj"
+      }
+    },
+    {
+      "name": ".NET Core Docker Attach222",
+      "type": "coreclr",
+      "request": "attach",
+      "processId": "${command:pickRemoteProcess}",
+      "sourceFileMap": {
+        "/app": "${workspaceFolder}"
+      },
+      "pipeTransport": {
+        "pipeProgram": "docker",
+        "pipeArgs": ["exec", "-i", "server_yournamespaceapi_1"],
+        "debuggerPath": "~/.vsdbg/vsdbg",
+        "pipeCwd": "${workspaceRoot}",
+        "quoteArgs": false
+      }
     }
   ]
 }

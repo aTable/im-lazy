@@ -43,7 +43,13 @@ Building will also auto-generate front end documentation.
 
 ## Development setup
 
-Code-OSS on Arch doesn't seem to execute the .vscode/launch.json file which is quite problematic for local development.
+Code-OSS on Arch doesn't seem to execute the .vscode/launch.json file which is quite problematic for local development. // TODO: figure out
+
+Install cross-platform .NET Core debugger
+
+```
+curl -sSL https://aka.ms/getvsdbgsh | /bin/sh /dev/stdin -v latest -l ~/.vsdbg
+```
 
 Install the tools via:
 
@@ -51,3 +57,8 @@ Install the tools via:
 pacman -S dotnet-sdk aspnet-runtime
 ```
 
+Generate your self-signed certificate for https in development:
+
+```
+dotnet dev-certs https -ep $HOME/.aspnet/https/yournamespace.pfx -p password -v
+```
