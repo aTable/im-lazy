@@ -25,13 +25,22 @@ namespace Your.Namespace.IdentityServer
         {
             return new List<ApiResource>
             {
-                new ApiResource("MyAwesome-API", "The best API ever seen") {
-                    Scopes = new List<Scope>
-                    {
-                        new Scope { Name = "myawesomeapi.full_access", DisplayName = "Full Access", Description = "Full access to my awesome API" },
-                        new Scope { Name = "myawesomeapi.app_access", DisplayName = "App access", Description = "Some other scope.." },
-                    }
+                new ApiResource("MyAwesome-API", "The best API ever seen")
+                {
+                    Scopes = new List<string>{ "myawesomeapi.full_access", "myawesomeapi.app_access" }
                 }
+            };
+        }
+
+        public static IEnumerable<ApiScope> GetApiScopes()
+        {
+            return new List<ApiScope>
+            {
+                new ApiScope( name: "read",   displayName: "Read your data."),
+                new ApiScope( name: "write",  displayName: "Write your data."),
+                new ApiScope( name: "delete", displayName: "Delete your data."),
+                new ApiScope( name: "myawesomeapi.full_access", displayName: "Full Access" ),
+                new ApiScope( name: "myawesomeapi.app_access", displayName: "App access" ),
             };
         }
 

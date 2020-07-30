@@ -23,6 +23,8 @@ namespace Your.Namespace.Api.Controllers
                     <li>/weatherforecast</li>
                     <li>/protectedvalues</li>
                 </ul>
+
+                <p>Note this is just a raw string (and not a Razor page) as this API is intending to be consumed by a SPA.
             </html>";
         }
     }

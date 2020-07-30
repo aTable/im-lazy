@@ -9,14 +9,14 @@ using Your.Namespace.IdentityServer.DataAccess;
 namespace Your.Namespace.IdentityServer.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20190927002349_init")]
+    [Migration("20200730114148_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.0.0");
+                .HasAnnotation("ProductVersion", "3.1.6");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {

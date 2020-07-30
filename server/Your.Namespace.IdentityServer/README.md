@@ -16,6 +16,13 @@ If on linux, you may need to
 export PATH=$PATH:/path/to/your/home/.dotnet/tools
 ```
 
+Create the migrations
+```
+dotnet ef migrations add init --context Your.Namespace.IdentityServer.DataAccess.Context
+dotnet ef migrations add init --context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext
+dotnet ef migrations add init --context IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext
+```
+
 ### Script migrations
 
 Note `--idempotent` is not supported by SQLite.

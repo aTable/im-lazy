@@ -88,6 +88,7 @@ namespace Your.Namespace.IdentityServer
                         b.UseSqlite(identityServerConnectionString, sql => sql.MigrationsAssembly(_migrationsAssemblyName));
                     options.EnableTokenCleanup = true;// this enables automatic token cleanup. this is optional.
                 })
+                .AddInMemoryApiScopes(Config.GetApiScopes())
                 //.AddProfileService<ProfileService>();
                 .AddAspNetIdentity<ApplicationUser>();
 
@@ -144,13 +145,13 @@ namespace Your.Namespace.IdentityServer
             app.UseStaticFiles();
             app.UseMvcWithDefaultRoute();
 
-            if (appSettings.IsRunMigrations) 
+            if (appSettings.IsRunMigrations)
             {
                 context.Database.Migrate();
                 persistedGrantDbContext.Database.Migrate();
                 configurationDbContext.Database.Migrate();
             }
-            
+
             if (appSettings.IsRunSeed)
             {
                 SeedData.EnsureSeedData(context, persistedGrantDbContext, configurationDbContext, userManager);
