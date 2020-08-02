@@ -13,7 +13,7 @@ namespace Your.Namespace.Api.GraphSchema
         public MyGraphSchema(IDependencyResolver resolver) : base(resolver)
         {
             Query = resolver.Resolve<MyGraphQuery>();
-            //Mutation = resolver.Resolve<MyGraphMutation>();
+            Mutation = resolver.Resolve<MyGraphMutation>();
         }
     }
 }

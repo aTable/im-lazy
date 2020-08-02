@@ -6,6 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="GraphQL" Version="2.4.0" />
+    <PackageReference Include="GraphQL.Authorization" Version="2.1.29" />
     <PackageReference Include="GraphQL.Server.Transports.AspNetCore" Version="3.4.0" />
     <PackageReference Include="GraphQL.Server.Transports.WebSockets" Version="3.4.0" />
     <PackageReference Include="GraphQL.Server.Ui.GraphiQL" Version="3.4.0" />
@@ -24,6 +25,7 @@
     <PackageReference Include="Serilog.AspnetCore" Version="3.4.0" />
     <PackageReference Include="Serilog.Extensions.Hosting" Version="3.1.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.SQLite" Version="5.0.0" />
   </ItemGroup>
 </Project>

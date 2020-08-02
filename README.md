@@ -2,6 +2,13 @@
 
 A template repository for building React single page apps talking to .NET Core back ends. Clone, `rm rf ./git`, grab a drink and pretend you've spent ages configuring things. The intent is to be opinionated in the technology choices so that all the wiring and plumbing is set up allowing you to focus on bringing your idea to life, securely. The opinion of wanting to write minimal code to add value.
 
+## Motivation
+
+To deliver value, not code.
+
+- GraphQL -> add value, not endpoints
+- React -> add value, not ##insert_edgy_comment##
+
 ## Choices
 
 ### Infrastructure
@@ -25,10 +32,7 @@ A template repository for building React single page apps talking to .NET Core b
 | [React](https://reactjs.org/) (and friends) | component driven design |
 | a crapton of libraries                      | write less, do more     |
 
-
 Building will also auto-generate front end documentation.
-
-
 
 ## Future
 
@@ -39,7 +43,6 @@ Building will also auto-generate front end documentation.
 - [ ] add `Docker` per deployable project
 - [ ] convert `docker-compose.yml` to `Kubernetes`
 - [ ] add `garden`/`tilt`/`skaffold` for k8s local dev environments.
-
 
 ## Development setup
 
@@ -62,3 +65,5 @@ Generate your self-signed certificate for https in development:
 ```
 dotnet dev-certs https -ep $HOME/.aspnet/https/yournamespace.pfx -p password -v
 ```
+
+When running the web client without trusting certificates, you may need to visit each web server individually in your browser and accept the risks for temporary access.

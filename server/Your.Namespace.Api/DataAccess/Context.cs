@@ -14,12 +14,13 @@ namespace Your.Namespace.Api.DataAccess
         {
         }
 
-        public DbSet<StoreEntity> Stores { get; set; }
-        public DbSet<ProductEntity> Products { get; set; }
+        public DbSet<ArtistEntity> Artists { get; set; }
+        public DbSet<AlbumEntity> Albums { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<ArtistEntity>().HasMany(x => x.Albums).WithOne(x => x.Artist);
         }
     }
 }

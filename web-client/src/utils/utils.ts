@@ -107,3 +107,36 @@ export function extractAllPagedData(
         resolve(output)
     })
 }
+
+export function extractQueryString(querystring: string): object {
+    const qs = querystring
+        .slice(1)
+        .split('&')
+        .reduce((p: object, i: string) => {
+            const [key, value] = i.split('=')
+            return { ...p, [key]: value }
+        }, {})
+    return qs
+}
+
+export function extractParamsFromHash(hash: string) {
+    const params = window.location.hash
+        .slice(1)
+        .split('&')
+        .reduce((acc, item) => {
+            const [key, value] = item.split('=')
+            return { ...acc, [key]: value }
+        }, {})
+
+    return params
+}
+export function mutateQueryStringWithoutReload(newQs?: string) {
+    if (newQs && !newQs.startsWith('?`')) throw new Error("query string must start with a '?'")
+
+    if ('pushState' in window.history) {
+        const uri = `${window.location.protocol}//${window.location.host}${window.location.pathname}${newQs || ''}${
+            window.location.hash
+        }`
+        window.history.pushState({ path: uri }, '', uri)
+    }
+}

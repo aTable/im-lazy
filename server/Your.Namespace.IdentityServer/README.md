@@ -17,6 +17,7 @@ export PATH=$PATH:/path/to/your/home/.dotnet/tools
 ```
 
 Create the migrations
+
 ```
 dotnet ef migrations add init --context Your.Namespace.IdentityServer.DataAccess.Context
 dotnet ef migrations add init --context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext
@@ -32,7 +33,7 @@ dotnet ef migrations script -v --output "identity-server-App-migrations.sql" --c
 
 dotnet ef migrations script -v --output "identity-server-PersistedGrant-migrations.sql" --context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext --configuration Debug
 
-dotnet ef migrations script -v --output "identity-server-Configuration-migrations.sql" --context IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext --configuration Debug
+dotnet ef migrations script -v --output "identity--context IdentityServer4.EntityFramework.D-server-Configuratzion-migrations.sql" bContexts.ConfigurationDbContext --configuration Debug
 ```
 
 ### Apply migrations
@@ -47,8 +48,9 @@ dotnet ef database update --context IdentityServer4.EntityFramework.DbContexts.C
 
 ## Running
 
-Remember to apply the seed (on by default). You may want to turn this off in production.
+Remember to apply the migrations and seed (on by default). You should turn this off in production.
 
 ```
-dotnet run -p Your.Namespace.IdentityServer
+rm yournamespace-sts.db && dotnet build && dotnet run -p Your.Namespace.IdentityServer
 ```
+

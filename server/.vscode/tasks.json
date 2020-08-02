@@ -85,15 +85,26 @@
       "dependsOn": ["docker-build Your.Namespace.Api: debug"],
       "dockerRun": {
         "containerName": "yournamespaceapi-debug",
+        "os": "Linux",
         "image": "yournamespaceapi:debug",
+        "remove": true,
+        "volumes": [
+          {
+            "localPath": "/home/arr/.aspnet/https",
+            "containerPath": "/https",
+            "permissions": "ro"
+          }
+        ],
         "ports": [
           {
             "hostPort": 9080,
-            "containerPort": 9080
+            "containerPort": 9080,
+            "protocol": "tcp"
           },
           {
             "hostPort": 9081,
-            "containerPort": 9081
+            "containerPort": 9081,
+            "protocol": "tcp"
           }
         ]
       },

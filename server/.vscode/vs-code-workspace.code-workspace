@@ -1,0 +1,16 @@
+{
+  "folders": [
+	{
+		"path": ".."
+	},
+	{
+		"path": "../../web-client"
+	}
+],
+"settings": {
+	"cSpell.words": [
+		"Oidc",
+		"signin"
+	]
+}
+}

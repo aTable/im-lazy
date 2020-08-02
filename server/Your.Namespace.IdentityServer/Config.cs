@@ -25,9 +25,14 @@ namespace Your.Namespace.IdentityServer
         {
             return new List<ApiResource>
             {
+            // TODO: resolve SPA not being allowed to access due to audience problem. Hacky fix to have api and SPA the same audience lul
                 new ApiResource("MyAwesome-API", "The best API ever seen")
                 {
-                    Scopes = new List<string>{ "myawesomeapi.full_access", "myawesomeapi.app_access" }
+                    Scopes = new List<string>{
+                        "myawesomeapi.full_access",
+                        "myawesomeapi.app_access"
+                    },
+
                 }
             };
         }
@@ -39,6 +44,9 @@ namespace Your.Namespace.IdentityServer
                 new ApiScope( name: "read",   displayName: "Read your data."),
                 new ApiScope( name: "write",  displayName: "Write your data."),
                 new ApiScope( name: "delete", displayName: "Delete your data."),
+                new ApiScope( name: "openid", displayName: "openid protocol information" ),
+                new ApiScope( name: "profile", displayName: "Profile information" ),
+                new ApiScope( name: "email", displayName: "Email information" ),
                 new ApiScope( name: "myawesomeapi.full_access", displayName: "Full Access" ),
                 new ApiScope( name: "myawesomeapi.app_access", displayName: "App access" ),
             };
@@ -50,16 +58,18 @@ namespace Your.Namespace.IdentityServer
             {
                 new Client
                 {
-                    ClientId = "single-page-app",
-                    ClientName = "My Awesome API",
-                    AllowedGrantTypes = GrantTypes.Implicit,
-                    AllowAccessTokensViaBrowser = true,
+                    ClientId = "MyAwesome-API",// TODO: resolve SPA not being allowed to access due to audience problem. Hacky fix to have api and SPA the same audience lul
+                    ClientName = "Single Page Application client",
+                    AllowAccessTokensViaBrowser = true, // TODO: how does pkce impact this
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RequirePkce = true,
+                    RequireClientSecret = false,
                     RequireConsent = false, // enables silent renew
                     RedirectUris = {
                         "https://localhost:3000/",
                     },
                     PostLogoutRedirectUris = {
-                        "https://localhost:3000/logged-out",
+                        "https://localhost:3000/#/logged-out",
                     },
                     AllowedCorsOrigins = {
                         "https://localhost:3000",
