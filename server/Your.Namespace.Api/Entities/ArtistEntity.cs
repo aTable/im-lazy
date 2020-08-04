@@ -9,7 +9,7 @@ namespace Your.Namespace.Api.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int TotalRevenue { get; set; }
+        public double TotalRevenue { get; set; }
         public ICollection<AlbumEntity> Albums { get; set; }
     }
 }

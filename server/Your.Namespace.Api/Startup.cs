@@ -40,7 +40,7 @@ namespace Your.Namespace.Api
             ConfigureWebServer(appSettings, services);
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AppSettings appSettings)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AppSettings appSettings, Context context)
         {
             if (env.IsDevelopment())
             {
@@ -68,6 +68,16 @@ namespace Your.Namespace.Api
             app.UseGraphQL<ISchema>();
             app.UseGraphiQLServer(new GraphiQLOptions { });
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions { });
+
+            if (appSettings.IsRunMigrations)
+            {
+                context.Database.Migrate();
+            }
+
+            if (appSettings.IsRunSeed)
+            {
+                SeedData.EnsureSeedData(context);
+            }
         }
 
         private AppSettings ConfigureAppSettings(IServiceCollection services)
@@ -131,16 +141,17 @@ namespace Your.Namespace.Api
                  });
              });
             services.AddControllers(options =>
-             {
-                 //  var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-                 //  options.Filters.Add(new AuthorizeFilter(policy));
-             }).AddJsonOptions(options =>
-             {
-                 options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
-             });
+            {
+                //  var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                //  options.Filters.Add(new AuthorizeFilter(policy));
+            }).AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+            });
             services.AddAuthorization(options =>
-                      {
-                      });
+            {
+                options.AddPolicy(Policies.BeCool, policy => policy.RequireClaim("aud"));
+            });
 
             services.AddAuthentication("Bearer")
                     .AddIdentityServerAuthentication(options =>

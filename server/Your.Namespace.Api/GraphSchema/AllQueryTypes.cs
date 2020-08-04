@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using GraphQL.Types;
 using Your.Namespace.Api.Entities;
 using GraphQL.Authorization;
+using Your.Namespace.Api.DataAccess;
+using Microsoft.EntityFrameworkCore;
 
 namespace Your.Namespace.Api.GraphSchema
 {
@@ -12,8 +14,8 @@ namespace Your.Namespace.Api.GraphSchema
     {
         public ArtistType()
         {
-            Field(x => x.Id).Description("id");
-            Field(x => x.Name).Description("name");
+            Field(x => x.Id);
+            Field(x => x.Name);
             Field(x => x.TotalRevenue).AuthorizeWith(Policies.God);
             Field<ListGraphType<AlbumType>>(name: "albums", description: "albums");
         }
@@ -21,11 +23,17 @@ namespace Your.Namespace.Api.GraphSchema
 
     public class AlbumType : ObjectGraphType<AlbumEntity>
     {
-        public AlbumType()
+        public AlbumType(Context context)
         {
-            Field(x => x.Id).Description("id");
-            Field(x => x.Name).Description("name");
-            Field(x => x.Artist).Description("artist");
+            Field(x => x.Id);
+            Field(x => x.Name);
+            Field(x => x.ReleaseDate);
+            FieldAsync<ArtistType>(
+                name: "artist",
+                resolve: async ctx =>
+                {
+                    return await context.Artists.FirstOrDefaultAsync(x => x.Id == ctx.Source.ArtistId);
+                });
         }
     }
 }

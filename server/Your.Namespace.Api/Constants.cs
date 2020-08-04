@@ -4,5 +4,6 @@ namespace Your.Namespace.Api
     {
         public const string God = "god";
         public const string User = "user";
+        public const string BeCool = "becool";
     }
 }

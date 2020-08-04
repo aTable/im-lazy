@@ -30,3 +30,7 @@ export function getWeather(): Promise<IWeatherForecast[]> {
 export function getProtectedValue(): Promise<string[]> {
     return backend.get(`/api/protectedvalues`)
 }
+
+export function getGraphQlThing(): Promise<any> {
+    return backend.post(`/graphql`)
+}

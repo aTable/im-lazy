@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GraphQL;
 using GraphQL.Types;
+using Microsoft.EntityFrameworkCore;
 using Your.Namespace.Api.DataAccess;
 
 namespace Your.Namespace.Api.GraphSchema
@@ -16,7 +17,17 @@ namespace Your.Namespace.Api.GraphSchema
             Context context
             )
         {
-            Field<ListGraphType<ArtistType>>(name: "artists", resolve: ctx => context.Artists.ToList());
+            Field<AlbumType>(
+                name: "album",
+                arguments: new QueryArguments(new QueryArgument<IntGraphType> { Name = "id" }),
+                resolve: ctx => context.Albums.FirstOrDefault(x => x.Id == ctx.GetArgument<int>("id", int.MinValue))
+            );
+            Field<ArtistType>(
+                name: "artist",
+                arguments: new QueryArguments(new QueryArgument<IntGraphType> { Name = "id" }),
+                resolve: ctx => context.Artists.FirstOrDefault(x => x.Id == ctx.GetArgument<int>("id", int.MinValue))
+            );
+            Field<ListGraphType<ArtistType>>(name: "artists", resolve: ctx => context.Artists.Include(x => x.Albums).ToList());
             Field<ListGraphType<AlbumType>>(name: "albums", resolve: ctx => context.Albums.ToList());
         }
     }

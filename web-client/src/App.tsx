@@ -15,7 +15,6 @@ import LoggedOut from './pages/LoggedOut'
 const mgr = new Oidc.UserManager(config.oidc)
 // @ts-ignore
 window.mgr = mgr
-debugger
 if (window.location.search.includes('code')) {
     ;(window as any).mgr
         .signinRedirectCallback()

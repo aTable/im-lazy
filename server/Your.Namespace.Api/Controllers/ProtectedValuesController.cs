@@ -26,6 +26,7 @@ namespace Your.Namespace.Api.Controllers
 
         // GET api/values
         [HttpGet]
+        [Authorize(Policy = Policies.BeCool)]
         public ActionResult<IEnumerable<string>> Get()
         {
             Logger.Information("protected values were requested");
@@ -34,7 +35,6 @@ namespace Your.Namespace.Api.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
-        [Authorize(Policy = "CanReadPolicy")]
         public ActionResult<string> Get(int id)
         {
             return "value";
@@ -42,21 +42,18 @@ namespace Your.Namespace.Api.Controllers
 
         // POST api/values
         [HttpPost]
-        [Authorize(Policy = "CanWritePolicy")]
         public void Post([FromBody] string value)
         {
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        [Authorize(Policy = "CanWritePolicy")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        [Authorize(Policy = "CanWritePolicy")]
         public void Delete(int id)
         {
         }

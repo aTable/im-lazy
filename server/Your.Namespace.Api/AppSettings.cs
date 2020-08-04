@@ -13,6 +13,8 @@ namespace Your.Namespace.Api
         public string AuthorizationServerUri { get; set; }
         public bool AuthorizationServerRequiresHttps { get; set; }
         public GraphQLSettings GraphQLSettings { get; set; }
+        public bool IsRunMigrations { get; set; }
+        public bool IsRunSeed { get; set; }
     }
 
     public class GraphQLSettings

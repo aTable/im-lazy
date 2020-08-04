@@ -28,6 +28,7 @@ export const reducer = (state: IAuthContext, action: IAuthActions): IAuthContext
         case 'SET_TOKEN':
             console.log('access token', decode(action.payload.access_token))
             console.log('id token', decode(action.payload.id_token))
+            setBearer(action.payload.id_token)
             return {
                 ...state,
                 user: action.payload,
