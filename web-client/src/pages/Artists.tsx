@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react'
-import { useQuery, useMutation, disableFragmentWarnings, gql } from '@apollo/client'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import { GetArtistsDocument, GetArtistsQuery, CreateArtistDocument, CreateArtistMutation } from '../generated/graphql'
 import { Link } from 'react-router-dom'
 
