@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, FC, Dispatch, useEffect } from 'react'
 import decode from 'jwt-decode'
-import { setBearer } from '../api'
+import { setBearer } from '../api/api'
 import { User } from 'oidc-client'
 
 export const authKeys = {
@@ -52,8 +52,8 @@ export interface IAuthContextProps {
     state: IAuthContext
     dispatch: Dispatch<IAuthActions>
 }
-export const AuthContextProvider: FC<any> = props => {
-    const [state, dispatch] = useReducer(reducer, { token: undefined, claims: undefined }, init => init)
+export const AuthContextProvider: FC<any> = (props) => {
+    const [state, dispatch] = useReducer(reducer, { token: undefined, claims: undefined }, (init) => init)
 
     // TODO: resolve the context initialization being after route
     const userSerialized = localStorage.getItem(authKeys.user)

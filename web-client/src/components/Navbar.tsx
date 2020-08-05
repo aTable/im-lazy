@@ -33,6 +33,8 @@ const NavBar: FC<INavBarProps> = () => {
                         Disabled
                     </NavItem>
                     <NavItem to="/protected">Protected</NavItem>
+                    <NavItem to="/health">Health</NavItem>
+                    <NavItem to="/artists">Artists</NavItem>
                 </ul>
                 {state.token && (
                     <button onClick={logout} className="btn btn-secondary">

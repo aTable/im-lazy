@@ -17,6 +17,10 @@ namespace Your.Namespace.Api.GraphSchema
             Context context
             )
         {
+            Field<HealthType>(
+                name: "health",
+                resolve: ctx => new HealthModel { ApiStatus = "we good" });
+
             Field<AlbumType>(
                 name: "album",
                 arguments: new QueryArguments(new QueryArgument<IntGraphType> { Name = "id" }),
@@ -25,7 +29,7 @@ namespace Your.Namespace.Api.GraphSchema
             Field<ArtistType>(
                 name: "artist",
                 arguments: new QueryArguments(new QueryArgument<IntGraphType> { Name = "id" }),
-                resolve: ctx => context.Artists.FirstOrDefault(x => x.Id == ctx.GetArgument<int>("id", int.MinValue))
+                resolve: ctx => context.Artists.Include(x => x.Albums).FirstOrDefault(x => x.Id == ctx.GetArgument<int>("id", int.MinValue))
             );
             Field<ListGraphType<ArtistType>>(name: "artists", resolve: ctx => context.Artists.Include(x => x.Albums).ToList());
             Field<ListGraphType<AlbumType>>(name: "albums", resolve: ctx => context.Albums.ToList());

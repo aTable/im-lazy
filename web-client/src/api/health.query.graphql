@@ -1,0 +1,6 @@
+# need a valid query available to enable the graphql-codegen
+query GetHealth {
+    health {
+        apiStatus
+    }
+}

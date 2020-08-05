@@ -1,6 +1,12 @@
 import axios, { AxiosResponse, AxiosError } from 'axios'
-import config from './config'
-import { IWeatherForecast } from './types/server'
+import config from '../config'
+import { IWeatherForecast } from '../types/server'
+import { ApolloClient, InMemoryCache } from '@apollo/client'
+
+export const client = new ApolloClient({
+    uri: config.serverUri + '/graphql',
+    cache: new InMemoryCache(),
+})
 
 const backend = axios.create({
     baseURL: config.serverUri,
@@ -29,8 +35,4 @@ export function getWeather(): Promise<IWeatherForecast[]> {
 
 export function getProtectedValue(): Promise<string[]> {
     return backend.get(`/api/protectedvalues`)
-}
-
-export function getGraphQlThing(): Promise<any> {
-    return backend.post(`/graphql`)
 }

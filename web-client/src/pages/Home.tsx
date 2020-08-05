@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { IWeatherForecast } from '../types/server'
-import { getWeather } from '../api'
+import { getWeather } from '../api/api'
 import ShowWeatherForecast from '../components/ShowWeatherForecast'
 
 interface IHomeProps {

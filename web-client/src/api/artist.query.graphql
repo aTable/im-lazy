@@ -1,0 +1,11 @@
+query GetArtist($id: Int!) {
+    artist(id: $id) {
+        id,
+        name,
+        albums {
+            id,
+            name,
+            releaseDate
+        }
+    }
+}

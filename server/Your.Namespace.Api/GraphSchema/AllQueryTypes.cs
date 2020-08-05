@@ -10,6 +10,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Your.Namespace.Api.GraphSchema
 {
+    public class HealthModel
+    {
+        public string ApiStatus { get; set; }
+    }
+
+    public class HealthType : ObjectGraphType<HealthModel>
+    {
+        public HealthType()
+        {
+            Field(x => x.ApiStatus);
+        }
+    }
     public class ArtistType : ObjectGraphType<ArtistEntity>
     {
         public ArtistType()
