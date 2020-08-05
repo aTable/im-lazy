@@ -19,7 +19,7 @@ namespace Your.Namespace.Api.GraphSchema
         {
             Field<HealthType>(
                 name: "health",
-                resolve: ctx => new HealthModel { ApiStatus = "we good" });
+                resolve: ctx => new HealthModel { ApiStatus = new Random().Next(0, 2) == 0 ? "we good" : "we not good" });
 
             Field<AlbumType>(
                 name: "album",

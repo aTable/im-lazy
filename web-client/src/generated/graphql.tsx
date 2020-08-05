@@ -126,6 +126,19 @@ export type GetArtistsQuery = (
   )>>> }
 );
 
+export type CreateArtistMutationVariables = Exact<{
+  artist: ArtistInput;
+}>;
+
+
+export type CreateArtistMutation = (
+  { __typename?: 'MyGraphMutation' }
+  & { createArtist?: Maybe<(
+    { __typename?: 'ArtistType' }
+    & Pick<ArtistType, 'id' | 'name'>
+  )> }
+);
+
 export type GetHealthQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -214,6 +227,39 @@ export function useGetArtistsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type GetArtistsQueryHookResult = ReturnType<typeof useGetArtistsQuery>;
 export type GetArtistsLazyQueryHookResult = ReturnType<typeof useGetArtistsLazyQuery>;
 export type GetArtistsQueryResult = Apollo.QueryResult<GetArtistsQuery, GetArtistsQueryVariables>;
+export const CreateArtistDocument = Apollo.gql`
+    mutation CreateArtist($artist: ArtistInput!) {
+  createArtist(artist: $artist) {
+    id
+    name
+  }
+}
+    `;
+export type CreateArtistMutationFn = Apollo.MutationFunction<CreateArtistMutation, CreateArtistMutationVariables>;
+
+/**
+ * __useCreateArtistMutation__
+ *
+ * To run a mutation, you first call `useCreateArtistMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateArtistMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createArtistMutation, { data, loading, error }] = useCreateArtistMutation({
+ *   variables: {
+ *      artist: // value for 'artist'
+ *   },
+ * });
+ */
+export function useCreateArtistMutation(baseOptions?: Apollo.MutationHookOptions<CreateArtistMutation, CreateArtistMutationVariables>) {
+        return Apollo.useMutation<CreateArtistMutation, CreateArtistMutationVariables>(CreateArtistDocument, baseOptions);
+      }
+export type CreateArtistMutationHookResult = ReturnType<typeof useCreateArtistMutation>;
+export type CreateArtistMutationResult = Apollo.MutationResult<CreateArtistMutation>;
+export type CreateArtistMutationOptions = Apollo.BaseMutationOptions<CreateArtistMutation, CreateArtistMutationVariables>;
 export const GetHealthDocument = Apollo.gql`
     query GetHealth {
   health {

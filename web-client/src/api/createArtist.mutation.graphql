@@ -1,0 +1,6 @@
+mutation CreateArtist($artist:ArtistInput!) {
+  createArtist(artist: $artist) {
+    id,
+    name
+  }
+}
