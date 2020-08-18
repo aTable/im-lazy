@@ -3,7 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Your.Namespace.Api.Entities;
+using Your.Namespace.Api.GraphSchema.Albums;
+using Your.Namespace.Api.GraphSchema.Artists;
 
 namespace Your.Namespace.Api.DataAccess
 {
@@ -14,13 +15,13 @@ namespace Your.Namespace.Api.DataAccess
         {
         }
 
-        public DbSet<ArtistEntity> Artists { get; set; }
-        public DbSet<AlbumEntity> Albums { get; set; }
+        public DbSet<Artist> Artists { get; set; }
+        public DbSet<Album> Albums { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<ArtistEntity>().HasMany(x => x.Albums).WithOne(x => x.Artist);
+            builder.Entity<Artist>().HasMany(x => x.Albums).WithOne(x => x.Artist);
         }
     }
 }

@@ -11,16 +11,16 @@ using Your.Namespace.Api.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Logging;
 using Prometheus;
-using GraphQL.Server.Ui.GraphiQL;
-using GraphQL.Server;
-using GraphQL;
-using GraphQL.Http;
-using GraphQL.Types;
 using Your.Namespace.Api.GraphSchema;
-using GraphQL.Server.Ui.Playground;
-using GraphQL.Authorization;
 using System.Security.Claims;
-using GraphQL.Validation;
+using HotChocolate;
+using HotChocolate.AspNetCore;
+using HotChocolate.AspNetCore.Voyager;
+using HotChocolate.Execution.Configuration;
+using HotChocolate.Subscriptions;
+using Your.Namespace.Api.GraphSchema.Albums;
+using Your.Namespace.Api.GraphSchema.Artists;
+using Your.Namespace.Api.GraphSchema.Health;
 
 namespace Your.Namespace.Api
 {
@@ -36,8 +36,8 @@ namespace Your.Namespace.Api
         {
             var appSettings = ConfigureAppSettings(services);
             var logger = ConfigureLogger(services);
-            ConfigureGraphQL(appSettings, services);
             ConfigureWebServer(appSettings, services);
+            ConfigureGraphQL(appSettings, services);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AppSettings appSettings, Context context)
@@ -65,9 +65,8 @@ namespace Your.Namespace.Api
                 endpoints.MapControllers();
             });
             app.UseMetricServer();
-            app.UseGraphQL<ISchema>();
-            app.UseGraphiQLServer(new GraphiQLOptions { });
-            app.UseGraphQLPlayground(new GraphQLPlaygroundOptions { });
+            app.UseGraphQL(path: "/graphql");
+            app.UsePlayground(queryPath: "/graphql", uiPath: "/playground");
 
             if (appSettings.IsRunMigrations)
             {
@@ -100,32 +99,24 @@ namespace Your.Namespace.Api
 
         private void ConfigureGraphQL(AppSettings appSettings, IServiceCollection services)
         {
-            services.AddGraphQL(opts =>
-            {
-                opts.EnableMetrics = appSettings.GraphQLSettings.EnableMetrics;
-                opts.ExposeExceptions = appSettings.GraphQLSettings.ExposeExceptions;
-            }).AddGraphTypes(ServiceLifetime.Scoped);
+            //services.AddInMemorySubscriptionProvider();
+            services.AddGraphQL(sp => SchemaBuilder.New()
+                 .AddServices(sp)
+                 .AddQueryType(d => d.Name("Query"))
+                 .AddMutationType(d => d.Name("Mutation"))
+                 //.AddSubscriptionType(d => d.Name("Subscription"))
+                 .AddType<HealthQueries>()
+                 .AddType<ArtistQueries>()
+                 .AddType<ArtistMutations>()
+                 .AddType<AlbumQueries>()
+                 .AddType<AlbumMutations>()
+                 //.AddType<ArtistSubscriptions>()
+                 .AddType<Artist>()
+                 .AddType<Album>()
+                 .AddType<Health>()
+                 .Create()
+            );
 
-            // schema
-            services.AddScoped<IDocumentExecuter, DocumentExecuter>();
-            services.AddScoped<IDocumentWriter, DocumentWriter>();
-            services.AddScoped<MyGraphQuery>();
-            services.AddScoped<MyGraphMutation>();
-            services.AddScoped<ISchema, MyGraphSchema>();
-            services.AddScoped<IDependencyResolver>(provider => new FuncDependencyResolver(provider.GetService));
-
-            // auth
-            services.AddSingleton<IAuthorizationEvaluator, AuthorizationEvaluator>();
-            services.AddTransient<IValidationRule, AuthorizationValidationRule>();
-            services.AddSingleton<AuthorizationSettings>(s =>
-            {
-                var authSettings = new AuthorizationSettings();
-
-                authSettings.AddPolicy(Policies.God, _ => _.RequireClaim(ClaimTypes.Role, "god"));
-                authSettings.AddPolicy(Policies.User, _ => _.RequireClaim(ClaimTypes.Role, "user"));
-
-                return authSettings;
-            });
         }
 
         private void ConfigureWebServer(AppSettings appSettings, IServiceCollection services)

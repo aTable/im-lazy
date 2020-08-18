@@ -9,7 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Your.Namespace.Api.Entities;
+using Your.Namespace.Api.GraphSchema.Albums;
+using Your.Namespace.Api.GraphSchema.Artists;
 
 namespace Your.Namespace.Api.DataAccess
 {
@@ -17,38 +18,38 @@ namespace Your.Namespace.Api.DataAccess
     {
         public static void EnsureSeedData(Context context)
         {
-            var jinjer = new ArtistEntity
+            var jinjer = new Artist
             {
                 Id = 1,
                 Name = "Jinjer",
                 TotalRevenue = 50.7d,
-                Albums = new List<AlbumEntity>
+                Albums = new List<Album>
                 {
-                    new AlbumEntity
+                    new Album
                     {
                         Id = 1,
                         Name = "Inhale, Don't Breathe",
                         ReleaseDate = DateTime.Parse("2012-01-01"),
                     },
-                    new AlbumEntity
+                    new Album
                     {
                         Id = 2,
                         Name = "Cloud Factory",
                         ReleaseDate = DateTime.Parse("2014-01-01"),
                     },
-                    new AlbumEntity
+                    new Album
                     {
                         Id = 3,
                         Name = "King of Everything",
                         ReleaseDate = DateTime.Parse("2016-01-01"),
                     },
-                    new AlbumEntity
+                    new Album
                     {
                         Id = 4,
                         Name = "Micro",
                         ReleaseDate = DateTime.Parse("2019-01-01"),
                     },
-                    new AlbumEntity
+                    new Album
                     {
                         Id = 5,
                         Name = "Macro",
@@ -57,56 +58,56 @@ namespace Your.Namespace.Api.DataAccess
                 }
             };
 
-            var jinjerEntity = context.Set<AlbumEntity>().FirstOrDefault(x => x.Name.Equals(jinjer.Name));
+            var jinjerEntity = context.Set<Album>().FirstOrDefault(x => x.Name.Equals(jinjer.Name));
             if (jinjerEntity == null)
             {
                 context.Add(jinjer);
             }
 
-            var death = new ArtistEntity
+            var death = new Artist
             {
                 Id = 2,
                 Name = "Death",
                 TotalRevenue = 100.7d,
-                Albums = new List<AlbumEntity>
+                Albums = new List<Album>
                 {
-                    new AlbumEntity
+                    new Album
                     {
                         Id = 6,
                         Name = "Scream Bloody Gore",
                         ReleaseDate = DateTime.Parse("1987-01-01"),
                     },
-                    new AlbumEntity
+                    new Album
                     {
                         Id = 7,
                         Name = "Leprosy",
                         ReleaseDate = DateTime.Parse("1988-01-01"),
                     },
-                    new AlbumEntity
+                    new Album
                     {
                         Id = 8,
                         Name = "Spiritual Healing",
                         ReleaseDate = DateTime.Parse("1990-01-01"),
                     },
-                    new AlbumEntity
+                    new Album
                     {
                         Id = 9,
                         Name = "Human",
                         ReleaseDate = DateTime.Parse("1991-01-01"),
                     },
-                    new AlbumEntity
+                    new Album
                     {
                         Id = 10,
                         Name = "Individual Thought Patterns",
                         ReleaseDate = DateTime.Parse("1993-01-01"),
                     },
-                    new AlbumEntity
+                    new Album
                     {
                         Id = 11,
                         Name = "Symbolic",
                         ReleaseDate = DateTime.Parse("1995-01-01"),
                     },
-                    new AlbumEntity
+                    new Album
                     {
                         Id = 12,
                         Name = "The Sound of Perseverance",
@@ -114,7 +115,7 @@ namespace Your.Namespace.Api.DataAccess
                     }
                 }
             };
-            var deathEntity = context.Set<AlbumEntity>().FirstOrDefault(x => x.Name.Equals(jinjer.Name));
+            var deathEntity = context.Set<Album>().FirstOrDefault(x => x.Name.Equals(jinjer.Name));
             if (deathEntity == null)
             {
                 context.Add(death);
