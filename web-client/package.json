@@ -8,7 +8,7 @@
         "build": "react-scripts build && npm run generate-docs",
         "test": "react-scripts test --env=jsdom",
         "eject": "react-scripts eject",
-        "generate-docs": "jsdoc src -c .jsdoc.json --recurse",
+        "generate-docs": "typedoc",
         "gql-codegen": "NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen --config codegen.yml"
     },
     "browserslist": {
@@ -34,7 +34,8 @@
         "@types/react-notification-system": "^0.2.39",
         "@types/react-router-dom": "^5.1.5",
         "axios": "^0.19.2",
-        "bootstrap": "^4.5.0",
+        "bootstrap": "^4.5.1",
+        "formik": "^2.1.5",
         "jquery": "^3.5.1",
         "jwt-decode": "^2.2.0",
         "oidc-client": "^1.10.1",
@@ -43,7 +44,8 @@
         "react-dom": "^16.13.1",
         "react-notification-system": "^0.4.0",
         "react-router-dom": "^5.2.0",
-        "typescript": "3.9.7"
+        "typescript": "3.9.7",
+        "yup": "^0.29.3"
     },
     "devDependencies": {
         "@graphql-codegen/cli": "1.17.7",
@@ -52,16 +54,15 @@
         "@graphql-codegen/typescript-operations": "1.17.7",
         "@graphql-codegen/typescript-react-apollo": "2.0.1",
         "@types/react-test-renderer": "^16.9.3",
+        "@types/yup": "^0.29.4",
         "cross-env": "^7.0.2",
-        "docdash": "^1.2.0",
         "eslint-config-prettier": "^6.11.0",
         "eslint-plugin-prettier": "^3.1.4",
         "graphql": "^15.3.0",
-        "jsdoc": "^3.6.5",
-        "minami": "^1.2.3",
         "node-sass-chokidar": "^1.5.0",
         "prettier": "^2.0.5",
-        "react-scripts": "^3.4.1",
-        "react-test-renderer": "^16.13.1"
+        "react-scripts": "^3.4.3",
+        "react-test-renderer": "^16.13.1",
+        "typedoc": "^0.18.0"
     }
 }

@@ -1,5 +1,4 @@
-import React, { createContext, useReducer, FC, Dispatch, useEffect } from 'react'
-import decode from 'jwt-decode'
+import React, { createContext, useReducer, Dispatch, useEffect, MutableRefObject, ReactNode } from 'react'
 import { setBearer } from '../api/api'
 import { User } from 'oidc-client'
 
@@ -26,8 +25,6 @@ export interface IAuthActions {
 export const reducer = (state: IAuthContext, action: IAuthActions): IAuthContext => {
     switch (action.type) {
         case 'SET_TOKEN':
-            console.log('access token', decode(action.payload.access_token))
-            console.log('id token', decode(action.payload.id_token))
             setBearer(action.payload.id_token)
             return {
                 ...state,
@@ -52,7 +49,12 @@ export interface IAuthContextProps {
     state: IAuthContext
     dispatch: Dispatch<IAuthActions>
 }
-export const AuthContextProvider: FC<any> = (props) => {
+
+export interface IAuthContextProviderProps {
+    notificationSystem: MutableRefObject<null>
+    children: ReactNode
+}
+export const AuthContextProvider = (props: IAuthContextProviderProps) => {
     const [state, dispatch] = useReducer(reducer, { token: undefined, claims: undefined }, (init) => init)
 
     // TODO: resolve the context initialization being after route

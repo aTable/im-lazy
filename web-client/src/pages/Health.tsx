@@ -6,7 +6,7 @@ interface IHealthProps {}
 
 const Health: FC<IHealthProps> = () => {
     const { loading, error, data } = useQuery<GetHealthQuery>(GetHealthDocument, {
-        pollInterval: 1500,
+        pollInterval: 500,
     })
 
     if (loading) return <p>Loading broskie</p>

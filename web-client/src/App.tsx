@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { useRef } from 'react'
 import { HashRouter as Router, Route, Switch } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import NotFound from './pages/NotFound'
@@ -16,6 +16,7 @@ import { mutateQueryStringWithoutReload } from './utils/utils'
 import LoggedOut from './pages/LoggedOut'
 import { client } from './api/api'
 import { ApolloProvider } from '@apollo/client'
+import NotificationSystem from 'react-notification-system'
 
 const mgr = new Oidc.UserManager(config.oidc)
 // @ts-ignore
@@ -33,10 +34,20 @@ if (window.location.search.includes('code')) {
 }
 
 interface IAppProps {}
-const App: FC<IAppProps> = () => {
+
+/**
+ * The root of the application built with [TypeScript](https://www.typescriptlang.org/)
+ * @param props The props
+ */
+const App = (props: IAppProps) => {
+    const notificationSystem = useRef(null)
+    // @ts-ignore
+    window.notificationSystem = notificationSystem
+
     return (
         <ApolloProvider client={client}>
-            <AuthContextProvider>
+            <NotificationSystem ref={notificationSystem} />
+            <AuthContextProvider notificationSystem={notificationSystem}>
                 <Router>
                     <Navbar />
                     <Switch>

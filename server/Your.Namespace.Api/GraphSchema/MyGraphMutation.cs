@@ -32,6 +32,19 @@ namespace Your.Namespace.Api.GraphSchema
                     context.SaveChanges();
                     return newAlbum;
                 });
+            Field<AlbumType>(
+                name: "deleteAlbum",
+                arguments: new QueryArguments(new QueryArgument<NonNullGraphType<DeleteAlbumInputType>> { Name = "album" }),
+                resolve: ctx =>
+                {
+                    var albumInput = ctx.GetArgument<DeleteAlbumInputType>("album");
+                    var album = ctx.GetArgument<AlbumEntity>("album");
+                    var albumEntity = context.Albums.Single(x => x.Id == album.Id);
+                    context.Albums.Remove(albumEntity);
+                    context.SaveChanges();
+                    return null;
+                }
+            );
 
             Field<ArtistType>(
                 "createArtist",
@@ -51,6 +64,24 @@ namespace Your.Namespace.Api.GraphSchema
                     context.Artists.Add(newEntity);
                     context.SaveChanges();
                     return newEntity;
+                });
+
+
+            Field<ArtistType>(
+                "updateArtist",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<UpdateArtistInputType>> { Name = "artist" }),
+                resolve: ctx =>
+                {
+                    var input = ctx.GetArgument<UpdateArtistInputType>("artist");
+                    var artist = ctx.GetArgument<ArtistEntity>("artist");
+
+                    var toUpdate = context.Artists.SingleOrDefault(x => x.Id == artist.Id);
+                    if (toUpdate == null) throw new Exception(nameof(toUpdate));
+                    toUpdate.Name = artist.Name;
+
+                    context.SaveChanges();
+                    return toUpdate;
                 });
         }
     }

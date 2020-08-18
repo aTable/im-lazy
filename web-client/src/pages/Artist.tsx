@@ -1,36 +1,148 @@
-import React, { FC } from 'react'
-import { useQuery } from '@apollo/client'
-import { GetArtistQuery, GetArtistDocument } from '../generated/graphql'
-import { useParams } from 'react-router-dom'
-interface IArtistProps {}
+import React from 'react'
+import { useQuery, useMutation, gql } from '@apollo/client'
+import {
+    GetArtistQuery,
+    GetArtistDocument,
+    UpdateArtistMutation,
+    UpdateArtistDocument,
+    DeleteAlbumMutation,
+    DeleteAlbumDocument,
+} from '../generated/graphql'
+import { RouteComponentProps } from 'react-router-dom'
+import { useFormik } from 'formik'
+import { string, object } from 'yup'
+import LoadingRoot from '../components/LoadingRoot'
 
-const Artists: FC<IArtistProps> = () => {
-    const { artistId } = useParams()
-    const { loading, error, data } = useQuery<GetArtistQuery>(GetArtistDocument, {
+const updateArtistSchema = object().shape({
+    artistName: string().required().min(2),
+})
+
+interface IUpdateArtistFormData {
+    artistName: string
+}
+
+interface RouteParams {
+    artistId: string
+}
+
+interface IArtistProps extends RouteComponentProps<RouteParams> {}
+
+const Artists = (props: IArtistProps) => {
+    const { loading, error, data, refetch } = useQuery<GetArtistQuery>(GetArtistDocument, {
         variables: {
-            id: artistId,
+            id: props.match.params.artistId,
         },
     })
+    const [updateArtist] = useMutation<UpdateArtistMutation>(UpdateArtistDocument, {
+        update(cache, res) {
+            cache.modify({
+                fields: {
+                    artists(existingArtists = []) {
+                        const newArtistRef = cache.writeFragment({
+                            data: res.data?.updateArtist,
+                            fragment: gql`
+                                fragment UpdateArtist on Artist {
+                                    id
+                                    name
+                                }
+                            `,
+                        })
+                        // TODO: learn mutating cache even though it is automatic for single entity changes
+                        return [...existingArtists, newArtistRef]
+                    },
+                },
+            })
+        },
+        onCompleted(res) {
+            refetch()
+            // @ts-ignore
+            window.notificationSystem.current.addNotification({ message: 'Save successful', level: 'success' })
+        },
+    })
+    const [deleteAlbum] = useMutation<DeleteAlbumMutation>(DeleteAlbumDocument)
 
-    if (loading) return <p>Loading broskie</p>
+    const { handleSubmit, handleChange, isSubmitting, dirty, values, errors, isValid } = useFormik<
+        IUpdateArtistFormData
+    >({
+        initialValues: {
+            artistName: data?.artist?.name! || '',
+        },
+        onSubmit(values) {
+            updateArtist({
+                variables: {
+                    artist: {
+                        name: values.artistName,
+                        id: props.match.params.artistId,
+                    },
+                },
+            })
+        },
+        validationSchema: updateArtistSchema,
+        enableReinitialize: true,
+    })
+
+    if (loading) return <LoadingRoot />
     if (error) return <p>Errors broskie</p>
 
     return (
         <div className="container">
             <h1>Artist</h1>
-            <h2> {data?.artist?.name}</h2>
+
+            <form onSubmit={handleSubmit} noValidate style={{ marginBottom: '2rem' }}>
+                <div className="form-group">
+                    <label htmlFor="artistName">Name</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="artistName"
+                        aria-describedby="artistNameHelp"
+                        placeholder="Enter Artist Name"
+                        onChange={handleChange}
+                        value={values.artistName}
+                    />
+                    {errors.artistName && <span className="text-danger">{errors.artistName}</span>}
+                    <small id="artistNameHelp" className="form-text text-muted">
+                        The name of the artist
+                    </small>
+                </div>
+                <button type="submit" className="btn btn-primary" disabled={!isValid || !dirty || isSubmitting}>
+                    Submit
+                </button>
+            </form>
+
+            <h2>Albums</h2>
             <table className="table">
                 <thead>
                     <tr>
                         <th>Name</th>
                         <th>Released</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {data?.artist?.albums?.map((x) => (
                         <tr key={x?.id}>
-                            <td>{x?.name}</td>
+                            <td>
+                                <a
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    href={`https://www.youtube.com/results?search_query=${data?.artist?.name.replaceAll(
+                                        ' ',
+                                        '+'
+                                    )}+${x?.name.replaceAll(' ', '+')}`}
+                                >
+                                    {x?.name}
+                                </a>
+                            </td>
                             <td>{x?.releaseDate}</td>
+                            <td>
+                                <button
+                                    className="btn btn-danger"
+                                    onClick={() => deleteAlbum({ variables: { album: { id: x?.id! } } })}
+                                >
+                                    <i className="fas fa-times" />
+                                </button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>

@@ -1,11 +1,12 @@
-import React, { FC, useState } from 'react'
+import React, { useState } from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import { GetArtistsDocument, GetArtistsQuery, CreateArtistDocument, CreateArtistMutation } from '../generated/graphql'
 import { Link } from 'react-router-dom'
+import LoadingRoot from '../components/LoadingRoot'
 
 interface IArtistProps {}
 
-const Artists: FC<IArtistProps> = () => {
+const Artists = (props: IArtistProps) => {
     const [newArtistName, setNewArtistName] = useState('')
     const { loading, error, data } = useQuery<GetArtistsQuery>(GetArtistsDocument)
     const [createArtist] = useMutation<CreateArtistMutation>(CreateArtistDocument, {
@@ -16,9 +17,9 @@ const Artists: FC<IArtistProps> = () => {
                         const newArtistRef = cache.writeFragment({
                             data: res.data?.createArtist,
                             fragment: gql`
-                                fragment NewTodo on Todo {
+                                fragment CreateArtist on Artist {
                                     id
-                                    type
+                                    name
                                 }
                             `,
                         })
@@ -32,7 +33,7 @@ const Artists: FC<IArtistProps> = () => {
         },
     })
 
-    if (loading) return <p>Loading broskie</p>
+    if (loading) return <LoadingRoot />
     if (error) return <p>Errors broskie</p>
 
     const submitCreateArtist = () => {

@@ -21,12 +21,33 @@ namespace Your.Namespace.Api.GraphSchema
         }
     }
 
+    public class DeleteAlbumInputType : InputObjectGraphType
+    {
+        public DeleteAlbumInputType()
+        {
+            Name = "AlbumDeleteInput";
+            Field<NonNullGraphType<IntGraphType>>("id");
+        }
+    }
+
     public class CreateArtistInputType : InputObjectGraphType
     {
         public CreateArtistInputType()
         {
             Name = "ArtistInput";
             Field<NonNullGraphType<StringGraphType>>("name");
+        }
+    }
+
+    public class UpdateArtistInputType : InputObjectGraphType<ArtistEntity>
+    {
+        public UpdateArtistInputType()
+        {
+            Name = "ArtistUpdateInput";
+            Field(x => x.Id);
+            Field(x => x.Name);
+            //Field<NonNullGraphType<StringGraphType>>("name");
+            //Field<NonNullGraphType<IntGraphType>>("artistId");
         }
     }
 }
