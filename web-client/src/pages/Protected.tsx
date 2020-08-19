@@ -1,9 +1,9 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { getProtectedValue } from '../api/api'
 
 interface IProtectedProps {}
 
-const Protected: FC<IProtectedProps> = () => {
+const Protected = (props: IProtectedProps) => {
     const [values, setValues] = useState<string[]>([])
 
     useEffect(() => {

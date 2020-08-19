@@ -1,10 +1,10 @@
-import React, { FC } from 'react'
+import React from 'react'
 import { useQuery } from '@apollo/client'
 import { GetHealthDocument, GetHealthQuery } from '../generated/graphql'
 
 interface IHealthProps {}
 
-const Health: FC<IHealthProps> = () => {
+const Health = (props: IHealthProps) => {
     const { loading, error, data } = useQuery<GetHealthQuery>(GetHealthDocument, {
         pollInterval: 500,
     })

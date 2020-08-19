@@ -1,14 +1,14 @@
-import { FC } from 'react'
+import { ReactNode } from 'react'
 import ShowForClaim from './ShowForClaim'
 
 export interface IShowForAdminOnly {
-    children: React.ReactNode
+    children: ReactNode
 }
 
-export const ShowForAdminOnly: FC<IShowForAdminOnly> = ({ children, ...rest }) => {
+export const ShowForAdminOnly = ({ children, ...rest }: IShowForAdminOnly) => {
     return ShowForClaim({
         children,
-        predicate: token => token.is_admin === true,
+        predicate: (token) => token.is_admin === true,
         ...rest,
     })
 }

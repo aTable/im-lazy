@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 using HotChocolate;
 using HotChocolate.Types;
 using HotChocolate.Types.Relay;
+using HotChocolate.Types.Descriptors;
+using HotChocolate.Types.Filters;
+using HotChocolate.Types.Introspection;
+using HotChocolate.Types.Sorting;
 using Your.Namespace.Api.DataAccess;
 using Your.Namespace.Api.GraphSchema.Artists;
 
@@ -16,14 +20,16 @@ namespace Your.Namespace.Api.GraphSchema.Albums
         //[UsePaging]
         //[UseFiltering]
         //[UseSorting]
-        public IEnumerable<Album> GetAlbums(
+        [UseSelection]
+        public IQueryable<Album> GetAlbums(
             [Service] Context context) =>
-            context.Albums.ToList();
+            context.Albums;
 
-
-        public Album GetAlbum(
+        [UseFirstOrDefault]
+        [UseSelection]
+        public IQueryable<Album> GetAlbum(
             int id,
             [Service] Context context) =>
-            context.Albums.Single(x => x.Id == id);
+            context.Albums.Where(x => x.Id == id);
     }
 }

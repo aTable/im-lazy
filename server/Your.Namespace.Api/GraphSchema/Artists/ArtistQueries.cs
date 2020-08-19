@@ -14,16 +14,21 @@ namespace Your.Namespace.Api.GraphSchema.Artists
     [ExtendObjectType(Name = "Query")]
     public class ArtistQueries
     {
-        //[UsePaging]
-        //[UseFiltering]
-        //[UseSorting]
-        public IEnumerable<Artist> GetArtists(
-            [Service] Context context) =>
-            context.Artists.ToList();
+        // [UsePaging]
+        // [UseFiltering]
+        // [UseSorting]
+        // [UseSelection]
 
-        public Artist GetArtist(
+        [UseSelection]
+        public IQueryable<Artist> GetArtists(
+            [Service] Context context) =>
+            context.Artists;
+
+        [UseFirstOrDefault]
+        [UseSelection]
+        public IQueryable<Artist> GetArtist(
             int id,
             [Service] Context context) =>
-            context.Artists.Single(x => x.Id == id);
+            context.Artists.Where(x => x.Id == id);
     }
 }

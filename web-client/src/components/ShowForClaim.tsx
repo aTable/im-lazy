@@ -1,13 +1,13 @@
-import React, { FC, useContext } from 'react'
+import React, { useContext, ReactNode } from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import AuthContext, { IClaims } from '../stores/AuthContext'
 
 export interface IShowForClaimProps {
-    children: React.ReactNode
+    children: ReactNode
     predicate: (claims: IClaims) => boolean
 }
 
-export const ShowForClaim: FC<IShowForClaimProps> = ({ children, predicate, ...rest }) => {
+export const ShowForClaim = ({ children, predicate, ...rest }: IShowForClaimProps) => {
     const { state } = useContext(AuthContext)
     if (!state.claims) return <Redirect to="/login" />
     const match = predicate(state.claims)

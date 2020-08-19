@@ -1,9 +1,9 @@
 query GetArtists {
     artists {
-        id,
-        name,
+        id
+        name
         albums {
-            id,
+            id
             name
         }
     }

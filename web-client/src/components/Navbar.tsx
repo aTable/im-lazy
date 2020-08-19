@@ -1,10 +1,10 @@
-import React, { FC, useContext } from 'react'
+import React, { useContext } from 'react'
 import { withRouter, Link } from 'react-router-dom'
 import NavItem from './NavItem'
 import AuthContext from '../stores/AuthContext'
 
 export interface INavBarProps {}
-const NavBar: FC<INavBarProps> = () => {
+const NavBar = (props: INavBarProps) => {
     const { state, dispatch } = useContext(AuthContext)
     const logout = () => {
         dispatch({ type: 'LOGOUT' })
@@ -29,9 +29,6 @@ const NavBar: FC<INavBarProps> = () => {
             <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
                 <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
                     <NavItem to="/">Home</NavItem>
-                    <NavItem to="/disabled" isDisabled={true}>
-                        Disabled
-                    </NavItem>
                     <NavItem to="/protected">Protected</NavItem>
                     <NavItem to="/health">Health</NavItem>
                     <NavItem to="/artists">Artists</NavItem>

@@ -5,7 +5,7 @@ export interface ILoadingContainerProps {
     isLoading: boolean
     children: any
 }
-const LoadingContainer: FC<ILoadingContainerProps> = ({ isLoading, children }) => {
+const LoadingContainer = ({ isLoading, children }: ILoadingContainerProps) => {
     return (
         <>
             {isLoading && <Loading />}

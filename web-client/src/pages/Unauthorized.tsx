@@ -1,6 +1,6 @@
-import React, { FC } from 'react'
+import React from 'react'
 
-const Unauthorized: FC<{}> = () => {
+const Unauthorized = () => {
     return (
         <div className="container">
             <h1>Unauthorized</h1>

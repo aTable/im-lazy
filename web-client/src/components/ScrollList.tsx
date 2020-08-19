@@ -10,7 +10,7 @@ export interface IScrollListProps {
     cssHeight: string
 }
 
-const ScrollList: FC<IScrollListProps> = props => {
+const ScrollList = (props: IScrollListProps) => {
     const cssHeight = props.cssHeight || defaults.cssHeight
     const records = props.records.map(props.renderRecord)
 

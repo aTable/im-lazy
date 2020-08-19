@@ -30,7 +30,7 @@ interface IArtistProps extends RouteComponentProps<RouteParams> {}
 const Artists = (props: IArtistProps) => {
     const { loading, error, data, refetch } = useQuery<GetArtistQuery>(GetArtistDocument, {
         variables: {
-            id: props.match.params.artistId,
+            id: parseInt(props.match.params.artistId, 10),
         },
     })
     const [updateArtist] = useMutation<UpdateArtistMutation>(UpdateArtistDocument, {
@@ -59,7 +59,16 @@ const Artists = (props: IArtistProps) => {
             window.notificationSystem.current.addNotification({ message: 'Save successful', level: 'success' })
         },
     })
-    const [deleteAlbum] = useMutation<DeleteAlbumMutation>(DeleteAlbumDocument)
+    const [deleteAlbum] = useMutation<DeleteAlbumMutation>(DeleteAlbumDocument, {
+        onCompleted() {
+            refetch()
+            // @ts-ignore
+            window.notificationSystem.current.addNotification({
+                message: 'Removed album successfully',
+                level: 'success',
+            })
+        },
+    })
 
     const { handleSubmit, handleChange, isSubmitting, dirty, values, errors, isValid } = useFormik<
         IUpdateArtistFormData
@@ -72,7 +81,7 @@ const Artists = (props: IArtistProps) => {
                 variables: {
                     artist: {
                         name: values.artistName,
-                        id: props.match.params.artistId,
+                        id: parseInt(props.match.params.artistId, 10),
                     },
                 },
             })
@@ -126,10 +135,10 @@ const Artists = (props: IArtistProps) => {
                                 <a
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    href={`https://www.youtube.com/results?search_query=${data?.artist?.name.replaceAll(
+                                    href={`https://www.youtube.com/results?search_query=${data?.artist?.name?.replaceAll(
                                         ' ',
                                         '+'
-                                    )}+${x?.name.replaceAll(' ', '+')}`}
+                                    )}+${x?.name?.replaceAll(' ', '+')}`}
                                 >
                                     {x?.name}
                                 </a>
@@ -138,7 +147,7 @@ const Artists = (props: IArtistProps) => {
                             <td>
                                 <button
                                     className="btn btn-danger"
-                                    onClick={() => deleteAlbum({ variables: { album: { id: x?.id! } } })}
+                                    onClick={() => deleteAlbum({ variables: { album: { albumId: x?.id! } } })}
                                 >
                                     <i className="fas fa-times" />
                                 </button>

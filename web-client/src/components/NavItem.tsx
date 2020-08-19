@@ -1,13 +1,14 @@
-import React, { FC } from 'react'
+import React, { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 
 export interface INavItemProps extends RouteComponentProps {
     isDisabled?: boolean
     to: string
+    children: ReactNode
 }
 
-const NavItem: FC<INavItemProps> = props => {
+const NavItem = (props: INavItemProps) => {
     const isActive = () => props.location.pathname === props.to
 
     const linkClicked = (e: any) => {

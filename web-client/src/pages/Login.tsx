@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react'
+import React, { useCallback } from 'react'
 
 export function useLogin(): [() => void] {
     const handleLogin = useCallback(() => {
@@ -18,7 +18,7 @@ export function useLogin(): [() => void] {
 
 export interface ILoginProps {}
 
-const Login: FC<ILoginProps> = props => {
+const Login = (props: ILoginProps) => {
     const [handleLogin] = useLogin()
 
     return (

@@ -8,112 +8,89 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** The `Date` scalar type represents a year, month and day in accordance with the [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) standard. */
-  Date: any;
-  /** The `DateTime` scalar type represents a date and time. `DateTime` expects timestamps to be formatted in accordance with the [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) standard. */
+  /** The multiplier path scalar represents a valid GraphQL multiplier path string. */
+  MultiplierPath: any;
+  /** The `DateTime` scalar represents an ISO-8601 compliant date time type. */
   DateTime: any;
-  /** The `DateTimeOffset` scalar type represents a date, time and offset from UTC. `DateTimeOffset` expects timestamps to be formatted in accordance with the [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) standard. */
-  DateTimeOffset: any;
-  /** The `Seconds` scalar type represents a period of time represented as the total number of seconds. */
-  Seconds: any;
-  /** The `Milliseconds` scalar type represents a period of time represented as the total number of milliseconds. */
-  Milliseconds: any;
-  Decimal: any;
+};
+
+export type Query = {
+  __typename?: 'Query';
+  album?: Maybe<Album>;
+  albums?: Maybe<Array<Maybe<Album>>>;
+  artist?: Maybe<Artist>;
+  artists?: Maybe<Array<Maybe<Artist>>>;
+  health?: Maybe<Health>;
 };
 
 
-
-
-
-
-
-export type MyGraphQuery = {
-  __typename?: 'MyGraphQuery';
-  album?: Maybe<AlbumType>;
-  albums?: Maybe<Array<Maybe<AlbumType>>>;
-  artist?: Maybe<ArtistType>;
-  artists?: Maybe<Array<Maybe<ArtistType>>>;
-  health?: Maybe<HealthType>;
-};
-
-
-export type MyGraphQueryAlbumArgs = {
-  id?: Maybe<Scalars['Int']>;
-};
-
-
-export type MyGraphQueryArtistArgs = {
-  id?: Maybe<Scalars['Int']>;
-};
-
-export type HealthType = {
-  __typename?: 'HealthType';
-  apiStatus: Scalars['String'];
-};
-
-export type AlbumType = {
-  __typename?: 'AlbumType';
-  artist?: Maybe<ArtistType>;
+export type QueryAlbumArgs = {
   id: Scalars['Int'];
-  name: Scalars['String'];
-  releaseDate: Scalars['Date'];
 };
 
-export type ArtistType = {
-  __typename?: 'ArtistType';
-  /** albums */
-  albums?: Maybe<Array<Maybe<AlbumType>>>;
+
+export type QueryArtistArgs = {
   id: Scalars['Int'];
-  name: Scalars['String'];
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  createArtist?: Maybe<Artist>;
+  deleteAlbum?: Maybe<Album>;
+  updateArtist?: Maybe<Artist>;
+};
+
+
+export type MutationCreateArtistArgs = {
+  input?: Maybe<CreateArtistInput>;
+};
+
+
+export type MutationDeleteAlbumArgs = {
+  input?: Maybe<DeleteAlbumInput>;
+};
+
+
+export type MutationUpdateArtistArgs = {
+  input?: Maybe<UpdateArtistInput>;
+};
+
+
+export type Artist = {
+  __typename?: 'Artist';
+  albums?: Maybe<Array<Maybe<Album>>>;
+  id: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
   totalRevenue: Scalars['Float'];
 };
 
-export type MyGraphMutation = {
-  __typename?: 'MyGraphMutation';
-  createAlbum?: Maybe<AlbumType>;
-  createArtist?: Maybe<ArtistType>;
-  deleteAlbum?: Maybe<AlbumType>;
-  updateArtist?: Maybe<ArtistType>;
-};
-
-
-export type MyGraphMutationCreateAlbumArgs = {
-  album: AlbumInput;
-};
-
-
-export type MyGraphMutationCreateArtistArgs = {
-  artist: ArtistInput;
-};
-
-
-export type MyGraphMutationDeleteAlbumArgs = {
-  album: AlbumDeleteInput;
-};
-
-
-export type MyGraphMutationUpdateArtistArgs = {
-  artist: ArtistUpdateInput;
-};
-
-export type AlbumInput = {
-  name: Scalars['String'];
-  releaseDate: Scalars['Date'];
+export type Album = {
+  __typename?: 'Album';
+  artist?: Maybe<Artist>;
   artistId: Scalars['Int'];
-};
-
-export type AlbumDeleteInput = {
   id: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
+  releaseDate: Scalars['DateTime'];
 };
 
-export type ArtistInput = {
-  name: Scalars['String'];
+export type Health = {
+  __typename?: 'Health';
+  apiStatus?: Maybe<Scalars['String']>;
 };
 
-export type ArtistUpdateInput = {
+export type CreateArtistInput = {
+  name?: Maybe<Scalars['String']>;
+};
+
+export type UpdateArtistInput = {
   id: Scalars['Int'];
-  name: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
 };
+
+export type DeleteAlbumInput = {
+  albumId: Scalars['Int'];
+};
+
 
 export type GetArtistQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -121,13 +98,13 @@ export type GetArtistQueryVariables = Exact<{
 
 
 export type GetArtistQuery = (
-  { __typename?: 'MyGraphQuery' }
+  { __typename?: 'Query' }
   & { artist?: Maybe<(
-    { __typename?: 'ArtistType' }
-    & Pick<ArtistType, 'id' | 'name'>
+    { __typename?: 'Artist' }
+    & Pick<Artist, 'id' | 'name'>
     & { albums?: Maybe<Array<Maybe<(
-      { __typename?: 'AlbumType' }
-      & Pick<AlbumType, 'id' | 'name' | 'releaseDate'>
+      { __typename?: 'Album' }
+      & Pick<Album, 'id' | 'name' | 'releaseDate'>
     )>>> }
   )> }
 );
@@ -136,40 +113,40 @@ export type GetArtistsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetArtistsQuery = (
-  { __typename?: 'MyGraphQuery' }
+  { __typename?: 'Query' }
   & { artists?: Maybe<Array<Maybe<(
-    { __typename?: 'ArtistType' }
-    & Pick<ArtistType, 'id' | 'name'>
+    { __typename?: 'Artist' }
+    & Pick<Artist, 'id' | 'name'>
     & { albums?: Maybe<Array<Maybe<(
-      { __typename?: 'AlbumType' }
-      & Pick<AlbumType, 'id' | 'name'>
+      { __typename?: 'Album' }
+      & Pick<Album, 'id' | 'name'>
     )>>> }
   )>>> }
 );
 
 export type CreateArtistMutationVariables = Exact<{
-  artist: ArtistInput;
+  artist: CreateArtistInput;
 }>;
 
 
 export type CreateArtistMutation = (
-  { __typename?: 'MyGraphMutation' }
+  { __typename?: 'Mutation' }
   & { createArtist?: Maybe<(
-    { __typename?: 'ArtistType' }
-    & Pick<ArtistType, 'id' | 'name'>
+    { __typename?: 'Artist' }
+    & Pick<Artist, 'id' | 'name'>
   )> }
 );
 
 export type DeleteAlbumMutationVariables = Exact<{
-  album: AlbumDeleteInput;
+  album: DeleteAlbumInput;
 }>;
 
 
 export type DeleteAlbumMutation = (
-  { __typename?: 'MyGraphMutation' }
+  { __typename?: 'Mutation' }
   & { deleteAlbum?: Maybe<(
-    { __typename?: 'AlbumType' }
-    & Pick<AlbumType, 'id' | 'name'>
+    { __typename?: 'Album' }
+    & Pick<Album, 'id' | 'name'>
   )> }
 );
 
@@ -177,23 +154,23 @@ export type GetHealthQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetHealthQuery = (
-  { __typename?: 'MyGraphQuery' }
+  { __typename?: 'Query' }
   & { health?: Maybe<(
-    { __typename?: 'HealthType' }
-    & Pick<HealthType, 'apiStatus'>
+    { __typename?: 'Health' }
+    & Pick<Health, 'apiStatus'>
   )> }
 );
 
 export type UpdateArtistMutationVariables = Exact<{
-  artist: ArtistUpdateInput;
+  artist: UpdateArtistInput;
 }>;
 
 
 export type UpdateArtistMutation = (
-  { __typename?: 'MyGraphMutation' }
+  { __typename?: 'Mutation' }
   & { updateArtist?: Maybe<(
-    { __typename?: 'ArtistType' }
-    & Pick<ArtistType, 'id' | 'name'>
+    { __typename?: 'Artist' }
+    & Pick<Artist, 'id' | 'name'>
   )> }
 );
 
@@ -275,8 +252,8 @@ export type GetArtistsQueryHookResult = ReturnType<typeof useGetArtistsQuery>;
 export type GetArtistsLazyQueryHookResult = ReturnType<typeof useGetArtistsLazyQuery>;
 export type GetArtistsQueryResult = Apollo.QueryResult<GetArtistsQuery, GetArtistsQueryVariables>;
 export const CreateArtistDocument = Apollo.gql`
-    mutation CreateArtist($artist: ArtistInput!) {
-  createArtist(artist: $artist) {
+    mutation CreateArtist($artist: CreateArtistInput!) {
+  createArtist(input: $artist) {
     id
     name
   }
@@ -308,8 +285,8 @@ export type CreateArtistMutationHookResult = ReturnType<typeof useCreateArtistMu
 export type CreateArtistMutationResult = Apollo.MutationResult<CreateArtistMutation>;
 export type CreateArtistMutationOptions = Apollo.BaseMutationOptions<CreateArtistMutation, CreateArtistMutationVariables>;
 export const DeleteAlbumDocument = Apollo.gql`
-    mutation DeleteAlbum($album: AlbumDeleteInput!) {
-  deleteAlbum(album: $album) {
+    mutation DeleteAlbum($album: DeleteAlbumInput!) {
+  deleteAlbum(input: $album) {
     id
     name
   }
@@ -373,8 +350,8 @@ export type GetHealthQueryHookResult = ReturnType<typeof useGetHealthQuery>;
 export type GetHealthLazyQueryHookResult = ReturnType<typeof useGetHealthLazyQuery>;
 export type GetHealthQueryResult = Apollo.QueryResult<GetHealthQuery, GetHealthQueryVariables>;
 export const UpdateArtistDocument = Apollo.gql`
-    mutation UpdateArtist($artist: ArtistUpdateInput!) {
-  updateArtist(artist: $artist) {
+    mutation UpdateArtist($artist: UpdateArtistInput!) {
+  updateArtist(input: $artist) {
     id
     name
   }

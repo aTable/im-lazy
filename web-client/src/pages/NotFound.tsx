@@ -1,8 +1,8 @@
-import React, { FC } from 'react'
+import React from 'react'
 
 interface INotFoundProps {}
 
-const NotFound: FC<INotFoundProps> = () => {
+const NotFound = (props: INotFoundProps) => {
     return (
         <div className="container">
             <h1>404</h1>

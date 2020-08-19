@@ -7,7 +7,7 @@ export interface ITreeListProps {
 }
 
 // TODO: cant make this compile friendly without actually using hooks
-const TreeList: FC<ITreeListProps> = props => {
+const TreeList = (props: ITreeListProps) => {
     return null
     // this.state = {
     //   selectedIds: [],

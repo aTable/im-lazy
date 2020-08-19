@@ -1,5 +1,5 @@
-mutation DeleteAlbum($album: AlbumDeleteInput!) {
-    deleteAlbum(album: $album) {
+mutation DeleteAlbum($album: DeleteAlbumInput!) {
+    deleteAlbum(input: $album) {
         id
         name
     }
