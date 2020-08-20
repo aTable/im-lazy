@@ -21,6 +21,7 @@ using HotChocolate.Subscriptions;
 using Your.Namespace.Api.GraphSchema.Albums;
 using Your.Namespace.Api.GraphSchema.Artists;
 using Your.Namespace.Api.GraphSchema.Health;
+using System.Threading.Tasks;
 
 namespace Your.Namespace.Api
 {
@@ -99,8 +100,17 @@ namespace Your.Namespace.Api
 
         private void ConfigureGraphQL(AppSettings appSettings, IServiceCollection services)
         {
+            services.AddQueryRequestInterceptor((ctx, builder, ct) =>
+            {
+                var identity = new ClaimsIdentity();
+                identity.AddClaim(new Claim(ClaimTypes.Country, "au"));
+                ctx.User.AddIdentity(identity);
+                return Task.CompletedTask;
+            });
+
             //services.AddInMemorySubscriptionProvider();
             services.AddGraphQL(sp => SchemaBuilder.New()
+                 .AddAuthorizeDirectiveType()
                  .AddServices(sp)
                  .AddQueryType(d => d.Name("Query"))
                  .AddMutationType(d => d.Name("Mutation"))
@@ -141,7 +151,8 @@ namespace Your.Namespace.Api
             });
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(Policies.BeCool, policy => policy.RequireClaim("aud"));
+                options.AddPolicy(Policies.User, policy => policy.RequireClaim("aud"));
+                options.AddPolicy(Policies.God, policy => policy.RequireAssertion(context => context.User.HasClaim(x => x.Type == ClaimTypes.Upn && x.Value == "fail")));
             });
 
             services.AddAuthentication("Bearer")

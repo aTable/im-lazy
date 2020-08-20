@@ -26,7 +26,7 @@ namespace Your.Namespace.Api.Controllers
 
         // GET api/values
         [HttpGet]
-        [Authorize(Policy = Policies.BeCool)]
+        [Authorize(Policy = Policies.User)]
         public ActionResult<IEnumerable<string>> Get()
         {
             Logger.Information("protected values were requested");

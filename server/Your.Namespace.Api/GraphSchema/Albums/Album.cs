@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HotChocolate.AspNetCore.Authorization;
 using Your.Namespace.Api.GraphSchema.Artists;
 
 namespace Your.Namespace.Api.GraphSchema.Albums

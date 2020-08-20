@@ -54,6 +54,7 @@ const Artists = (props: IArtistProps) => {
                 <thead>
                     <tr>
                         <th>Name</th>
+                        <th>Revenue</th>
                         <th>Albums</th>
                     </tr>
                 </thead>
@@ -63,13 +64,14 @@ const Artists = (props: IArtistProps) => {
                             <td>
                                 <Link to={`/artists/${x?.id}/`}>{x?.name}</Link>
                             </td>
+                            <td>?</td>
                             <td>{x?.albums?.length}</td>
                         </tr>
                     ))}
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td>
+                        <td colSpan={2}>
                             <input
                                 type="text"
                                 className="form-control"
