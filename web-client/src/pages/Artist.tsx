@@ -1,4 +1,5 @@
 import React from 'react'
+import { format, parseISO, parse } from 'date-fns'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import {
     GetArtistQuery,
@@ -7,6 +8,7 @@ import {
     UpdateArtistDocument,
     DeleteAlbumMutation,
     DeleteAlbumDocument,
+    MyRating,
 } from '../generated/graphql'
 import { RouteComponentProps } from 'react-router-dom'
 import { useFormik } from 'formik'
@@ -125,6 +127,7 @@ const Artists = (props: IArtistProps) => {
                     <tr>
                         <th>Name</th>
                         <th>Released</th>
+                        <th>My Rating</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -144,6 +147,19 @@ const Artists = (props: IArtistProps) => {
                                 </a>
                             </td>
                             <td>{x?.releaseDate}</td>
+                            <td className="text-center">
+                                {(() => {
+                                    if (!x || !x.myRating) return null
+                                    switch (x.myRating) {
+                                        case MyRating.None:
+                                            return <i className="fas fa-meh-blank" />
+                                        case MyRating.Okayish:
+                                            return <i className="fas fa-meh" />
+                                        case MyRating.Legendary:
+                                            return <i className="fas fa-star" />
+                                    }
+                                })()}
+                            </td>
                             <td>
                                 <button
                                     className="btn btn-danger"

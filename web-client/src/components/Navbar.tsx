@@ -32,6 +32,7 @@ const NavBar = (props: INavBarProps) => {
                     <NavItem to="/protected">Protected</NavItem>
                     <NavItem to="/health">Health</NavItem>
                     <NavItem to="/artists">Artists</NavItem>
+                    <NavItem to="/error-demo">Error Demo</NavItem>
                 </ul>
                 {state.token && (
                     <button onClick={logout} className="btn btn-secondary">

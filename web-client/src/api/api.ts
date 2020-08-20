@@ -20,7 +20,11 @@ backend.interceptors.response.use(
         if (err.response) {
             if (err.response.status === 401) {
                 window.location.hash = config.loginRoute
-            } else if (err.response.status === 403) window.location.hash = '#/unauthorized'
+                return Promise.reject(err)
+            } else if (err.response.status === 403) {
+                window.location.hash = '#/unauthorized'
+                return Promise.reject(err)
+            }
         }
         return Promise.reject(err)
     }

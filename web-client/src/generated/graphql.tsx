@@ -69,6 +69,7 @@ export type Album = {
   artist?: Maybe<Artist>;
   artistId: Scalars['Int'];
   id: Scalars['Int'];
+  myRating: MyRating;
   name?: Maybe<Scalars['String']>;
   releaseDate: Scalars['DateTime'];
 };
@@ -92,6 +93,12 @@ export type DeleteAlbumInput = {
 };
 
 
+export enum MyRating {
+  None = 'NONE',
+  Okayish = 'OKAYISH',
+  Legendary = 'LEGENDARY'
+}
+
 export type GetArtistQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
@@ -104,7 +111,7 @@ export type GetArtistQuery = (
     & Pick<Artist, 'id' | 'name'>
     & { albums?: Maybe<Array<Maybe<(
       { __typename?: 'Album' }
-      & Pick<Album, 'id' | 'name' | 'releaseDate'>
+      & Pick<Album, 'id' | 'name' | 'releaseDate' | 'myRating'>
     )>>> }
   )> }
 );
@@ -184,6 +191,7 @@ export const GetArtistDocument = Apollo.gql`
       id
       name
       releaseDate
+      myRating
     }
   }
 }

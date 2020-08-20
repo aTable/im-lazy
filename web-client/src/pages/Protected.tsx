@@ -5,7 +5,6 @@ interface IProtectedProps {}
 
 const Protected = (props: IProtectedProps) => {
     const [values, setValues] = useState<string[]>([])
-
     useEffect(() => {
         getProtectedValue().then((res) => setValues(res))
     }, [])

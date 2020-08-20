@@ -8,6 +8,7 @@ import Health from './pages/Health'
 import Artists from './pages/Artists'
 import Artist from './pages/Artist'
 import Protected from './pages/Protected'
+import ErrorDemo from './pages/ErrorDemo'
 import Unauthorized from './pages/Unauthorized'
 import Oidc, { User } from 'oidc-client'
 import config from './config'
@@ -17,6 +18,7 @@ import LoggedOut from './pages/LoggedOut'
 import { client } from './api/api'
 import { ApolloProvider } from '@apollo/client'
 import NotificationSystem from 'react-notification-system'
+import ErrorBoundary from './components/ErrorBoundary'
 
 const mgr = new Oidc.UserManager(config.oidc)
 // @ts-ignore
@@ -50,17 +52,20 @@ const App = (props: IAppProps) => {
             <AuthContextProvider notificationSystem={notificationSystem}>
                 <Router>
                     <Navbar />
-                    <Switch>
-                        <Route path="/health" component={Health} />
-                        <Route path="/artists/:artistId" component={Artist} />
-                        <Route path="/artists" component={Artists} />
-                        <Route path="/login" component={Login} />
-                        <Route path="/unauthorized" component={Unauthorized} />
-                        <Route path="/logged-out" component={LoggedOut} />
-                        <Route path="/protected" component={Protected} />
-                        <Route path="/" component={Home} />
-                        <Route component={NotFound} />
-                    </Switch>
+                    <ErrorBoundary>
+                        <Switch>
+                            <Route path="/health" component={Health} />
+                            <Route path="/artists/:artistId" component={Artist} />
+                            <Route path="/artists" component={Artists} />
+                            <Route path="/login" component={Login} />
+                            <Route path="/unauthorized" component={Unauthorized} />
+                            <Route path="/logged-out" component={LoggedOut} />
+                            <Route path="/protected" component={Protected} />
+                            <Route path="/error-demo" component={ErrorDemo} />
+                            <Route path="/" component={Home} />
+                            <Route component={NotFound} />
+                        </Switch>
+                    </ErrorBoundary>
                 </Router>
             </AuthContextProvider>
         </ApolloProvider>

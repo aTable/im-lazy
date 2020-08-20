@@ -30,30 +30,35 @@ namespace Your.Namespace.Api.DataAccess
                         Id = 1,
                         Name = "Inhale, Don't Breathe",
                         ReleaseDate = DateTime.Parse("2012-01-01"),
+                        MyRating = MyRating.None,
                     },
                     new Album
                     {
                         Id = 2,
                         Name = "Cloud Factory",
                         ReleaseDate = DateTime.Parse("2014-01-01"),
+                        MyRating = MyRating.Okayish,
                     },
                     new Album
                     {
                         Id = 3,
                         Name = "King of Everything",
                         ReleaseDate = DateTime.Parse("2016-01-01"),
+                        MyRating = MyRating.Legendary,
                     },
                     new Album
                     {
                         Id = 4,
                         Name = "Micro",
                         ReleaseDate = DateTime.Parse("2019-01-01"),
+                        MyRating = MyRating.Okayish,
                     },
                     new Album
                     {
                         Id = 5,
                         Name = "Macro",
                         ReleaseDate = DateTime.Parse("2019-01-01"),
+                        MyRating = MyRating.Okayish,
                     }
                 }
             };
@@ -76,42 +81,49 @@ namespace Your.Namespace.Api.DataAccess
                         Id = 6,
                         Name = "Scream Bloody Gore",
                         ReleaseDate = DateTime.Parse("1987-01-01"),
+                        MyRating = MyRating.None,
                     },
                     new Album
                     {
                         Id = 7,
                         Name = "Leprosy",
                         ReleaseDate = DateTime.Parse("1988-01-01"),
+                        MyRating = MyRating.None,
                     },
                     new Album
                     {
                         Id = 8,
                         Name = "Spiritual Healing",
                         ReleaseDate = DateTime.Parse("1990-01-01"),
+                        MyRating = MyRating.None,
                     },
                     new Album
                     {
                         Id = 9,
                         Name = "Human",
                         ReleaseDate = DateTime.Parse("1991-01-01"),
+                        MyRating = MyRating.None,
                     },
                     new Album
                     {
                         Id = 10,
                         Name = "Individual Thought Patterns",
                         ReleaseDate = DateTime.Parse("1993-01-01"),
+                        MyRating = MyRating.None,
                     },
                     new Album
                     {
                         Id = 11,
                         Name = "Symbolic",
                         ReleaseDate = DateTime.Parse("1995-01-01"),
+                        MyRating = MyRating.None,
                     },
                     new Album
                     {
                         Id = 12,
                         Name = "The Sound of Perseverance",
                         ReleaseDate = DateTime.Parse("1998-01-01"),
+                        MyRating = MyRating.Legendary,
                     }
                 }
             };
