@@ -6,7 +6,11 @@ interface IProtectedProps {}
 const Protected = (props: IProtectedProps) => {
     const [values, setValues] = useState<string[]>([])
     useEffect(() => {
-        getProtectedValue().then((res) => setValues(res))
+        getProtectedValue()
+            .then((res) => setValues(res))
+            .catch((err) =>
+                console.log('error boundaries dont catch async errors so caughting this cause its getting annoying')
+            )
     }, [])
     return (
         <div className="container">

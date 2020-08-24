@@ -6,6 +6,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Health from './pages/Health'
 import Artists from './pages/Artists'
+import AlbumFinder from './pages/AlbumFinder'
 import Artist from './pages/Artist'
 import Protected from './pages/Protected'
 import ErrorDemo from './pages/ErrorDemo'
@@ -57,6 +58,7 @@ const App = (props: IAppProps) => {
                             <Route path="/health" component={Health} />
                             <Route path="/artists/:artistId" component={Artist} />
                             <Route path="/artists" component={Artists} />
+                            <Route path="/album-finder" component={AlbumFinder} />
                             <Route path="/login" component={Login} />
                             <Route path="/unauthorized" component={Unauthorized} />
                             <Route path="/logged-out" component={LoggedOut} />

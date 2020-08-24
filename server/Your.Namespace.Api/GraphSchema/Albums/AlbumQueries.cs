@@ -17,10 +17,10 @@ namespace Your.Namespace.Api.GraphSchema.Albums
     [ExtendObjectType(Name = "Query")]
     public class AlbumQueries
     {
-        //[UsePaging]
-        //[UseFiltering]
-        //[UseSorting]
+        [UsePaging]
         [UseSelection]
+        [UseFiltering]
+        [UseSorting]
         public IQueryable<Album> GetAlbums(
             [Service] Context context) =>
             context.Albums;

@@ -13,6 +13,7 @@ namespace Your.Namespace.Api.DataAccess
         public Context(DbContextOptions<Context> options)
             : base(options)
         {
+
         }
 
         public DbSet<Artist> Artists { get; set; }
@@ -22,6 +23,11 @@ namespace Your.Namespace.Api.DataAccess
         {
             base.OnModelCreating(builder);
             builder.Entity<Artist>().HasMany(x => x.Albums).WithOne(x => x.Artist);
+            builder.Entity<Artist>().HasKey(x => x.Id);
+            builder.Entity<Artist>().Property(x => x.Id).ValueGeneratedOnAdd();
+
+            builder.Entity<Album>().HasKey(x => x.Id);
+            builder.Entity<Album>().Property(x => x.Id).ValueGeneratedOnAdd();
         }
     }
 }

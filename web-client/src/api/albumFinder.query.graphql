@@ -1,0 +1,23 @@
+query AlbumFinder($name: String!, $pageSize: PaginationAmount!, $cursor: String) {
+    albums(first: $pageSize, where: { name_contains: $name }, after: $cursor) {
+        nodes {
+            id
+            name
+            releaseDate
+            myRating
+        }
+        edges {
+            node {
+                id
+                name
+                releaseDate
+                myRating
+            }
+        }
+        pageInfo {
+            hasNextPage
+            endCursor
+        }
+        totalCount
+    }
+}
