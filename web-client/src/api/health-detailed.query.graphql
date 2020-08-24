@@ -1,0 +1,6 @@
+query GetHealthDetailed {
+    health {
+        apiStatus
+        databaseStatus
+    }
+}

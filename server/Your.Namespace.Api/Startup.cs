@@ -152,7 +152,7 @@ namespace Your.Namespace.Api
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(Policies.User, policy => policy.RequireClaim("aud"));
-                options.AddPolicy(Policies.God, policy => policy.RequireAssertion(context => context.User.HasClaim(x => x.Type == ClaimTypes.Upn && x.Value == "fail")));
+                options.AddPolicy(Policies.God, policy => policy.RequireAssertion(context => context.User.HasClaim(x => x.Type == ClaimTypes.Upn && x.Value == "god")));
             });
 
             services.AddAuthentication("Bearer")

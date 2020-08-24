@@ -132,7 +132,7 @@ const AlbumFinder = (props: IAlbumFinderProps) => {
                     <tr>
                         <td>
                             <button className="btn btn-secondary" onClick={() => loadMorePagination()}>
-                                <i className="fas fa-step-forward" />
+                                <i className="fas fa-caret-down" /> More
                             </button>
                         </td>
                     </tr>

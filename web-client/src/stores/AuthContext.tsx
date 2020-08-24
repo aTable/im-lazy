@@ -29,7 +29,7 @@ export const reducer = (state: IAuthContext, action: IAuthActions): IAuthContext
             return {
                 ...state,
                 user: action.payload,
-                token: action.payload.access_token,
+                token: action.payload.id_token,
                 claims: undefined, //decode(action.payload),
             }
         case 'LOGOUT':

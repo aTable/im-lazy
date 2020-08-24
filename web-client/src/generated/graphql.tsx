@@ -88,6 +88,7 @@ export type Album = {
 export type Health = {
   __typename?: 'Health';
   apiStatus?: Maybe<Scalars['String']>;
+  databaseStatus?: Maybe<Scalars['String']>;
 };
 
 export type AlbumFilter = {
@@ -304,6 +305,17 @@ export type DeleteAlbumMutation = (
   & { deleteAlbum?: Maybe<(
     { __typename?: 'Album' }
     & Pick<Album, 'id' | 'name'>
+  )> }
+);
+
+export type GetHealthDetailedQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetHealthDetailedQuery = (
+  { __typename?: 'Query' }
+  & { health?: Maybe<(
+    { __typename?: 'Health' }
+    & Pick<Health, 'apiStatus' | 'databaseStatus'>
   )> }
 );
 
@@ -528,6 +540,39 @@ export function useDeleteAlbumMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteAlbumMutationHookResult = ReturnType<typeof useDeleteAlbumMutation>;
 export type DeleteAlbumMutationResult = Apollo.MutationResult<DeleteAlbumMutation>;
 export type DeleteAlbumMutationOptions = Apollo.BaseMutationOptions<DeleteAlbumMutation, DeleteAlbumMutationVariables>;
+export const GetHealthDetailedDocument = Apollo.gql`
+    query GetHealthDetailed {
+  health {
+    apiStatus
+    databaseStatus
+  }
+}
+    `;
+
+/**
+ * __useGetHealthDetailedQuery__
+ *
+ * To run a query within a React component, call `useGetHealthDetailedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetHealthDetailedQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetHealthDetailedQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetHealthDetailedQuery(baseOptions?: Apollo.QueryHookOptions<GetHealthDetailedQuery, GetHealthDetailedQueryVariables>) {
+        return Apollo.useQuery<GetHealthDetailedQuery, GetHealthDetailedQueryVariables>(GetHealthDetailedDocument, baseOptions);
+      }
+export function useGetHealthDetailedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetHealthDetailedQuery, GetHealthDetailedQueryVariables>) {
+          return Apollo.useLazyQuery<GetHealthDetailedQuery, GetHealthDetailedQueryVariables>(GetHealthDetailedDocument, baseOptions);
+        }
+export type GetHealthDetailedQueryHookResult = ReturnType<typeof useGetHealthDetailedQuery>;
+export type GetHealthDetailedLazyQueryHookResult = ReturnType<typeof useGetHealthDetailedLazyQuery>;
+export type GetHealthDetailedQueryResult = Apollo.QueryResult<GetHealthDetailedQuery, GetHealthDetailedQueryVariables>;
 export const GetHealthDocument = Apollo.gql`
     query GetHealth {
   health {

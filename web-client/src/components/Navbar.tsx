@@ -35,7 +35,7 @@ const NavBar = (props: INavBarProps) => {
                     <NavItem to="/album-finder">Album Finder</NavItem>
                     <NavItem to="/error-demo">Error Demo</NavItem>
                 </ul>
-                {state.token && (
+                {state.user && (
                     <button onClick={logout} className="btn btn-secondary">
                         Logout <i className="fa fa-times" />
                     </button>

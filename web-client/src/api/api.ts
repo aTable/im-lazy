@@ -1,11 +1,37 @@
 import axios, { AxiosResponse, AxiosError } from 'axios'
 import config from '../config'
 import { IWeatherForecast } from '../types/server'
-import { ApolloClient, InMemoryCache } from '@apollo/client'
+import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client'
+import { setContext } from '@apollo/client/link/context'
+import { authKeys } from '../stores/AuthContext'
+import { User } from 'oidc-client'
+
+const httpLink = createHttpLink({
+    uri: `${config.serverUri}/graphql`,
+})
+const authLink = setContext((_, { headers }) => {
+    const userSerialized = localStorage.getItem(authKeys.user)
+    if (!userSerialized)
+        return {
+            headers: {
+                ...headers,
+                wtf: 'wtf',
+            },
+        }
+
+    const user: User = User.fromStorageString(userSerialized)
+    return {
+        headers: {
+            ...headers,
+            Authorization: `Bearer ${user.id_token}`,
+        },
+    }
+})
 
 export const client = new ApolloClient({
-    uri: config.serverUri + '/graphql',
+    link: authLink.concat(httpLink),
     cache: new InMemoryCache(),
+    //headers: { wtf: 'wtf2' },
 })
 
 const backend = axios.create({

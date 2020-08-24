@@ -19,6 +19,7 @@ namespace Your.Namespace.Api.GraphSchema.Health
             return new Health
             {
                 ApiStatus = random == 1 ? "we good" : "we not good",
+                DatabaseStatus = "online"
             };
         }
     }
