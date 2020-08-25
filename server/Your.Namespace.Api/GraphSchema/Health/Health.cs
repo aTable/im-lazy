@@ -13,6 +13,7 @@ namespace Your.Namespace.Api.GraphSchema.Health
     public class Health
     {
         public string ApiStatus { get; set; }
+
         [Authorize]
         public string DatabaseStatus { get; set; }
     }

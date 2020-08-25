@@ -12,14 +12,8 @@ namespace Your.Namespace.Api
         public string WebClientOrigin { get; set; }
         public string AuthorizationServerUri { get; set; }
         public bool AuthorizationServerRequiresHttps { get; set; }
-        public GraphQLSettings GraphQLSettings { get; set; }
+        public int MaxPageSize { get; set; }
         public bool IsRunMigrations { get; set; }
         public bool IsRunSeed { get; set; }
-    }
-
-    public class GraphQLSettings
-    {
-        public bool EnableMetrics { get; set; }
-        public bool ExposeExceptions { get; set; }
     }
 }

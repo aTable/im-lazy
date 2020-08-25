@@ -22,6 +22,7 @@ using Your.Namespace.Api.GraphSchema.Albums;
 using Your.Namespace.Api.GraphSchema.Artists;
 using Your.Namespace.Api.GraphSchema.Health;
 using System.Threading.Tasks;
+using HotChocolate.Types;
 
 namespace Your.Namespace.Api
 {
@@ -110,7 +111,11 @@ namespace Your.Namespace.Api
 
             //services.AddInMemorySubscriptionProvider();
             services.AddGraphQL(sp => SchemaBuilder.New()
+                 .AddType(new PaginationAmountType(appSettings.MaxPageSize))
                  .AddAuthorizeDirectiveType()
+                 .ModifyOptions(options =>
+                 {
+                 })
                  .AddServices(sp)
                  .AddQueryType(d => d.Name("Query"))
                  .AddMutationType(d => d.Name("Mutation"))
