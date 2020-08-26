@@ -67,3 +67,17 @@ dotnet dev-certs https -ep $HOME/.aspnet/https/yournamespace.pfx -p password -v
 ```
 
 When running the web client without trusting certificates, you may need to visit each web server individually in your browser and accept the risks for temporary access.
+
+## Developing 
+
+Update `NuGet` packages
+
+```bash
+find . -type f -name "*.csproj" -exec bash -c 'cd $(dirname $0) && dotnet list package --outdated | sed -n -E "s/^.*> (\S*) .*([0-9].[0-9].[0-9]) $/dotnet add package \1 --version \2/gmip" | sh' {} \;
+```
+
+Update `npm` packages
+
+```bash
+npx npm-check-updates -u
+```

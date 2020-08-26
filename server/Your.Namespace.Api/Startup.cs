@@ -115,6 +115,7 @@ namespace Your.Namespace.Api
                  .AddAuthorizeDirectiveType()
                  .ModifyOptions(options =>
                  {
+
                  })
                  .AddServices(sp)
                  .AddQueryType(d => d.Name("Query"))
