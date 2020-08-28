@@ -365,7 +365,7 @@ override.tf.json
 build
 server/Your.Namespace.IdentityServer/yournamespace-sts.db
 server/Your.Namespace.IdentityServer/logs
-server/Your.Namespace.Api/yournamespace.db
+server/Your.Namespace.Api/yournamespaceapi.db
 
 .terraform/
 terraform.tfstate
@@ -374,3 +374,4 @@ tempkey.rsa
 coverage.json
 coverage.*.xml
 web-client/dist
+server/grafana/grafana.db

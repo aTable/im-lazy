@@ -66,7 +66,19 @@ namespace Your.Namespace.Api
             {
                 endpoints.MapControllers();
             });
+
+            var counter = Metrics.CreateCounter(appSettings.ApiName.Replace("-", "_") + "_endpoint_counter", $"Counts requests to the {appSettings.ApiName} endpoints", new CounterConfiguration
+            {
+                LabelNames = new[] { "method", "endpoint" }
+            });
+            app.Use((ctx, next) =>
+            {
+                counter.WithLabels(ctx.Request.Method, ctx.Request.Path).Inc();
+                return next();
+            });
             app.UseMetricServer();
+            app.UseHttpMetrics();
+
             app.UseGraphQL(path: "/graphql");
             app.UsePlayground(queryPath: "/graphql", uiPath: "/playground");
 
