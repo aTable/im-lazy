@@ -18,9 +18,9 @@ import { mutateQueryStringWithoutReload } from './utils/utils'
 import LoggedOut from './pages/LoggedOut'
 import { client } from './api/api'
 import { ApolloProvider } from '@apollo/client'
-import NotificationSystem from 'react-notification-system'
+import NotificationSystem, { System } from 'react-notification-system'
 import ErrorBoundary from './components/ErrorBoundary'
-
+import { UiContextProvider } from './stores/UiContext'
 const mgr = new Oidc.UserManager(config.oidc)
 // @ts-ignore
 window.mgr = mgr
@@ -43,34 +43,33 @@ interface IAppProps {}
  * @param props The props
  */
 const App = (props: IAppProps) => {
-    const notificationSystem = useRef(null)
-    // @ts-ignore
-    window.notificationSystem = notificationSystem
-
+    const notificationSystem = useRef<System>(null)
     return (
-        <ApolloProvider client={client}>
+        <UiContextProvider notificationSystem={notificationSystem}>
             <NotificationSystem ref={notificationSystem} />
-            <AuthContextProvider notificationSystem={notificationSystem}>
-                <Router>
-                    <Navbar />
-                    <ErrorBoundary>
-                        <Switch>
-                            <Route path="/health" component={Health} />
-                            <Route path="/artists/:artistId" component={Artist} />
-                            <Route path="/artists" component={Artists} />
-                            <Route path="/album-finder" component={AlbumFinder} />
-                            <Route path="/login" component={Login} />
-                            <Route path="/unauthorized" component={Unauthorized} />
-                            <Route path="/logged-out" component={LoggedOut} />
-                            <Route path="/protected" component={Protected} />
-                            <Route path="/error-demo" component={ErrorDemo} />
-                            <Route path="/" component={Home} />
-                            <Route component={NotFound} />
-                        </Switch>
-                    </ErrorBoundary>
-                </Router>
-            </AuthContextProvider>
-        </ApolloProvider>
+            <ApolloProvider client={client}>
+                <AuthContextProvider>
+                    <Router>
+                        <Navbar />
+                        <ErrorBoundary>
+                            <Switch>
+                                <Route path="/health" component={Health} />
+                                <Route path="/artists/:artistId" component={Artist} />
+                                <Route path="/artists" component={Artists} />
+                                <Route path="/album-finder" component={AlbumFinder} />
+                                <Route path="/login" component={Login} />
+                                <Route path="/unauthorized" component={Unauthorized} />
+                                <Route path="/logged-out" component={LoggedOut} />
+                                <Route path="/protected" component={Protected} />
+                                <Route path="/error-demo" component={ErrorDemo} />
+                                <Route path="/" component={Home} />
+                                <Route component={NotFound} />
+                            </Switch>
+                        </ErrorBoundary>
+                    </Router>
+                </AuthContextProvider>
+            </ApolloProvider>
+        </UiContextProvider>
     )
 }
 

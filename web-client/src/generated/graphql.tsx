@@ -202,6 +202,13 @@ export type AlbumEdge = {
   node?: Maybe<Album>;
 };
 
+
+export enum MyRating {
+  None = 'NONE',
+  Okayish = 'OKAYISH',
+  Legendary = 'LEGENDARY'
+}
+
 export type CreateArtistInput = {
   name?: Maybe<Scalars['String']>;
 };
@@ -214,13 +221,6 @@ export type UpdateArtistInput = {
 export type DeleteAlbumInput = {
   albumId: Scalars['Int'];
 };
-
-
-export enum MyRating {
-  None = 'NONE',
-  Okayish = 'OKAYISH',
-  Legendary = 'LEGENDARY'
-}
 
 export type AlbumFinderQueryVariables = Exact<{
   name: Scalars['String'];

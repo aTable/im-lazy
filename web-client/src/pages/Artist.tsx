@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import {
     GetArtistQuery,
@@ -13,6 +13,7 @@ import { RouteComponentProps } from 'react-router-dom'
 import { useFormik } from 'formik'
 import { string, object } from 'yup'
 import LoadingRoot from '../components/LoadingRoot'
+import UiContext from '../stores/UiContext'
 
 const updateArtistSchema = object().shape({
     artistName: string().required().min(2),
@@ -29,6 +30,7 @@ interface RouteParams {
 interface IArtistProps extends RouteComponentProps<RouteParams> {}
 
 const Artists = (props: IArtistProps) => {
+    const uiContext = useContext(UiContext)
     const { loading, error, data, refetch } = useQuery<GetArtistQuery>(GetArtistDocument, {
         variables: {
             id: parseInt(props.match.params.artistId, 10),
@@ -56,17 +58,24 @@ const Artists = (props: IArtistProps) => {
         },
         onCompleted(res) {
             refetch()
-            // @ts-ignore
-            window.notificationSystem.current.addNotification({ message: 'Save successful', level: 'success' })
+            uiContext.dispatch({
+                type: 'NOTIFY',
+                payload: {
+                    message: 'Updated details successfully',
+                    level: 'success',
+                },
+            })
         },
     })
     const [deleteAlbum] = useMutation<DeleteAlbumMutation>(DeleteAlbumDocument, {
         onCompleted() {
             refetch()
-            // @ts-ignore
-            window.notificationSystem.current.addNotification({
-                message: 'Removed album successfully',
-                level: 'success',
+            uiContext.dispatch({
+                type: 'NOTIFY',
+                payload: {
+                    message: 'Removed album successfully',
+                    level: 'success',
+                },
             })
         },
     })

@@ -123,7 +123,8 @@ namespace Your.Namespace.Api
 
             //services.AddInMemorySubscriptionProvider();
             services.AddGraphQL(sp => SchemaBuilder.New()
-                 .AddType(new PaginationAmountType(appSettings.MaxPageSize))
+                 // TODO: registering this seems to override all IntType to PaginationAmtType
+                 //.AddType(new PaginationAmountType(appSettings.MaxPageSize))
                  .AddAuthorizeDirectiveType()
                  .ModifyOptions(options =>
                  {
@@ -132,6 +133,9 @@ namespace Your.Namespace.Api
                  .AddServices(sp)
                  .AddQueryType(d => d.Name("Query"))
                  .AddMutationType(d => d.Name("Mutation"))
+                 .AddType<Artist>()
+                 .AddType<Album>()
+                 .AddType<Health>()
                  //.AddSubscriptionType(d => d.Name("Subscription"))
                  .AddType<HealthQueries>()
                  .AddType<ArtistQueries>()
@@ -139,9 +143,6 @@ namespace Your.Namespace.Api
                  .AddType<AlbumQueries>()
                  .AddType<AlbumMutations>()
                  //.AddType<ArtistSubscriptions>()
-                 .AddType<Artist>()
-                 .AddType<Album>()
-                 .AddType<Health>()
                  .Create()
             );
 

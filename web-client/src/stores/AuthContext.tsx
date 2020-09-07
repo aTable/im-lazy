@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, Dispatch, useEffect, MutableRefObject, ReactNode } from 'react'
+import React, { createContext, useReducer, Dispatch, useEffect, ReactNode } from 'react'
 import { setBearer } from '../api/api'
 import { User } from 'oidc-client'
 
@@ -51,7 +51,6 @@ export interface IAuthContextProps {
 }
 
 export interface IAuthContextProviderProps {
-    notificationSystem: MutableRefObject<null>
     children: ReactNode
 }
 export const AuthContextProvider = (props: IAuthContextProviderProps) => {

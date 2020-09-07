@@ -27,8 +27,8 @@ namespace Your.Namespace.Api.GraphSchema.Artists
         [UseFirstOrDefault]
         [UseSelection]
         public IQueryable<Artist> GetArtist(
-            int id,
-            [Service] Context context) =>
+            [Service] Context context,
+            int id) =>
             context.Artists.Where(x => x.Id == id);
     }
 }
