@@ -91,3 +91,32 @@ services:
     restart: always
     deploy:
       mode: global
+
+  zaproxy:
+    container_name: zaproxy
+    image: owasp/zap2docker-stable
+    user: "zap"
+    ports:
+      - 8080:8080
+    # network_mode: host
+    command: zap-webswing.sh
+    # command: zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.key=123456
+
+  identityserver:
+    container_name: yournamespaceidentityserver
+    build:
+      context: ../
+      dockerfile: ./server/Your.Namespace.IdentityServer/Dockerfile
+      # target: debug
+
+      args:
+        hello: "world"
+    restart: "unless-stopped"
+    network_mode: host
+    environment:
+      ASPNETCORE_ENVIRONMENT: development
+    volumes:
+      - ${HOME}/.aspnet/https:/https
+    ports:
+      - "9082:9082"
+      - "9083:9083"

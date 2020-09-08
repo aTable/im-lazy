@@ -4,6 +4,7 @@ EXPOSE 9080
 EXPOSE 9081
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
+
 WORKDIR /src
 COPY ["Your.Namespace.Api/Your.Namespace.Api.csproj", "Your.Namespace.Api/"]
 RUN dotnet restore "Your.Namespace.Api/Your.Namespace.Api.csproj"
