@@ -6,13 +6,13 @@ metadata:
     kompose.version: 1.21.0 (992df58d8)
   creationTimestamp: 2020-10-02T00:00:00Z
   labels:
-    io.kompose.service: identityserver
-  name: identityserver
+    io.kompose.service: yournamespaceapi
+  name: yournamespaceapi
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: identityserver
+      io.kompose.service: yournamespaceapi
   strategy:
     type: Recreate
   template:
@@ -22,34 +22,34 @@ spec:
         kompose.version: 1.21.0 (992df58d8)
       creationTimestamp: 2020-10-02T00:00:00Z
       labels:
-        io.kompose.service: identityserver
+        io.kompose.service: yournamespaceapi
     spec:
       containers:
       - env:
         - name: ASPNETCORE_ENVIRONMENT
           value: development
         - name: ASPNETCORE_HTTPS_PORT
-          value: "9083"
+          value: "9081"
         - name: ASPNETCORE_Kestrel__Certificates__Default__Password
           value: password
         - name: ASPNETCORE_Kestrel__Certificates__Default__Path
           value: /https/yourentirenamespace.pfx
         - name: ASPNETCORE_URLS
           value: https://+;http://+
-        image: identityserver
-        imagePullPolicy: ""
-        name: yournamespaceidentityserver
+        image: yournamespaceapi
+        imagePullPolicy: Always
+        name: yournamespaceapi
         ports:
-        - containerPort: 9082
-        - containerPort: 9083
+        - containerPort: 9080
+        - containerPort: 9081
         resources: {}
         volumeMounts:
         - mountPath: /https
-          name: identityserver-claim0
+          name: yournamespaceapi-claim0
       restartPolicy: Always
       serviceAccountName: ""
       volumes:
-      - name: identityserver-claim0
+      - name: yournamespaceapi-claim0
         persistentVolumeClaim:
-          claimName: identityserver-claim0
+          claimName: yournamespaceapi-claim0
 status: {}

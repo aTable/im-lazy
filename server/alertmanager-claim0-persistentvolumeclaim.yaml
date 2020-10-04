@@ -3,8 +3,8 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: 2020-10-02T00:00:00Z
   labels:
-    io.kompose.service: identityserver-claim0
-  name: identityserver-claim0
+    io.kompose.service: alertmanager-claim0
+  name: alertmanager-claim0
 spec:
   accessModes:
   - ReadWriteOnce

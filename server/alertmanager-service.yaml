@@ -6,17 +6,14 @@ metadata:
     kompose.version: 1.21.0 (992df58d8)
   creationTimestamp: 2020-10-02T00:00:00Z
   labels:
-    io.kompose.service: identityserver
-  name: identityserver
+    io.kompose.service: alertmanager
+  name: alertmanager
 spec:
   ports:
-  - name: "9082"
-    port: 9082
-    targetPort: 9082
-  - name: "9083"
-    port: 9083
-    targetPort: 9083
+  - name: "9086"
+    port: 9086
+    targetPort: 9093
   selector:
-    io.kompose.service: identityserver
+    io.kompose.service: alertmanager
 status:
   loadBalancer: {}

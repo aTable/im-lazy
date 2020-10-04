@@ -3,11 +3,11 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: 2020-10-02T00:00:00Z
   labels:
-    io.kompose.service: identityserver-claim0
-  name: identityserver-claim0
+    io.kompose.service: node-exporter-claim1
+  name: node-exporter-claim1
 spec:
   accessModes:
-  - ReadWriteOnce
+  - ReadOnlyMany
   resources:
     requests:
       storage: 100Mi

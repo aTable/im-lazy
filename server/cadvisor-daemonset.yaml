@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: 2020-10-02T00:00:00Z
+  labels:
+    io.kompose.service: cadvisor
+  name: cadvisor
+spec:
+  selector:
+      matchLabels:
+        io.kompose.service: cadvisor
+  template:
+    metadata:
+      creationTimestamp: 2020-10-02T00:00:00Z
+      labels:
+        io.kompose.service: cadvisor
+    spec:
+      containers:
+      - image: google/cadvisor:latest
+        imagePullPolicy: "Always"
+        name: cadvisor
+        ports:
+        - containerPort: 8080
+        resources: {}
+        volumeMounts:
+        - mountPath: /rootfs
+          name: cadvisor-claim0
+          readOnly: true
+        - mountPath: /var/run
+          name: cadvisor-claim1
+        - mountPath: /sys
+          name: cadvisor-claim2
+          readOnly: true
+        - mountPath: /var/lib/docker
+          name: cadvisor-claim3
+          readOnly: true
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: cadvisor-claim0
+        persistentVolumeClaim:
+          claimName: cadvisor-claim0
+          readOnly: true
+      - name: cadvisor-claim1
+        persistentVolumeClaim:
+          claimName: cadvisor-claim1
+      - name: cadvisor-claim2
+        persistentVolumeClaim:
+          claimName: cadvisor-claim2
+          readOnly: true
+      - name: cadvisor-claim3
+        persistentVolumeClaim:
+          claimName: cadvisor-claim3
+          readOnly: true
+status:
+  currentNumberScheduled: 0
+  desiredNumberScheduled: 0
+  numberMisscheduled: 0
+  numberReady: 0

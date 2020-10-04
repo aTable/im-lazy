@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: 2020-10-02T00:00:00Z
+  labels:
+    io.kompose.service: zaproxy
+  name: zaproxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: zaproxy
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: 2020-10-02T00:00:00Z
+      labels:
+        io.kompose.service: zaproxy
+    spec:
+      containers:
+      - args:
+        - zap-webswing.sh
+        image: owasp/zap2docker-stable
+        imagePullPolicy: Always
+        name: zaproxy
+        ports:
+        - containerPort: 8080
+        resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+      # volumes: null
+status: {}

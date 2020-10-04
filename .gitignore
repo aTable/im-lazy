@@ -375,3 +375,6 @@ coverage.json
 coverage.*.xml
 web-client/dist
 server/grafana/grafana.db
+server/prometheus
+!server/prometheus/prometheus.yml
+!server/prometheus/alert.rules

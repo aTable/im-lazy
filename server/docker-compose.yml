@@ -1,11 +1,12 @@
 # //NOTE:
 #   - build context is alongside the .sln file so we can build our containers using class libraries in other folders. This enables each project to contain its Dockerfile yet access the nearby folders
 
-version: "3"
+version: "3.4"
 services:
   prometheus:
     container_name: prometheus
     image: prom/prometheus:latest
+    user: "1000:1000"
     volumes:
       - ./prometheus/:/etc/prometheus/
       - ./prometheus/:/prometheus
@@ -36,7 +37,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORDDD=admin
     restart: always
     ports:
-      - 3000:3000
+      - "3001:3000"
     volumes:
       - ./grafana/:/var/lib/grafana
       - ./grafana/provisioning/:/etc/grafana/provisioning/
@@ -79,7 +80,7 @@ services:
     image: prom/node-exporter:latest
     volumes:
       - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
+      - /sys:/hos                                    t/sys:ro
       - /:/rootfs:ro
     command:
       - "--path.procfs=/host/proc"

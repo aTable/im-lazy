@@ -6,17 +6,14 @@ metadata:
     kompose.version: 1.21.0 (992df58d8)
   creationTimestamp: 2020-10-02T00:00:00Z
   labels:
-    io.kompose.service: identityserver
-  name: identityserver
+    io.kompose.service: zaproxy
+  name: zaproxy
 spec:
   ports:
-  - name: "9082"
-    port: 9082
-    targetPort: 9082
-  - name: "9083"
-    port: 9083
-    targetPort: 9083
+  - name: "8080"
+    port: 8080
+    targetPort: 8080
   selector:
-    io.kompose.service: identityserver
+    io.kompose.service: zaproxy
 status:
   loadBalancer: {}
