@@ -1,37 +1,19 @@
 {
     "name": "im-lazy",
-    "version": "0.3.2",
+    "version": "0.4.0",
     "private": true,
-    "scripts": {
-        "s": "npm run start",
-        "start": "npm run gql-codegen && cross-env HTTPS=true react-scripts start",
-        "build": "react-scripts build && npm run generate-docs",
-        "test": "react-scripts test --env=jsdom",
-        "eject": "react-scripts eject",
-        "generate-docs": "typedoc",
-        "gql-codegen": "NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen --config codegen.yml"
-    },
-    "browserslist": {
-        "production": [
-            ">0.2%",
-            "not dead",
-            "not op_mini all"
-        ],
-        "development": [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version"
-        ]
-    },
     "dependencies": {
         "@apollo/client": "^3.1.2",
         "@fortawesome/fontawesome-free": "^5.14.0",
-        "@types/jest": "26.0.8",
+        "@testing-library/jest-dom": "^5.11.6",
+        "@testing-library/react": "^11.2.2",
+        "@testing-library/user-event": "^12.2.2",
+        "@types/jest": "^26.0.15",
         "@types/jquery": "^3.5.1",
         "@types/jwt-decode": "^2.2.1",
-        "@types/react": "16.9.44",
-        "@types/react-dom": "16.9.8",
-        "@types/react-notification-system": "^0.2.39",
+        "@types/node": "^12.19.6",
+        "@types/react": "^16.14.1",
+        "@types/react-dom": "^16.9.10",
         "@types/react-router-dom": "^5.1.5",
         "axios": "^0.19.2",
         "bootstrap": "^4.5.1",
@@ -41,11 +23,13 @@
         "jwt-decode": "^2.2.0",
         "oidc-client": "^1.10.1",
         "popper.js": "^1.16.1",
-        "react": "^16.13.1",
-        "react-dom": "^16.13.1",
-        "react-notification-system": "^0.4.0",
+        "react": "^17.0.1",
+        "react-dom": "^17.0.1",
         "react-router-dom": "^5.2.0",
-        "typescript": "3.9.7",
+        "react-scripts": "4.0.1",
+        "react-toastify": "^6.1.0",
+        "typescript": "^4.1.2",
+        "web-vitals": "^0.2.4",
         "yup": "^0.29.3"
     },
     "devDependencies": {
@@ -64,7 +48,28 @@
         "node-sass-chokidar": "^1.5.0",
         "prettier": "^2.0.5",
         "react-scripts": "^3.4.3",
-        "react-test-renderer": "^16.13.1",
+        "react-test-renderer": "^17.0.1",
         "typedoc": "^0.18.0"
+    },
+    "scripts": {
+        "s": "npm run start",
+        "start": "npm run gql-codegen && react-scripts start",
+        "build": "react-scripts build && npm run generate-docs",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+        "generate-docs": "typedoc",
+        "gql-codegen": "NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen --config codegen.yml"
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
     }
 }

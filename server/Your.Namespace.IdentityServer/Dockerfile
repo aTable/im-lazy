@@ -8,10 +8,11 @@ RUN apt-get update && \
     apt-get install -y unzip procps && \
     curl -sSL https://aka.ms/getvsdbgsh | /bin/sh /dev/stdin -v latest -l /vsdbg
 WORKDIR /src
-COPY ["server/Your.Namespace.IdentityServer/Your.Namespace.IdentityServer.csproj", "server/Your.Namespace.IdentityServer/"]
-RUN dotnet restore "server/Your.Namespace.IdentityServer/Your.Namespace.IdentityServer.csproj"
-COPY . .
-WORKDIR "/src/server/Your.Namespace.IdentityServer"
+COPY ["Your.Namespace.IdentityServer.csproj", "Your.Namespace.IdentityServer/"]
+RUN dotnet restore "Your.Namespace.IdentityServer/Your.Namespace.IdentityServer.csproj"
+COPY [".", "./Your.Namespace.IdentityServer"]
+WORKDIR "/src/Your.Namespace.IdentityServer"
+RUN dotnet nuget locals all --clear
 RUN dotnet build "Your.Namespace.IdentityServer.csproj" -c Release -o /app/build
 
 FROM build AS publish

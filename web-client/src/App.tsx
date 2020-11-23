@@ -1,4 +1,5 @@
-import React, { useRef } from 'react'
+import React from 'react'
+import { ToastContainer } from 'react-toastify'
 import { HashRouter as Router, Route, Switch } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import NotFound from './pages/NotFound'
@@ -18,9 +19,9 @@ import { mutateQueryStringWithoutReload } from './utils/utils'
 import LoggedOut from './pages/LoggedOut'
 import { client } from './api/api'
 import { ApolloProvider } from '@apollo/client'
-import NotificationSystem, { System } from 'react-notification-system'
 import ErrorBoundary from './components/ErrorBoundary'
 import { UiContextProvider } from './stores/UiContext'
+
 const mgr = new Oidc.UserManager(config.oidc)
 // @ts-ignore
 window.mgr = mgr
@@ -43,10 +44,9 @@ interface IAppProps {}
  * @param props The props
  */
 const App = (props: IAppProps) => {
-    const notificationSystem = useRef<System>(null)
     return (
-        <UiContextProvider notificationSystem={notificationSystem}>
-            <NotificationSystem ref={notificationSystem} />
+        <UiContextProvider>
+            <ToastContainer />
             <ApolloProvider client={client}>
                 <AuthContextProvider>
                     <Router>

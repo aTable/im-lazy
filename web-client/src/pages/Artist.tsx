@@ -80,9 +80,15 @@ const Artists = (props: IArtistProps) => {
         },
     })
 
-    const { handleSubmit, handleChange, isSubmitting, dirty, values, errors, isValid } = useFormik<
-        IUpdateArtistFormData
-    >({
+    const {
+        handleSubmit,
+        handleChange,
+        isSubmitting,
+        dirty,
+        values,
+        errors,
+        isValid,
+    } = useFormik<IUpdateArtistFormData>({
         initialValues: {
             artistName: data?.artist?.name! || '',
         },

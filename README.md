@@ -81,3 +81,17 @@ Update `npm` packages
 ```bash
 npx npm-check-updates -u
 ```
+
+Launch k8s
+
+```bash
+eval $(minikube -p minikube docker-env)
+
+find -type f -name "*.yaml" -exec kubectl apply -f {} \;
+
+find -type f -name "*.yaml" | sed 's/.\///' | sed 's/$/,/' | xargs
+
+
+docker run --rm -p 9082:9082 -p 9083:9083 -v ~/.aspnet/https:/https -e "ASPNETCORE_URLS=https://+;http://+" -e "ASPNETCORE_HTTPS_PORT=9083" -e "ASPNETCORE_ENVIRONMENT=development" -e "ASPNETCORE_Kestrel__Certificates__Default__Password=password" -e "ASPNETCORE_Kestrel__Certificates__Default__Path=/https/yourentirenamespace.pfx"  yournamespaceidentityserver:latest
+```
+

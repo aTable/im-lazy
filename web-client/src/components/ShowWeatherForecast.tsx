@@ -18,7 +18,7 @@ const ShowWeatherForecast = (props: IShowWeatherForecastProps) => {
             </thead>
             <tbody>
                 {!props.weather || (props.weather.length <= 0 && <p>No weather data</p>)}
-                {props.weather?.map(x => (
+                {props.weather?.map((x) => (
                     <tr key={x.date.toString()}>
                         <td>{x.date.toString()}</td>
                         <td>{x.summary}</td>

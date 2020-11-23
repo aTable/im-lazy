@@ -8,12 +8,16 @@ import {
 } from '../generated/graphql'
 import Loading from '../components/Loading'
 import { useLogin } from '../stores/hooks'
+import { toast } from 'react-toastify'
 
 interface IHealthProps {}
 
 const Health = (props: IHealthProps) => {
     const { loading, error, data } = useQuery<GetHealthQuery>(GetHealthDocument, {
         pollInterval: 500,
+        onCompleted: () => {
+            toast('health completed')
+        },
     })
 
     const healthDetailed = useQuery<GetHealthDetailedQuery>(GetHealthDetailedDocument)

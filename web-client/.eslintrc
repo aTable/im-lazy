@@ -1,14 +1,9 @@
 {
-    "extends": ["react-app", "prettier", "plugin:react-hooks/recommended"],
+    "extends": ["react-app", "react-app/jest", "prettier", "plugin:react-hooks/recommended"],
     "plugins": ["prettier", "react-hooks"],
     "rules": {
         "prettier/prettier": "error",
         "react-hooks/rules-of-hooks": "error",
-        "react-hooks/exhaustive-deps": [
-            "warn",
-            {
-                "additionalHooks": "useRecoilCallback"
-            }
-        ]
+        "react-hooks/exhaustive-deps": ["warn"]
     }
 }

@@ -3,6 +3,7 @@ kind: Service
 metadata:
   annotations:
     kompose.cmd: kompose convert
+    kompose.service.type: LoadBalancer
     kompose.version: 1.21.0 (992df58d8)
   creationTimestamp: 2020-10-02T00:00:00Z
   labels:
@@ -18,5 +19,6 @@ spec:
     targetPort: 9083
   selector:
     io.kompose.service: identityserver
+  type: LoadBalancer
 status:
   loadBalancer: {}

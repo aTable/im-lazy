@@ -4,6 +4,7 @@ metadata:
   annotations:
     kompose.cmd: kompose convert
     kompose.version: 1.21.0 (992df58d8)
+    kompose.service.type: LoadBalancer
   creationTimestamp: 2020-10-02T00:00:00Z
   labels:
     io.kompose.service: grafana
@@ -15,5 +16,6 @@ spec:
     targetPort: 3000
   selector:
     io.kompose.service: grafana
+  type: LoadBalancer
 status:
   loadBalancer: {}

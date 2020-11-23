@@ -30,7 +30,7 @@ export function debouncePromise(fn: Function, ms: number = 0) {
     let resolves = []
 
     // @ts-ignore
-    return function(...args) {
+    return function (...args) {
         // Run the function after a certain amount of time
         // @ts-ignore
         clearTimeout(timer)
@@ -39,11 +39,11 @@ export function debouncePromise(fn: Function, ms: number = 0) {
             // each promise that has been created since the last time the inner function was run
             let result = fn(...args)
             // @ts-ignore
-            resolves.forEach(r => r(result))
+            resolves.forEach((r) => r(result))
             resolves = []
         }, ms)
 
-        return new Promise(r => resolves.push(r))
+        return new Promise((r) => resolves.push(r))
     }
 }
 
@@ -70,7 +70,7 @@ export function resolveWhen(predicate: Function) {
     const retryCount = 10
     let count = 0
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
         const intervalId = window.setInterval(() => {
             count++
             if (predicate()) {
