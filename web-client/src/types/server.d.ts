@@ -4,3 +4,9 @@ export interface IWeatherForecast {
     temperatureF: number
     summary: string
 }
+
+export interface Todo {
+    id: number
+    label: string
+    isDone: boolean
+}

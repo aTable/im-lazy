@@ -1,5 +1,5 @@
 import React, { Component, ReactNode, ErrorInfo } from 'react'
-
+import Modal from 'react-modal'
 export interface IErrorBoundaryProps {
     children: ReactNode
 }
@@ -7,12 +7,13 @@ export interface IErrorBoundaryProps {
 export interface IErrorBoundaryState {
     error?: Error
     errorInfo?: ErrorInfo
+    isErrorModalOpen: boolean
 }
 
 class ErrorBoundary extends Component<IErrorBoundaryProps, IErrorBoundaryState> {
     constructor(props: IErrorBoundaryProps) {
         super(props)
-        this.state = { error: undefined, errorInfo: undefined }
+        this.state = { error: undefined, errorInfo: undefined, isErrorModalOpen: false }
     }
 
     componentDidCatch(error: any, errorInfo: any) {
@@ -28,21 +29,56 @@ class ErrorBoundary extends Component<IErrorBoundaryProps, IErrorBoundaryState> 
             return (
                 <div className="container">
                     <h2>Something went wrong.</h2>
-                    <p>Click this from another page otherwise Error Demo will re-trigger</p>
-                    <button
-                        className="btn btn-info"
-                        onClick={() => this.setState({ error: undefined, errorInfo: undefined })}
-                    >
-                        Clear Error
-                    </button>
+                    <p>
+                        The error boundary is shown on all routes. Navigate elsewhere from the navbar above then click{' '}
+                        <span
+                            style={{
+                                cursor: 'pointer',
+                                fontWeight: 'bold',
+                                fontStyle: 'italic',
+                                textDecoration: 'underline',
+                                fontSize: '1.5rem',
+                            }}
+                            onClick={() => this.setState({ error: undefined, errorInfo: undefined })}
+                        >
+                            Clear Error
+                        </span>
+                        &nbsp;otherwise you'll re-trigger the error (by being on the current route)
+                    </p>
 
                     <br />
                     <br />
-                    <details style={{ whiteSpace: 'pre-wrap' }}>
-                        {this.state.error && this.state.error.toString()}
-                        <br />
-                        {this.state.errorInfo.componentStack}
-                    </details>
+                    <button className="btn btn-info" onClick={() => this.setState({ isErrorModalOpen: true })}>
+                        Show error details
+                    </button>
+
+                    <Modal
+                        isOpen={this.state.isErrorModalOpen}
+                        onAfterOpen={() => {}}
+                        onRequestClose={() => this.setState({ isErrorModalOpen: false })}
+                        style={{}}
+                        contentLabel="Content Label"
+                        appElement={document.querySelector('#root')!}
+                    >
+                        <div style={{ display: 'flex' }}>
+                            <h2>My Modal</h2>
+                            <button
+                                className="btn btn-info"
+                                style={{ marginLeft: 'auto' }}
+                                onClick={() => this.setState({ isErrorModalOpen: false })}
+                            >
+                                <i className="fa fa-times" />
+                                &nbsp;Close
+                            </button>
+                        </div>
+                        <div>
+                            <pre style={{ whiteSpace: 'pre-wrap' }}>
+                                {this.state.error && this.state.error.toString()}
+                                <br />
+                                {this.state.errorInfo.componentStack}
+                            </pre>
+                        </div>
+                    </Modal>
                 </div>
             )
         }

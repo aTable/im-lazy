@@ -1,6 +1,6 @@
 import axios, { AxiosResponse, AxiosError } from 'axios'
 import config from '../config'
-import { IWeatherForecast } from '../types/server'
+import { IWeatherForecast, Todo } from '../types/server'
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { authKeys } from '../stores/AuthContext'
@@ -65,4 +65,13 @@ export function getWeather(): Promise<IWeatherForecast[]> {
 
 export function getProtectedValue(): Promise<string[]> {
     return backend.get(`/api/protectedvalues`)
+}
+
+const baseDotnet5Uri = 'https://localhost:49163'
+export function getTodos(): Promise<Todo[]> {
+    return axios.get(`${baseDotnet5Uri}/api/todos`).then((res) => res.data)
+}
+
+export function getTodo(id: number): Promise<Todo> {
+    return axios.get(`${baseDotnet5Uri}/api/todos/${id}`).then((res) => res.data)
 }

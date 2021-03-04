@@ -21,6 +21,10 @@ import { client } from './api/api'
 import { ApolloProvider } from '@apollo/client'
 import ErrorBoundary from './components/ErrorBoundary'
 import { UiContextProvider } from './stores/UiContext'
+import Todos from './pages/Todos'
+import TodoCreateUpdate from './pages/TodoCreateUpdate'
+import { QueryClient, QueryClientProvider } from 'react-query'
+const queryClient = new QueryClient()
 
 const mgr = new Oidc.UserManager(config.oidc)
 // @ts-ignore
@@ -45,31 +49,35 @@ interface IAppProps {}
  */
 const App = (props: IAppProps) => {
     return (
-        <UiContextProvider>
-            <ToastContainer />
-            <ApolloProvider client={client}>
-                <AuthContextProvider>
-                    <Router>
-                        <Navbar />
-                        <ErrorBoundary>
-                            <Switch>
-                                <Route path="/health" component={Health} />
-                                <Route path="/artists/:artistId" component={Artist} />
-                                <Route path="/artists" component={Artists} />
-                                <Route path="/album-finder" component={AlbumFinder} />
-                                <Route path="/login" component={Login} />
-                                <Route path="/unauthorized" component={Unauthorized} />
-                                <Route path="/logged-out" component={LoggedOut} />
-                                <Route path="/protected" component={Protected} />
-                                <Route path="/error-demo" component={ErrorDemo} />
-                                <Route path="/" component={Home} />
-                                <Route component={NotFound} />
-                            </Switch>
-                        </ErrorBoundary>
-                    </Router>
-                </AuthContextProvider>
-            </ApolloProvider>
-        </UiContextProvider>
+        <QueryClientProvider client={queryClient}>
+            <UiContextProvider>
+                <ToastContainer />
+                <ApolloProvider client={client}>
+                    <AuthContextProvider>
+                        <Router>
+                            <Navbar />
+                            <ErrorBoundary>
+                                <Switch>
+                                    <Route path="/health" component={Health} />
+                                    <Route path="/artists/:artistId" component={Artist} />
+                                    <Route path="/artists" component={Artists} />
+                                    <Route path="/album-finder" component={AlbumFinder} />
+                                    <Route path="/login" component={Login} />
+                                    <Route path="/unauthorized" component={Unauthorized} />
+                                    <Route path="/logged-out" component={LoggedOut} />
+                                    <Route path="/protected" component={Protected} />
+                                    <Route path="/error-demo" component={ErrorDemo} />
+                                    <Route path="/todos/:id" component={TodoCreateUpdate} />
+                                    <Route path="/todos" component={Todos} />
+                                    <Route path="/" component={Home} />
+                                    <Route component={NotFound} />
+                                </Switch>
+                            </ErrorBoundary>
+                        </Router>
+                    </AuthContextProvider>
+                </ApolloProvider>
+            </UiContextProvider>
+        </QueryClientProvider>
     )
 }
 

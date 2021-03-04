@@ -30,6 +30,7 @@ const NavBar = (props: INavBarProps) => {
                 <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
                     <NavItem to="/">Home</NavItem>
                     <NavItem to="/protected">Protected</NavItem>
+                    <NavItem to="/todos">Todos</NavItem>
                     <NavItem to="/health">Health</NavItem>
                     <NavItem to="/artists">Artists</NavItem>
                     <NavItem to="/album-finder">Album Finder</NavItem>
