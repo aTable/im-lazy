@@ -5,6 +5,17 @@ export interface IWeatherForecast {
     summary: string
 }
 
+export interface Paged<T> {
+    metadata: PagedMetadata
+    records: T[]
+}
+export interface PagedMetadata {
+    total: number
+    pageSize: number
+    pageNumber: number
+    pageCount: number
+}
+
 export interface Todo {
     id: number
     label: string

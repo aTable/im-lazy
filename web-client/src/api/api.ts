@@ -1,6 +1,6 @@
 import axios, { AxiosResponse, AxiosError } from 'axios'
 import config from '../config'
-import { IWeatherForecast, Todo } from '../types/server'
+import { IWeatherForecast, Paged, Todo } from '../types/server'
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { authKeys } from '../stores/AuthContext'
@@ -68,10 +68,23 @@ export function getProtectedValue(): Promise<string[]> {
 }
 
 const baseDotnet5Uri = 'https://localhost:49163'
-export function getTodos(): Promise<Todo[]> {
-    return axios.get(`${baseDotnet5Uri}/api/todos`).then((res) => res.data)
+export function getTodos(pageNumber: number, pageSize: number): Promise<Paged<Todo>> {
+    return axios
+        .get(`${baseDotnet5Uri}/api/todos?pageSize=${pageSize}&pageNumber=${pageNumber}`)
+        .then((res) => res.data)
 }
 
 export function getTodo(id: number): Promise<Todo> {
     return axios.get(`${baseDotnet5Uri}/api/todos/${id}`).then((res) => res.data)
+}
+export function getTodoAssignees(id: number): Promise<string[]> {
+    return axios.get(`${baseDotnet5Uri}/api/todos/${id}/assignees`).then((res) => res.data)
+}
+
+export function createUpdateTodo(data: Todo): Promise<Todo> {
+    const action =
+        data.id === 0
+            ? axios.post(`${baseDotnet5Uri}/api/todos`, data)
+            : axios.put(`${baseDotnet5Uri}/api/todos/${data.id}`, data)
+    return action.then((res) => res.data)
 }

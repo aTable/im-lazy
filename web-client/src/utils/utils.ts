@@ -140,3 +140,5 @@ export function mutateQueryStringWithoutReload(newQs?: string) {
         window.history.pushState({ path: uri }, '', uri)
     }
 }
+
+export const nameof = <T>(name: keyof T) => name

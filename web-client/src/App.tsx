@@ -23,6 +23,8 @@ import ErrorBoundary from './components/ErrorBoundary'
 import { UiContextProvider } from './stores/UiContext'
 import Todos from './pages/Todos'
 import TodoCreateUpdate from './pages/TodoCreateUpdate'
+import Test from './pages/Test'
+
 import { QueryClient, QueryClientProvider } from 'react-query'
 const queryClient = new QueryClient()
 
@@ -69,6 +71,7 @@ const App = (props: IAppProps) => {
                                     <Route path="/error-demo" component={ErrorDemo} />
                                     <Route path="/todos/:id" component={TodoCreateUpdate} />
                                     <Route path="/todos" component={Todos} />
+                                    <Route path="/test" component={Test} />
                                     <Route path="/" component={Home} />
                                     <Route component={NotFound} />
                                 </Switch>
