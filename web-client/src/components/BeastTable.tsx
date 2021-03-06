@@ -8,9 +8,18 @@ export interface BeastTableProps<T extends Object> {
     controlledPageCount: number
     totalCount: number
     loading: boolean
-    fethData: any
+    fetchData: any
+    defaultPageSize: number
 }
-const BeastTable = ({ columns, data, fetchData, loading, totalCount, pageCount: controlledPageCount }: any) => {
+const BeastTable = ({
+    columns,
+    data,
+    fetchData,
+    loading,
+    totalCount,
+    pageCount: controlledPageCount,
+    defaultPageSize,
+}: any) => {
     const {
         getTableProps,
         getTableBodyProps,
@@ -42,7 +51,7 @@ const BeastTable = ({ columns, data, fetchData, loading, totalCount, pageCount: 
             columns,
             data,
             // @ts-ignore
-            initialState: { pageIndex: 0 }, // Pass our hoisted table state
+            initialState: { pageIndex: 0, pageSize: defaultPageSize }, // Pass our hoisted table state
             manualPagination: true, // Tell the usePagination
             // hook that we'll handle our own data fetching
             // This means we'll also have to provide our own
@@ -148,7 +157,7 @@ const BeastTable = ({ columns, data, fetchData, loading, totalCount, pageCount: 
                         setPageSize(Number(e.target.value))
                     }}
                 >
-                    {[10, 20, 30, 40, 50].map((pageSize) => (
+                    {[5, 10, 20, 30, 40, 50].map((pageSize) => (
                         <option key={pageSize} value={pageSize}>
                             Show {pageSize}
                         </option>
