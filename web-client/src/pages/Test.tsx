@@ -1,47 +1,27 @@
-// @ts-nocheck
-import React from 'react'
-import { useTable, usePagination } from 'react-table'
+import React, { useCallback, useMemo, useState } from 'react'
 
-import makeData from '../data/makeData'
 import BeastTable from '../components/BeastTable'
 import { getTodos } from '../api/api'
-
-const serverData = makeData(10000)
+import { Todo } from '../types/server'
+import { useQuery } from 'react-query'
 
 function Test() {
-    const columns = React.useMemo(
+    const columns = useMemo(
         () => [
             {
-                Header: 'Name',
+                Header: 'Todo',
                 columns: [
                     {
-                        Header: 'First Name',
-                        accessor: 'firstName',
+                        Header: 'Id',
+                        accessor: 'id',
                     },
                     {
-                        Header: 'Last Name',
-                        accessor: 'lastName',
-                    },
-                ],
-            },
-            {
-                Header: 'Info',
-                columns: [
-                    {
-                        Header: 'Age',
-                        accessor: 'age',
+                        Header: 'Label',
+                        accessor: 'label',
                     },
                     {
-                        Header: 'Visits',
-                        accessor: 'visits',
-                    },
-                    {
-                        Header: 'Status',
-                        accessor: 'status',
-                    },
-                    {
-                        Header: 'Profile Progress',
-                        accessor: 'progress',
+                        Header: 'Is Done',
+                        accessor: 'isDone',
                     },
                 ],
             },
@@ -49,33 +29,41 @@ function Test() {
         []
     )
 
-    // We'll start our table without any data
-    const [data, setData] = React.useState([])
-    const [loading, setLoading] = React.useState(false)
-    const [pageCount, setPageCount] = React.useState(0)
-    const fetchIdRef = React.useRef(0)
+    const [data, setData] = useState<Todo[]>([])
+    const [loading, setLoading] = useState(false)
+    const [pageCount, setPageCount] = useState(0)
+    const [totalCount, setTotalCount] = useState(0)
 
-    const fetchData = React.useCallback(({ pageSize, pageIndex }) => {
-        // This will get called when the table needs new data
-        // You could fetch your data from literally anywhere,
-        // even a server. But for this example, we'll just fake it.
-
-        // Give this fetch an ID
-        const fetchId = ++fetchIdRef.current
-        setLoading(true)
-        setTimeout(() => {
-            // Only update the data if this is the latest fetch
-            if (fetchId === fetchIdRef.current) {
-                const startRow = pageSize * pageIndex
-                const endRow = startRow + pageSize
-                setData(serverData.slice(startRow, endRow))
-                setPageCount(Math.ceil(serverData.length / pageSize))
-                setLoading(false)
-            }
-        }, 300)
+    // const dataQuery = useQuery(
+    //     ['todos', queryPageNumber, queryPageSize],
+    //     () => getTodos(queryPageNumber, queryPageSize),
+    //     {
+    //         // keepPreviousData: true,
+    //         //  staleTime: 5000,
+    //         onSuccess: (data) => {
+    //             // setTableData(mappedData)
+    //         },
+    //     }
+    // )
+    const fetchData = useCallback(({ pageSize, pageIndex }) => {
+        return getTodos(pageIndex + 1, pageSize).then((res) => {
+            setData(res.records)
+            setPageCount(res.metadata.pageCount)
+            setTotalCount(res.metadata.total)
+            setLoading(false)
+        })
     }, [])
 
-    return <BeastTable columns={columns} data={data} fetchData={fetchData} loading={loading} pageCount={pageCount} />
+    return (
+        <BeastTable
+            columns={columns}
+            data={data}
+            fetchData={fetchData}
+            loading={loading}
+            pageCount={pageCount}
+            totalCount={totalCount}
+        />
+    )
 }
 
 export default Test

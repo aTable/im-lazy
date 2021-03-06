@@ -6,10 +6,11 @@ export interface BeastTableProps<T extends Object> {
     columns: Column<T>
     data: object[]
     controlledPageCount: number
+    totalCount: number
     loading: boolean
     fethData: any
 }
-const BeastTable = ({ columns, data, fetchData, loading, pageCount: controlledPageCount }: any) => {
+const BeastTable = ({ columns, data, fetchData, loading, totalCount, pageCount: controlledPageCount }: any) => {
     const {
         getTableProps,
         getTableBodyProps,
@@ -74,7 +75,7 @@ const BeastTable = ({ columns, data, fetchData, loading, pageCount: controlledPa
                     )}
                 </code>
             </pre>
-            <table {...getTableProps()}>
+            <table className="table table-sm" {...getTableProps()}>
                 <thead>
                     {headerGroups.map((headerGroup) => (
                         <tr {...headerGroup.getHeaderGroupProps()}>
@@ -104,7 +105,7 @@ const BeastTable = ({ columns, data, fetchData, loading, pageCount: controlledPa
                             <td colSpan={10000}>Loading...</td>
                         ) : (
                             <td colSpan={10000}>
-                                Showing {page.length} of ~{controlledPageCount * pageSize} results
+                                Showing {page.length} of {totalCount} results
                             </td>
                         )}
                     </tr>
