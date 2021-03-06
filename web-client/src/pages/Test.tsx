@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import BeastTable from '../components/BeastTable'
 import { getTodos } from '../api/api'
@@ -33,26 +33,31 @@ function Test() {
     const [loading, setLoading] = useState(false)
     const [pageCount, setPageCount] = useState(0)
     const [totalCount, setTotalCount] = useState(0)
+    const [queryPageSize, setQueryPageSize] = useState(5)
+    const [queryPageNumber, setQueryPageNumber] = useState(1)
 
-    // const dataQuery = useQuery(
-    //     ['todos', queryPageNumber, queryPageSize],
-    //     () => getTodos(queryPageNumber, queryPageSize),
-    //     {
-    //         // keepPreviousData: true,
-    //         //  staleTime: 5000,
-    //         onSuccess: (data) => {
-    //             // setTableData(mappedData)
-    //         },
-    //     }
-    // )
+    const dataQuery = useQuery(
+        ['todos', queryPageNumber, queryPageSize],
+        () => getTodos(queryPageNumber, queryPageSize),
+        {
+            // keepPreviousData: true,
+            //  staleTime: 5000,
+            onSuccess: (data) => {
+                setData(data.records)
+                setPageCount(data.metadata.pageCount)
+                setTotalCount(data.metadata.total)
+                setLoading(false)
+            },
+        }
+    )
     const fetchData = useCallback(({ pageSize, pageIndex }) => {
-        return getTodos(pageIndex + 1, pageSize).then((res) => {
-            setData(res.records)
-            setPageCount(res.metadata.pageCount)
-            setTotalCount(res.metadata.total)
-            setLoading(false)
-        })
+        setQueryPageNumber(pageIndex + 1)
+        setQueryPageSize(pageSize)
     }, [])
+
+    useEffect(() => {
+        console.log('pageNumber:', queryPageNumber, 'pageSize', queryPageSize)
+    }, [queryPageNumber, queryPageSize])
 
     return (
         <BeastTable
@@ -62,6 +67,7 @@ function Test() {
             loading={loading}
             pageCount={pageCount}
             totalCount={totalCount}
+            defaultPageSize={queryPageSize}
         />
     )
 }
