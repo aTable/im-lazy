@@ -1,15 +1,17 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-
+import { TodoJsx } from '../types/server'
 import BeastTable from '../components/BeastTable'
 import { getTodos } from '../api/api'
 import { Todo } from '../types/server'
 import { useQuery } from 'react-query'
+import { Link } from 'react-router-dom'
+import { Column } from 'react-table'
 
-function Test() {
-    const columns = useMemo(
+const Test = () => {
+    const columns = useMemo<Column<TodoJsx>[]>(
         () => [
             {
-                Header: 'Todo',
+                Header: 'Todos',
                 columns: [
                     {
                         Header: 'Id',
@@ -21,7 +23,11 @@ function Test() {
                     },
                     {
                         Header: 'Is Done',
-                        accessor: 'isDone',
+                        accessor: 'isDoneJsx',
+                    },
+                    {
+                        Header: 'Actions',
+                        accessor: 'actionsJsx',
                     },
                 ],
             },
@@ -30,6 +36,7 @@ function Test() {
     )
 
     const [data, setData] = useState<Todo[]>([])
+    const [tableData, setTableData] = useState<TodoJsx[]>([])
     const [loading, setLoading] = useState(false)
     const [pageCount, setPageCount] = useState(0)
     const [totalCount, setTotalCount] = useState(0)
@@ -44,6 +51,19 @@ function Test() {
             //  staleTime: 5000,
             onSuccess: (data) => {
                 setData(data.records)
+                const mappedData = data.records?.map((x) => ({
+                    ...x,
+                    isDoneJsx: x.isDone ? <i className="fa fa-check" /> : null,
+                    actionsJsx: (
+                        <>
+                            <Link to={`/todos/${x.id}`}>
+                                <i className="fa fa-eye" />
+                                &nbsp;Open
+                            </Link>
+                        </>
+                    ),
+                }))
+                setTableData(mappedData)
                 setPageCount(data.metadata.pageCount)
                 setTotalCount(data.metadata.total)
                 setLoading(false)
@@ -62,7 +82,7 @@ function Test() {
     return (
         <BeastTable
             columns={columns}
-            data={data}
+            data={tableData}
             fetchData={fetchData}
             loading={loading}
             pageCount={pageCount}

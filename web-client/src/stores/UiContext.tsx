@@ -1,13 +1,16 @@
 import React, { createContext, useReducer, Dispatch, ReactNode } from 'react'
-import { toast, ToastContent } from 'react-toastify'
+import { toast, ToastContent, ToastOptions } from 'react-toastify'
 
 export const UiContext = createContext<IUiContextProps>({} as IUiContextProps)
 
 export interface IUiContext {}
 
 export interface NotifyAction {
-    type: 'NOTIFY'
-    payload: ToastContent
+    type: 'TOAST'
+    payload: {
+        content: ToastContent
+        options?: ToastOptions
+    }
 }
 export interface PurgeNotifications {
     type: 'PURGE_NOTIFICATIONS'
@@ -22,8 +25,9 @@ export const reducer = (state: IUiContext, action: IUiActions): IUiContext => {
                 ...state,
             }
 
-        case 'NOTIFY':
-            toast(action.payload)
+        case 'TOAST':
+            toast(action.payload.content, action.payload.options)
+
             return state
         default:
             return state

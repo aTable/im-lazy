@@ -1,5 +1,6 @@
-import React, { Component, ReactNode, ErrorInfo } from 'react'
+import { Component, ReactNode, ErrorInfo } from 'react'
 import Modal from 'react-modal'
+import UiContext from '../stores/UiContext'
 export interface IErrorBoundaryProps {
     children: ReactNode
 }
@@ -11,6 +12,8 @@ export interface IErrorBoundaryState {
 }
 
 class ErrorBoundary extends Component<IErrorBoundaryProps, IErrorBoundaryState> {
+    static contextType = UiContext
+
     constructor(props: IErrorBoundaryProps) {
         super(props)
         this.state = { error: undefined, errorInfo: undefined, isErrorModalOpen: false }
@@ -21,7 +24,14 @@ class ErrorBoundary extends Component<IErrorBoundaryProps, IErrorBoundaryState> 
             error: error,
             errorInfo: errorInfo,
         })
-        console.log('caught error ', error, ' with info ', errorInfo)
+        this.context.dispatch({
+            type: 'TOAST',
+            payload: {
+                content: 'Error boundary caught error',
+                options: { type: 'error' },
+            },
+        })
+        console.log('Error boundary caught error ', error, ' with info ', errorInfo)
     }
 
     render() {

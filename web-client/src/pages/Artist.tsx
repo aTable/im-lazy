@@ -59,10 +59,10 @@ const Artists = (props: IArtistProps) => {
         onCompleted(res) {
             refetch()
             uiContext.dispatch({
-                type: 'NOTIFY',
+                type: 'TOAST',
                 payload: {
-                    message: 'Updated details successfully',
-                    level: 'success',
+                    content: 'Updated details successfully',
+                    options: { type: 'success' },
                 },
             })
         },
@@ -71,10 +71,10 @@ const Artists = (props: IArtistProps) => {
         onCompleted() {
             refetch()
             uiContext.dispatch({
-                type: 'NOTIFY',
+                type: 'TOAST',
                 payload: {
-                    message: 'Removed album successfully',
-                    level: 'success',
+                    content: 'Removed album successfully',
+                    options: { type: 'success' },
                 },
             })
         },

@@ -1,6 +1,14 @@
 // @ts-nochecky
 import { useEffect } from 'react'
-import { Column, usePagination, useTable } from 'react-table'
+import {
+    Column,
+    TableInstance,
+    usePagination,
+    UsePaginationInstanceProps,
+    UsePaginationState,
+    useTable,
+} from 'react-table'
+import { TodoJsx } from '../types/server'
 
 export interface BeastTableProps<T extends Object> {
     columns: Column<T>
@@ -25,7 +33,6 @@ const BeastTable = ({
         getTableBodyProps,
         headerGroups,
         prepareRow,
-        // @ts-ignore
         // @ts-ignore
         page,
         // @ts-ignore
@@ -59,14 +66,12 @@ const BeastTable = ({
             pageCount: controlledPageCount,
         },
         usePagination
-    )
+    ) //as TableInstance<TodoJsx> & UsePaginationInstanceProps<TodoJsx> & { state: UsePaginationState<TodoJsx> }
 
-    // Listen for changes in pagination and use the state to fetch our new data
     useEffect(() => {
         fetchData({ pageIndex, pageSize })
     }, [fetchData, pageIndex, pageSize])
 
-    // Render the UI for your table
     return (
         <>
             <pre>
@@ -120,50 +125,57 @@ const BeastTable = ({
                     </tr>
                 </tbody>
             </table>
-            <div className="pagination">
-                <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-                    {'<<'}
-                </button>{' '}
-                <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-                    {'<'}
-                </button>{' '}
-                <button onClick={() => nextPage()} disabled={!canNextPage}>
-                    {'>'}
-                </button>{' '}
-                <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-                    {'>>'}
-                </button>{' '}
-                <span>
-                    Page{' '}
-                    <strong>
-                        {pageIndex + 1} of {pageOptions.length}
-                    </strong>{' '}
-                </span>
-                <span>
-                    | Go to page:{' '}
-                    <input
-                        type="number"
-                        defaultValue={pageIndex + 1}
-                        onChange={(e) => {
-                            const page = e.target.value ? Number(e.target.value) - 1 : 0
-                            gotoPage(page)
-                        }}
-                        style={{ width: '100px' }}
-                    />
-                </span>{' '}
-                <select
-                    value={pageSize}
-                    onChange={(e) => {
-                        setPageSize(Number(e.target.value))
-                    }}
-                >
-                    {[5, 10, 20, 30, 40, 50].map((pageSize) => (
-                        <option key={pageSize} value={pageSize}>
-                            Show {pageSize}
-                        </option>
+            <nav aria-label="Table data navigation">
+                <ul className="pagination">
+                    <li className={`page-item ${canPreviousPage ? '' : 'disabled'}`}>
+                        <button
+                            className="page-link"
+                            aria-label="Previous"
+                            onClick={() => gotoPage(0)}
+                            disabled={!canPreviousPage}
+                        >
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </button>
+                    </li>
+                    <li className={`page-item ${canPreviousPage ? '' : 'disabled'}`}>
+                        <button
+                            className="page-link"
+                            aria-label="Previous"
+                            onClick={() => previousPage()}
+                            disabled={!canPreviousPage}
+                        >
+                            <span aria-hidden="true">&laquo;</span>
+                        </button>
+                    </li>
+                    {pageOptions.map((x: any, i: number) => (
+                        <li key={x} className={`page-item  ${pageIndex === i ? 'active' : ''}`}>
+                            <button className="page-link" aria-label={x} onClick={() => gotoPage(x)}>
+                                <span aria-hidden="true">{x + 1}</span>
+                            </button>
+                        </li>
                     ))}
-                </select>
-            </div>
+                    <li className={`page-item ${canNextPage ? '' : 'disabled'}`}>
+                        <button
+                            className="page-link"
+                            aria-label="Next"
+                            onClick={() => nextPage()}
+                            disabled={!canNextPage}
+                        >
+                            <span aria-hidden="true">&raquo;</span>
+                        </button>
+                    </li>
+                    <li className={`page-item ${canNextPage ? '' : 'disabled'}`}>
+                        <button
+                            className="page-link"
+                            aria-label="Last"
+                            onClick={() => gotoPage(pageCount - 1)}
+                            disabled={!canNextPage}
+                        >
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
         </>
     )
 }

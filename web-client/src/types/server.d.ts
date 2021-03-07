@@ -21,3 +21,7 @@ export interface Todo {
     label: string
     isDone: boolean
 }
+export interface TodoJsx extends Todo {
+    isDoneJsx: ReactNode | null
+    actionsJsx: ReactNode | null
+}

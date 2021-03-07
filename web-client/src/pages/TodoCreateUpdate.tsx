@@ -35,7 +35,13 @@ const Todos = (_: ITodosProps) => {
     const mutation = useMutation(createUpdateTodo, {
         onSuccess: () => {
             queryClient.invalidateQueries(['todo', todoId])
-            ui.dispatch({ type: 'NOTIFY', payload: 'Saved Todo' })
+            ui.dispatch({
+                type: 'TOAST',
+                payload: {
+                    content: 'Saved Todo',
+                    options: { type: 'success' },
+                },
+            })
             history.push(`/todos`)
         },
     })
