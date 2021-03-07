@@ -67,7 +67,7 @@ export function getProtectedValue(): Promise<string[]> {
     return backend.get(`/api/protectedvalues`)
 }
 
-const baseDotnet5Uri = 'https://localhost:49163'
+const baseDotnet5Uri = 'https://localhost:49153'
 export function getTodos(pageNumber: number, pageSize: number): Promise<Paged<Todo>> {
     return axios
         .get(`${baseDotnet5Uri}/api/todos?pageSize=${pageSize}&pageNumber=${pageNumber}`)
