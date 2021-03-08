@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Serilog;
 using System;
@@ -15,10 +16,10 @@ namespace Your.Namespace.Api.Controllers
     [Authorize]
     public class ProtectedValuesController : ControllerBase
     {
-        public ILogger Logger { get; }
+        public ILogger<ProtectedValuesController> Logger { get; }
         public AppSettings AppSettings { get; }
 
-        public ProtectedValuesController(ILogger logger, AppSettings appSettings)
+        public ProtectedValuesController(ILogger<ProtectedValuesController> logger, AppSettings appSettings)
         {
             Logger = logger;
             AppSettings = appSettings;
@@ -29,7 +30,7 @@ namespace Your.Namespace.Api.Controllers
         [Authorize(Policy = Policies.User)]
         public ActionResult<IEnumerable<string>> Get()
         {
-            Logger.Information("protected values were requested");
+            Logger.LogInformation("protected values were requested");
             return new string[] { "value1", "value2" };
         }
 

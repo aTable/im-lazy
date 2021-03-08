@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ToastContainer } from 'react-toastify'
 import { HashRouter as Router, Route, Switch } from 'react-router-dom'
 import Navbar from './components/Navbar'
@@ -31,17 +31,17 @@ const queryClient = new QueryClient()
 const mgr = new Oidc.UserManager(config.oidc)
 // @ts-ignore
 window.mgr = mgr
-if (window.location.search.includes('code')) {
-    ;(window as any).mgr
-        .signinRedirectCallback()
-        .then((user: User) => {
-            localStorage.setItem(authKeys.user, user.toStorageString())
-            mutateQueryStringWithoutReload()
-        })
-        .catch((err: any) => {
-            console.error(err)
-        })
-}
+// if (window.location.search.includes('code')) {
+//     ;(window as any).mgr
+//         .signinRedirectCallback()
+//         .then((user: User) => {
+//             localStorage.setItem(authKeys.user, user.toStorageString())
+//             mutateQueryStringWithoutReload()
+//         })
+//         .catch((err: any) => {
+//             console.error(err)
+//         })
+// }
 
 interface IAppProps {}
 
@@ -50,6 +50,11 @@ interface IAppProps {}
  * @param props The props
  */
 const App = (props: IAppProps) => {
+    useEffect(() => {
+        const g = 2 + 2
+        // do init
+    }, [])
+
     return (
         <QueryClientProvider client={queryClient}>
             <UiContextProvider>

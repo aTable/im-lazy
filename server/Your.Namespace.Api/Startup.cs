@@ -1,28 +1,29 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using HotChocolate;
+using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Serilog;
-using System.Net.Http;
-using Your.Namespace.Api.DataAccess;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Logging;
+using Microsoft.OpenApi.Models;
 using Prometheus;
-using Your.Namespace.Api.GraphSchema;
-using System.Security.Claims;
-using HotChocolate;
-using HotChocolate.AspNetCore;
-using HotChocolate.AspNetCore.Voyager;
-using HotChocolate.Execution.Configuration;
-using HotChocolate.Subscriptions;
+using Serilog;
+using Your.Namespace.Api.DataAccess;
 using Your.Namespace.Api.GraphSchema.Albums;
 using Your.Namespace.Api.GraphSchema.Artists;
 using Your.Namespace.Api.GraphSchema.Health;
-using System.Threading.Tasks;
-using HotChocolate.Types;
 
 namespace Your.Namespace.Api
 {
@@ -32,8 +33,10 @@ namespace Your.Namespace.Api
         {
             Configuration = configuration;
         }
+
         public IConfiguration Configuration { get; }
 
+        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             var appSettings = ConfigureAppSettings(services);
@@ -49,17 +52,22 @@ namespace Your.Namespace.Api
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
                 IdentityModelEventSource.ShowPII = true;
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your.Namespace.Api v1"));
+                app.UsePlayground(queryPath: appSettings.GraphSettings.Path, uiPath: appSettings.GraphSettings.PlaygroundPath);
             }
             else if (env.IsProduction())
             {
-                app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                // TODO: configure
             }
+
             app.UseSerilogRequestLogging();
 
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
+
             app.UseRouting();
             app.UseCors(appSettings.CorsPolicyName);
+
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
@@ -79,11 +87,11 @@ namespace Your.Namespace.Api
             app.UseMetricServer();
             app.UseHttpMetrics();
 
-            app.UseGraphQL(path: "/graphql");
-            app.UsePlayground(queryPath: "/graphql", uiPath: "/playground");
+            app.UseGraphQL(path: appSettings.GraphSettings.Path);
 
             if (appSettings.IsRunMigrations)
             {
+                context.Database.EnsureCreated();
                 context.Database.Migrate();
             }
 
@@ -101,13 +109,14 @@ namespace Your.Namespace.Api
             Configuration.Bind("App", appSettings);
             return appSettings;
         }
-        private ILogger ConfigureLogger(IServiceCollection services)
+        private Serilog.ILogger ConfigureLogger(IServiceCollection services)
         {
             var logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(Configuration)
                 .CreateLogger();
             Log.Logger = logger; // needed for the middlewares on UseSerilog() and UseSerilogRequestLogging()
-            services.AddSingleton<ILogger>(provider => logger);
+            services.AddSingleton<Serilog.ILogger>(provider => logger);
+
             return logger;
         }
 
@@ -145,7 +154,6 @@ namespace Your.Namespace.Api
                  //.AddType<ArtistSubscriptions>()
                  .Create()
             );
-
         }
 
         private void ConfigureWebServer(AppSettings appSettings, IServiceCollection services)
@@ -160,6 +168,10 @@ namespace Your.Namespace.Api
                      builder.WithOrigins(appSettings.WebClientOrigin).AllowAnyMethod().AllowAnyHeader();
                  });
              });
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = appSettings.ApiName, Version = "v1" });
+            });
             services.AddControllers(options =>
             {
                 //  var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
@@ -180,6 +192,8 @@ namespace Your.Namespace.Api
                         options.Authority = appSettings.AuthorizationServerUri;
                         options.RequireHttpsMetadata = appSettings.AuthorizationServerRequiresHttps; // TODO: figure cross platform cert shenanigans for https during dev
                         options.ApiName = appSettings.ApiName;
+                        //ptions.JwtBearerEvents.AuthenticationFailed
+
                         options.Validate();
                     });
             services.AddSingleton(provider => new HttpClient

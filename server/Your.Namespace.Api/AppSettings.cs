@@ -15,5 +15,14 @@ namespace Your.Namespace.Api
         public int MaxPageSize { get; set; }
         public bool IsRunMigrations { get; set; }
         public bool IsRunSeed { get; set; }
+        public GraphSettings GraphSettings { get; set; }
+
+    }
+
+    public class GraphSettings
+    {
+        public string Path { get; set; }
+        public string PlaygroundPath { get; set; }
+
     }
 }

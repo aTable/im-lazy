@@ -67,24 +67,21 @@ export function getProtectedValue(): Promise<string[]> {
     return backend.get(`/api/protectedvalues`)
 }
 
-const baseDotnet5Uri = 'https://localhost:49153'
 export function getTodos(pageNumber: number, pageSize: number): Promise<Paged<Todo>> {
-    return axios
-        .get(`${baseDotnet5Uri}/api/todos?pageSize=${pageSize}&pageNumber=${pageNumber}`)
-        .then((res) => res.data)
+    return backend.get(`/api/todos?pageSize=${pageSize}&pageNumber=${pageNumber}`)
 }
 
 export function getTodo(id: number): Promise<Todo> {
-    return axios.get(`${baseDotnet5Uri}/api/todos/${id}`).then((res) => res.data)
+    return backend.get(`/api/todos/${id}`)
 }
 export function getTodoAssignees(id: number): Promise<string[]> {
-    return axios.get(`${baseDotnet5Uri}/api/todos/${id}/assignees`).then((res) => res.data)
+    return backend.get(`/api/todos/${id}/assignees`)
 }
 
 export function createUpdateTodo(data: Todo): Promise<Todo> {
     const action =
         data.id === 0
-            ? axios.post(`${baseDotnet5Uri}/api/todos`, data)
-            : axios.put(`${baseDotnet5Uri}/api/todos/${data.id}`, data)
-    return action.then((res) => res.data)
+            ? backend.post<Todo, Todo>(`/api/todos`, data)
+            : backend.put<Todo, Todo>(`/api/todos/${data.id}`, data)
+    return action
 }

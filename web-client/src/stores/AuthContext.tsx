@@ -1,6 +1,7 @@
 import React, { createContext, useReducer, Dispatch, useEffect, ReactNode } from 'react'
 import { setBearer } from '../api/api'
 import { User } from 'oidc-client'
+import { mutateQueryStringWithoutReload } from '../utils/utils'
 
 export const authKeys = {
     user: 'auth-serialized-user',
@@ -56,14 +57,19 @@ export interface IAuthContextProviderProps {
 export const AuthContextProvider = (props: IAuthContextProviderProps) => {
     const [state, dispatch] = useReducer(reducer, { token: undefined, claims: undefined }, (init) => init)
 
-    // TODO: resolve the context initialization being after route
-    const userSerialized = localStorage.getItem(authKeys.user)
-    if (userSerialized) {
-        const user: User = User.fromStorageString(userSerialized)
-        setBearer(user.id_token)
-    }
-
     useEffect(() => {
+        if (window.location.search.includes('code')) {
+            ;(window as any).mgr
+                .signinRedirectCallback()
+                .then((user: User) => {
+                    mutateQueryStringWithoutReload()
+                    dispatch({ type: 'SET_TOKEN', payload: user })
+                })
+                .catch((err: any) => {
+                    console.error(err)
+                })
+        }
+
         const userSerialized = localStorage.getItem(authKeys.user)
         if (userSerialized) {
             const user: User = User.fromStorageString(userSerialized)

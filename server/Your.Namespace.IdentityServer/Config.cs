@@ -29,6 +29,7 @@ namespace Your.Namespace.IdentityServer
                 new ApiResource("MyAwesome-API", "The best API ever seen")
                 {
                     Scopes = new List<string>{
+                        "openid", "profile", "email",
                         "myawesomeapi.full_access",
                         "myawesomeapi.app_access"
                     },

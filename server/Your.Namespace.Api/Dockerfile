@@ -1,15 +1,14 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
-EXPOSE 9080
-EXPOSE 9081
+EXPOSE 80
+EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
-
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["server/Your.Namespace.Api/Your.Namespace.Api.csproj", "server/Your.Namespace.Api/"]
-RUN dotnet restore "server/Your.Namespace.Api/Your.Namespace.Api.csproj"
+COPY ["Your.Namespace.Api.csproj", "./"]
+RUN dotnet restore "Your.Namespace.Api.csproj"
 COPY . .
-WORKDIR "/src/server/Your.Namespace.Api"
+WORKDIR "/src/."
 RUN dotnet build "Your.Namespace.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish

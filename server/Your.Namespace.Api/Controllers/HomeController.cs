@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 
 namespace Your.Namespace.Api.Controllers
 {
-    //[ApiController]
     [Route("")]
     public class HomeController : ControllerBase
     {

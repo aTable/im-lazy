@@ -366,6 +366,8 @@ build
 server/Your.Namespace.IdentityServer/yournamespace-sts.db
 server/Your.Namespace.IdentityServer/logs
 server/Your.Namespace.Api/yournamespaceapi.db
+*.db-shm
+*.db-wal
 
 .terraform/
 terraform.tfstate

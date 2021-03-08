@@ -57,7 +57,7 @@ namespace Your.Namespace.Api.DataAccess
                 }
             };
 
-            var jinjerEntity = context.Set<Album>().FirstOrDefault(x => x.Name.Equals(jinjer.Name));
+            var jinjerEntity = context.Set<Artist>().FirstOrDefault(x => x.Name.Equals(jinjer.Name));
             if (jinjerEntity == null)
                 context.Add(jinjer);
 
@@ -111,7 +111,7 @@ namespace Your.Namespace.Api.DataAccess
                     }
                 }
             };
-            var deathEntity = context.Set<Album>().FirstOrDefault(x => x.Name.Equals(jinjer.Name));
+            var deathEntity = context.Set<Artist>().FirstOrDefault(x => x.Name.Equals(jinjer.Name));
             if (deathEntity == null)
                 context.Add(death);
 
@@ -132,7 +132,7 @@ namespace Your.Namespace.Api.DataAccess
                     new Album { Name = "Hardwired...to Self-Destruct", ReleaseDate = DateTime.Parse("2016-11-18")},
                 },
             };
-            var metallicaEntity = context.Set<Album>().FirstOrDefault(x => x.Name.Equals(metallica.Name));
+            var metallicaEntity = context.Set<Artist>().FirstOrDefault(x => x.Name.Equals(metallica.Name));
             if (metallicaEntity == null)
                 context.Add(metallica);
 
@@ -155,7 +155,7 @@ namespace Your.Namespace.Api.DataAccess
                     new Album { Name = "Repentless", ReleaseDate = DateTime.Parse("2015-09-11"), },
                 },
             };
-            var slayerEntity = context.Set<Album>().FirstOrDefault(x => x.Name.Equals(slayer.Name));
+            var slayerEntity = context.Set<Artist>().FirstOrDefault(x => x.Name.Equals(slayer.Name));
             if (slayerEntity == null)
                 context.Add(slayer);
 
@@ -181,7 +181,7 @@ namespace Your.Namespace.Api.DataAccess
                     new Album { Name = "Dystopia", ReleaseDate = DateTime.Parse("2016-01-22"), },
                 },
             };
-            var megadethEntity = context.Set<Album>().FirstOrDefault(x => x.Name.Equals(megadeth.Name));
+            var megadethEntity = context.Set<Artist>().FirstOrDefault(x => x.Name.Equals(megadeth.Name));
             if (megadethEntity == null)
                 context.Add(megadeth);
 
