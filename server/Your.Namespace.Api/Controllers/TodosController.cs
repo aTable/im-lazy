@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Your.Namespace.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace Your.Namespace.Api.Controllers
 {
@@ -34,11 +35,10 @@ namespace Your.Namespace.Api.Controllers
         }
 
         [HttpGet]
-        public ActionResult<Paged<Todo>> GetAll(int pageSize = 10, [Range(1, 500)] int pageNumber = 1)
+        public ActionResult<Paged<Todo>> GetAll([FromQuery] PagedQuery pagedQuery)
         {
-            var skip = pageSize * (pageNumber - 1);
-            var records = _todos.Skip(skip).Take(pageSize).ToArray();
-            return new Paged<Todo>(pageSize, pageNumber, _todos.Count, records);
+            var records = _todos.Skip(pagedQuery.Skip).Take(pagedQuery.PageSize).ToArray();
+            return new Paged<Todo>(pagedQuery.PageSize, pagedQuery.PageNumber, _todos.Count, records, Request);
         }
 
         [HttpPost]

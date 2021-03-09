@@ -19,75 +19,19 @@ interface ITodosProps {
 }
 
 const Todos = (_: ITodosProps) => {
-    const columns = useMemo<Column<TodoJsx>[]>(
-        () => [
-            {
-                Header: 'Todos',
-                columns: [
-                    {
-                        Header: 'Id',
-                        accessor: 'id',
-                    },
-                    {
-                        Header: 'Label',
-                        accessor: 'label',
-                    },
-                    {
-                        Header: 'Is Done',
-                        accessor: 'isDoneJsx',
-                    },
-                    {
-                        Header: 'Actions',
-                        accessor: 'actionsJsx',
-                    },
-                ],
-            },
-        ],
-        []
-    )
-    const [data, setData] = useState<Todo[]>([])
-    const [tableData, setTableData] = useState<TodoJsx[]>([])
-    const [loading, setLoading] = useState(false)
-    const [pageCount, setPageCount] = useState(0)
-    const [totalCount, setTotalCount] = useState(0)
+    const columns = useMemo<Column<TodoJsx>[]>(() => todoColumns, [])
     const [queryPageSize, setQueryPageSize] = useState(5)
     const [queryPageNumber, setQueryPageNumber] = useState(1)
 
-    const dataQuery = useQuery(
-        ['todos', queryPageNumber, queryPageSize],
-        () => getTodos(queryPageNumber, queryPageSize),
-        {
-            // keepPreviousData: true,
-            //  staleTime: 5000,
-            onSuccess: (data) => {
-                setData(data.records)
-                const mappedData = data.records?.map((x) => ({
-                    ...x,
-                    isDoneJsx: x.isDone ? <i className="fa fa-check" /> : null,
-                    actionsJsx: (
-                        <>
-                            <Link to={`/todos/${x.id}`}>
-                                <i className="fa fa-eye" />
-                                &nbsp;Open
-                            </Link>
-                        </>
-                    ),
-                }))
-                setTableData(mappedData)
-                setPageCount(data.metadata.pageCount)
-                setTotalCount(data.metadata.total)
-                setLoading(false)
-            },
-        }
+    const dataQuery = useQuery(['todos', queryPageNumber, queryPageSize], () =>
+        getTodos(queryPageNumber, queryPageSize)
     )
+
     const fetchData = useCallback(({ pageSize, pageIndex }) => {
         setQueryPageNumber(pageIndex + 1)
         setQueryPageSize(pageSize)
     }, [])
 
-    useEffect(() => {
-        console.log('pageNumber:', queryPageNumber, 'pageSize', queryPageSize)
-    }, [queryPageNumber, queryPageSize])
     return (
         <div className="container">
             <p>A RESTful implementation</p>
@@ -102,11 +46,11 @@ const Todos = (_: ITodosProps) => {
             <br />
             <BeastTable
                 columns={columns}
-                data={tableData}
+                data={dataQuery.data?.records?.map(mapTodoToJsx) ?? []}
                 fetchData={fetchData}
-                loading={loading}
-                pageCount={pageCount}
-                totalCount={totalCount}
+                loading={dataQuery.isLoading}
+                pageCount={dataQuery.data?.metadata.pageCount}
+                totalCount={dataQuery.data?.metadata.total}
                 defaultPageSize={queryPageSize}
             />
         </div>
@@ -114,3 +58,40 @@ const Todos = (_: ITodosProps) => {
 }
 
 export default Todos
+
+const todoColumns = [
+    {
+        Header: 'Todos',
+        columns: [
+            {
+                Header: 'Id',
+                accessor: 'id',
+            },
+            {
+                Header: 'Label',
+                accessor: 'label',
+            },
+            {
+                Header: 'Is Done',
+                accessor: 'isDoneJsx',
+            },
+            {
+                Header: 'Actions',
+                accessor: 'actionsJsx',
+            },
+        ],
+    },
+]
+
+const mapTodoToJsx = (x: Todo): TodoJsx => ({
+    ...x,
+    isDoneJsx: x.isDone ? <i className="fa fa-check" /> : null,
+    actionsJsx: (
+        <>
+            <Link to={`/todos/${x.id}`}>
+                <i className="fa fa-eye" />
+                &nbsp;Open
+            </Link>
+        </>
+    ),
+})

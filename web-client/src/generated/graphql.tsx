@@ -1,6 +1,9 @@
+import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -202,15 +205,15 @@ export type AlbumEdge = {
   node?: Maybe<Album>;
 };
 
-
 export enum MyRating {
   None = 'NONE',
   Okayish = 'OKAYISH',
   Legendary = 'LEGENDARY'
 }
 
-export type CreateArtistInput = {
-  name?: Maybe<Scalars['String']>;
+
+export type DeleteAlbumInput = {
+  albumId: Scalars['Int'];
 };
 
 export type UpdateArtistInput = {
@@ -218,8 +221,8 @@ export type UpdateArtistInput = {
   name?: Maybe<Scalars['String']>;
 };
 
-export type DeleteAlbumInput = {
-  albumId: Scalars['Int'];
+export type CreateArtistInput = {
+  name?: Maybe<Scalars['String']>;
 };
 
 export type AlbumFinderQueryVariables = Exact<{
@@ -344,7 +347,7 @@ export type UpdateArtistMutation = (
 );
 
 
-export const AlbumFinderDocument = Apollo.gql`
+export const AlbumFinderDocument = gql`
     query AlbumFinder($name: String!, $pageSize: PaginationAmount!, $cursor: String) {
   albums(first: $pageSize, where: {name_contains: $name}, after: $cursor) {
     nodes {
@@ -388,7 +391,7 @@ export const AlbumFinderDocument = Apollo.gql`
  *   },
  * });
  */
-export function useAlbumFinderQuery(baseOptions?: Apollo.QueryHookOptions<AlbumFinderQuery, AlbumFinderQueryVariables>) {
+export function useAlbumFinderQuery(baseOptions: Apollo.QueryHookOptions<AlbumFinderQuery, AlbumFinderQueryVariables>) {
         return Apollo.useQuery<AlbumFinderQuery, AlbumFinderQueryVariables>(AlbumFinderDocument, baseOptions);
       }
 export function useAlbumFinderLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AlbumFinderQuery, AlbumFinderQueryVariables>) {
@@ -397,7 +400,7 @@ export function useAlbumFinderLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type AlbumFinderQueryHookResult = ReturnType<typeof useAlbumFinderQuery>;
 export type AlbumFinderLazyQueryHookResult = ReturnType<typeof useAlbumFinderLazyQuery>;
 export type AlbumFinderQueryResult = Apollo.QueryResult<AlbumFinderQuery, AlbumFinderQueryVariables>;
-export const GetArtistDocument = Apollo.gql`
+export const GetArtistDocument = gql`
     query GetArtist($id: Int!) {
   artist(id: $id) {
     id
@@ -428,7 +431,7 @@ export const GetArtistDocument = Apollo.gql`
  *   },
  * });
  */
-export function useGetArtistQuery(baseOptions?: Apollo.QueryHookOptions<GetArtistQuery, GetArtistQueryVariables>) {
+export function useGetArtistQuery(baseOptions: Apollo.QueryHookOptions<GetArtistQuery, GetArtistQueryVariables>) {
         return Apollo.useQuery<GetArtistQuery, GetArtistQueryVariables>(GetArtistDocument, baseOptions);
       }
 export function useGetArtistLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetArtistQuery, GetArtistQueryVariables>) {
@@ -437,7 +440,7 @@ export function useGetArtistLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type GetArtistQueryHookResult = ReturnType<typeof useGetArtistQuery>;
 export type GetArtistLazyQueryHookResult = ReturnType<typeof useGetArtistLazyQuery>;
 export type GetArtistQueryResult = Apollo.QueryResult<GetArtistQuery, GetArtistQueryVariables>;
-export const GetArtistsDocument = Apollo.gql`
+export const GetArtistsDocument = gql`
     query GetArtists {
   artists {
     id
@@ -474,7 +477,7 @@ export function useGetArtistsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type GetArtistsQueryHookResult = ReturnType<typeof useGetArtistsQuery>;
 export type GetArtistsLazyQueryHookResult = ReturnType<typeof useGetArtistsLazyQuery>;
 export type GetArtistsQueryResult = Apollo.QueryResult<GetArtistsQuery, GetArtistsQueryVariables>;
-export const CreateArtistDocument = Apollo.gql`
+export const CreateArtistDocument = gql`
     mutation CreateArtist($artist: CreateArtistInput!) {
   createArtist(input: $artist) {
     id
@@ -507,7 +510,7 @@ export function useCreateArtistMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateArtistMutationHookResult = ReturnType<typeof useCreateArtistMutation>;
 export type CreateArtistMutationResult = Apollo.MutationResult<CreateArtistMutation>;
 export type CreateArtistMutationOptions = Apollo.BaseMutationOptions<CreateArtistMutation, CreateArtistMutationVariables>;
-export const DeleteAlbumDocument = Apollo.gql`
+export const DeleteAlbumDocument = gql`
     mutation DeleteAlbum($album: DeleteAlbumInput!) {
   deleteAlbum(input: $album) {
     id
@@ -540,7 +543,7 @@ export function useDeleteAlbumMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteAlbumMutationHookResult = ReturnType<typeof useDeleteAlbumMutation>;
 export type DeleteAlbumMutationResult = Apollo.MutationResult<DeleteAlbumMutation>;
 export type DeleteAlbumMutationOptions = Apollo.BaseMutationOptions<DeleteAlbumMutation, DeleteAlbumMutationVariables>;
-export const GetHealthDetailedDocument = Apollo.gql`
+export const GetHealthDetailedDocument = gql`
     query GetHealthDetailed {
   health {
     apiStatus
@@ -573,7 +576,7 @@ export function useGetHealthDetailedLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type GetHealthDetailedQueryHookResult = ReturnType<typeof useGetHealthDetailedQuery>;
 export type GetHealthDetailedLazyQueryHookResult = ReturnType<typeof useGetHealthDetailedLazyQuery>;
 export type GetHealthDetailedQueryResult = Apollo.QueryResult<GetHealthDetailedQuery, GetHealthDetailedQueryVariables>;
-export const GetHealthDocument = Apollo.gql`
+export const GetHealthDocument = gql`
     query GetHealth {
   health {
     apiStatus
@@ -605,7 +608,7 @@ export function useGetHealthLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type GetHealthQueryHookResult = ReturnType<typeof useGetHealthQuery>;
 export type GetHealthLazyQueryHookResult = ReturnType<typeof useGetHealthLazyQuery>;
 export type GetHealthQueryResult = Apollo.QueryResult<GetHealthQuery, GetHealthQueryVariables>;
-export const UpdateArtistDocument = Apollo.gql`
+export const UpdateArtistDocument = gql`
     mutation UpdateArtist($artist: UpdateArtistInput!) {
   updateArtist(input: $artist) {
     id

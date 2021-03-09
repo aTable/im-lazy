@@ -8,7 +8,6 @@ import {
     UsePaginationState,
     useTable,
 } from 'react-table'
-import { TodoJsx } from '../types/server'
 
 export interface BeastTableProps<T extends Object> {
     columns: Column<T>
@@ -18,6 +17,7 @@ export interface BeastTableProps<T extends Object> {
     loading: boolean
     fetchData: any
     defaultPageSize: number
+    isDebug: boolean
 }
 const BeastTable = ({
     columns,
@@ -27,6 +27,7 @@ const BeastTable = ({
     totalCount,
     pageCount: controlledPageCount,
     defaultPageSize,
+    isDebug,
 }: any) => {
     const {
         getTableProps,
@@ -74,21 +75,23 @@ const BeastTable = ({
 
     return (
         <>
-            <pre>
-                <code>
-                    {JSON.stringify(
-                        {
-                            pageIndex,
-                            pageSize,
-                            pageCount,
-                            canNextPage,
-                            canPreviousPage,
-                        },
-                        null,
-                        2
-                    )}
-                </code>
-            </pre>
+            {isDebug && (
+                <pre>
+                    <code>
+                        {JSON.stringify(
+                            {
+                                pageIndex,
+                                pageSize,
+                                pageCount,
+                                canNextPage,
+                                canPreviousPage,
+                            },
+                            null,
+                            2
+                        )}
+                    </code>
+                </pre>
+            )}
             <table className="table table-sm" {...getTableProps()}>
                 <thead>
                     {headerGroups.map((headerGroup) => (

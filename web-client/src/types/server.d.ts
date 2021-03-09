@@ -14,6 +14,10 @@ export interface PagedMetadata {
     pageSize: number
     pageNumber: number
     pageCount: number
+    hasPrevious: boolean
+    hasNext: boolean
+    previous: string
+    next: string
 }
 
 export interface Todo {
