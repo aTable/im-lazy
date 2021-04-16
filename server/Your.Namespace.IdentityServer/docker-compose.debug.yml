@@ -3,11 +3,16 @@
 version: '3.4'
 
 services:
-  yournamespaceapi:
-    image: yournamespaceapi
+  yournamespaceidentityserver:
+    image: yournamespaceidentityserver
     build:
       context: .
       dockerfile: ./Dockerfile
     ports:
       - 80
       - 443
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw

@@ -8,6 +8,7 @@ using HotChocolate;
 using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -75,13 +76,19 @@ namespace Your.Namespace.Api
                 endpoints.MapControllers();
             });
 
-            var counter = Metrics.CreateCounter(appSettings.ApiName.Replace("-", "_") + "_endpoint_counter", $"Counts requests to the {appSettings.ApiName} endpoints", new CounterConfiguration
+            var httpRequestCounter = Metrics.CreateCounter("http_requests_total", $"Counts requests to the {appSettings.ApiName} endpoints", new CounterConfiguration());
+            app.Use((ctx, next) =>
+            {
+                httpRequestCounter.Inc();
+                return next();
+            });
+            var endpointCounter = Metrics.CreateCounter(appSettings.ApiName.Replace("-", "_") + "_endpoint_counter", $"Counts requests to the {appSettings.ApiName} endpoints", new CounterConfiguration
             {
                 LabelNames = new[] { "method", "endpoint" }
             });
             app.Use((ctx, next) =>
             {
-                counter.WithLabels(ctx.Request.Method, ctx.Request.Path).Inc();
+                endpointCounter.WithLabels(ctx.Request.Method, ctx.Request.Path).Inc();
                 return next();
             });
             app.UseMetricServer();

@@ -3,8 +3,8 @@
 version: '3.4'
 
 services:
-  yournamespaceapi:
-    image: yournamespaceapi
+  yournamespaceidentityserver:
+    image: yournamespaceidentityserver
     build:
       context: .
       dockerfile: ./Dockerfile

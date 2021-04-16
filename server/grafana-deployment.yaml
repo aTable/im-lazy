@@ -26,10 +26,10 @@ spec:
     spec:
       containers:
       - env:
-        - name: GF_SECURITY_ADMIN_PASSWORDDD
+        - name: GF_SECURITY_ADMIN_PASSWORD
           valueFrom:
             configMapKeyRef:
-              key: GF_SECURITY_ADMIN_PASSWORDDD
+              key: GF_SECURITY_ADMIN_PASSWORD
               name: grafana-config-monitoring
         - name: GF_USERS_ALLOW_SIGN_UP
           valueFrom:

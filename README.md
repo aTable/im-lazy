@@ -46,29 +46,13 @@ Building will also auto-generate front end documentation.
 
 ## Development setup
 
-Code-OSS on Arch doesn't seem to execute the .vscode/launch.json file which is quite problematic for local development. // TODO: figure out
+This repository has been setup for an `F5` experience to lower the barrier to entry in aim to be more productive. As a result, there are some things that should be attended to if you were to commit to this boilerplate. For example: 
 
-Install cross-platform .NET Core debugger
+- leveraging [user secrets](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-5.0&tabs=linux) in .NET instead of `appsettings.json` containing connection strings and secrets
 
-```
-curl -sSL https://aka.ms/getvsdbgsh | /bin/sh /dev/stdin -v latest -l ~/.vsdbg
-```
 
-Install the tools via:
 
-```shell
-pacman -S dotnet-sdk aspnet-runtime
-```
-
-Generate your self-signed certificate for https in development:
-
-```
-dotnet dev-certs https -ep $HOME/.aspnet/https/yournamespace.pfx -p password -v
-```
-
-When running the web client without trusting certificates, you may need to visit each web server individually in your browser and accept the risks for temporary access.
-
-## Developing 
+## Development helpers
 
 Update `NuGet` packages
 

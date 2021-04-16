@@ -64,6 +64,7 @@ export const AuthContextProvider = (props: IAuthContextProviderProps) => {
                 .then((user: User) => {
                     mutateQueryStringWithoutReload()
                     dispatch({ type: 'SET_TOKEN', payload: user })
+                    localStorage.setItem(authKeys.user, user.toStorageString())
                 })
                 .catch((err: any) => {
                     console.error(err)
