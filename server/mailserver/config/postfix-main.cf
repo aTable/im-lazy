@@ -1,1 +1,2 @@
 mydestination = localhost.$mydomain, localhost
+mynetworks = localhost 192.168.43.0/24, 127.0.0.0/8 172.18.0.1

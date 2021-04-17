@@ -9,26 +9,16 @@ services:
     domainname: localhost
     container_name: mailserver
     env_file: ./mailserver/mailserver.env
-    environment:
-      - PERMIT_DOCKER=network
-      - SSL_TYPE=letsencrypt
-      - ONE_DIR=1
-      - DMS_DEBUG=1
-      - SPOOF_PROTECTION=0
-      - REPORT_RECIPIENT=1
-      - ENABLE_SPAMASSASSIN=0
-      - ENABLE_CLAMAV=0
-      - ENABLE_FAIL2BAN=1
-      - ENABLE_POSTGREY=0
     # To avoid conflicts with yaml base-60 float, DO NOT remove the quotation marks.
     # More information about the mailserver ports:
     # https://docker-mailserver.github.io/docker-mailserver/edge/config/security/understanding-the-ports/
-    ports:
-      - "25:25" # SMTP  (explicit TLS => STARTTLS)
-      - "143:143" # IMAP4 (explicit TLS => STARTTLS)
-      - "465:465" # ESMTP (implicit TLS)
-      - "587:587" # ESMTP (explicit TLS => STARTTLS)
-      - "993:993" # IMAP4 (implicit TLS)
+    # ports:
+    #   - "25:25" # SMTP  (explicit TLS => STARTTLS)
+    #   - "143:143" # IMAP4 (explicit TLS => STARTTLS)
+    #   - "465:465" # ESMTP (implicit TLS)
+    #   - "587:587" # ESMTP (explicit TLS => STARTTLS)
+    #   - "993:993" # IMAP4 (implicit TLS)
+    network_mode: host
     volumes:
       - ./mailserver/maildata:/var/mail
       - ./mailserver/mailstate:/var/mail-state

@@ -1,2 +1,3 @@
-admin@example.com|{SHA512-CRYPT}$6$PrlmNMwfBsDY8I0C$XbakKyey6LycYMVVs/Ap6O9RJzvLj93HK5zHRVEJw/rN8b7w0XVN0KYqcYdPFC9rIx1M7sFZ8Po0v86B1/Der0
+admin@example.org|{SHA512-CRYPT}$6$PrlmNMwfBsDY8I0C$XbakKyey6LycYMVVs/Ap6O9RJzvLj93HK5zHRVEJw/rN8b7w0XVN0KYqcYdPFC9rIx1M7sFZ8Po0v86B1/Der0
 alertmanager@example.org|{SHA512-CRYPT}$6$WyMjeRgOmyplcRon$RTF.QQpWC/TYqiekzHvznkgIeaPkpG7QoP3/z5asT8y/6QC9B6.GBYQ0Qx3XdxOgxAYql02G7pVNfIHMqAqj41
+operations-team@example.org|{SHA512-CRYPT}$6$BS6U74ewZchw2Foy$pz0DFqSFS/75Px3BgFl8KTMn1gZvTnxH5hYPeClbCAYWhj/578lnku.Wg4YtJYWfZwgm9KjS2EwJvlsNCMrTq/

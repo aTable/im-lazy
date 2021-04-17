@@ -17,7 +17,7 @@ global:
   # [ smtp_auth_secret: <secret> ]
   # The default SMTP TLS requirement.
   # Note that Go does not support unencrypted connections to remote SMTP endpoints.
-  # [ smtp_require_tls: <bool> | default = true ]
+  smtp_require_tls: false
 
 
 # The root route on which each incoming alert enters.
@@ -102,6 +102,7 @@ route:
   - match_re:
       service: ^(.*)$
     receiver: 'webhook-demo'
+  
 
 
 # Inhibition rules allow to mute a set of alerts given that another alert is
@@ -148,3 +149,14 @@ receivers:
   webhook_configs:
   - send_resolved: true
     url: "http://localhost:9080/alerts"
+  email_configs:
+  - send_resolved: true
+    to: 'operations-team@example.org'
+    html: '<h1>something bad </h1>'
+    text: 'something bad'
+    # Further headers email header key/value pairs. Overrides any headers
+    # previously set by the notification implementation.
+    # [ headers: { <string>: <tmpl_string>, ... } ]
+
+
+  
