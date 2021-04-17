@@ -380,3 +380,6 @@ server/grafana/grafana.db
 server/prometheus
 !server/prometheus/prometheus.yml
 !server/prometheus/alert.rules
+server/mailserver/maildata
+server/mailserver/maillogs
+server/mailserver/mailstate

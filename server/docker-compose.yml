@@ -3,6 +3,42 @@
 
 version: "3.4"
 services:
+  mailserver:
+    image: docker.io/mailserver/docker-mailserver:latest
+    hostname: localhost
+    domainname: localhost
+    container_name: mailserver
+    env_file: ./mailserver/mailserver.env
+    environment:
+      - PERMIT_DOCKER=network
+      - SSL_TYPE=letsencrypt
+      - ONE_DIR=1
+      - DMS_DEBUG=1
+      - SPOOF_PROTECTION=0
+      - REPORT_RECIPIENT=1
+      - ENABLE_SPAMASSASSIN=0
+      - ENABLE_CLAMAV=0
+      - ENABLE_FAIL2BAN=1
+      - ENABLE_POSTGREY=0
+    # To avoid conflicts with yaml base-60 float, DO NOT remove the quotation marks.
+    # More information about the mailserver ports:
+    # https://docker-mailserver.github.io/docker-mailserver/edge/config/security/understanding-the-ports/
+    ports:
+      - "25:25" # SMTP  (explicit TLS => STARTTLS)
+      - "143:143" # IMAP4 (explicit TLS => STARTTLS)
+      - "465:465" # ESMTP (implicit TLS)
+      - "587:587" # ESMTP (explicit TLS => STARTTLS)
+      - "993:993" # IMAP4 (implicit TLS)
+    volumes:
+      - ./mailserver/maildata:/var/mail
+      - ./mailserver/mailstate:/var/mail-state
+      - ./mailserver/maillogs:/var/log/mail
+      - /etc/localtime:/etc/localtime:ro
+      - ./mailserver/config/:/tmp/docker-mailserver/
+    restart: always
+    stop_grace_period: 1m
+    cap_add: ["NET_ADMIN", "SYS_PTRACE"]
+
   prometheus:
     container_name: prometheus
     image: prom/prometheus:latest
@@ -64,16 +100,20 @@ services:
 
   alertmanager:
     container_name: alertmanager
-    image: prom/alertmanager:latest
+    image: quay.io/prometheus/alertmanager:latest
     # ports:
     #   - 9093:9093
     network_mode: host
     volumes:
-      - ./alertmanager/:/etc/alertmanager/
+      - ./alertmanager/alertmanager/:/etc/alertmanager/
+      - ./alertmanager/amtool/:/etc/amtool/
+      - ./alertmanager/storage/:/alertmanager/
     restart: always
+    depends_on:
+      - mailserver
     command:
       - "--config.file=/etc/alertmanager/config.yml"
-      - "--storage.path=/alertmanager"
+      #- "--storage.path=/etc/alertmanager/storage"
   #    deploy:
   #      placement:
   #        constraints:
