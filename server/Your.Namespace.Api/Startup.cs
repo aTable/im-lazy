@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using FluentValidation.AspNetCore;
 using HotChocolate;
 using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -25,6 +26,7 @@ using Your.Namespace.Api.DataAccess;
 using Your.Namespace.Api.GraphSchema.Albums;
 using Your.Namespace.Api.GraphSchema.Artists;
 using Your.Namespace.Api.GraphSchema.Health;
+using Your.Namespace.Api.Validators;
 
 namespace Your.Namespace.Api
 {
@@ -170,6 +172,9 @@ namespace Your.Namespace.Api
             }).AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+            }).AddFluentValidation(config =>
+            {
+                config.RegisterValidatorsFromAssemblyContaining<PlaceholderValidator>();
             });
             services.AddAuthorization(options =>
             {

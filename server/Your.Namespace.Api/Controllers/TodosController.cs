@@ -7,6 +7,7 @@ using Your.Namespace.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Your.Namespace.Api.ViewModels;
 
 namespace Your.Namespace.Api.Controllers
 {
@@ -42,7 +43,7 @@ namespace Your.Namespace.Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Todo> Create(Todo model)
+        public ActionResult<Todo> Create(CreateTodoViewModel model)
         {
             model.Id = _todos.Count + 1;
             model.Assignees = new string[] { "me", };
