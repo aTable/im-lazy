@@ -1,0 +1,14 @@
+---
+concurrency: 50
+base: 'http://localhost:9080'
+iterations: 100
+rampup: 5
+
+plan:
+  - name: Fetch todos
+    request:
+      url: /api/todos
+  - name: Fetch weather
+    request:
+      url: /weatherforecast
+  

@@ -76,23 +76,7 @@ namespace Your.Namespace.Api
                 endpoints.MapControllers();
             });
 
-            var httpRequestCounter = Metrics.CreateCounter("http_requests_total", $"Counts requests to the {appSettings.ApiName} endpoints", new CounterConfiguration());
-            app.Use((ctx, next) =>
-            {
-                httpRequestCounter.Inc();
-                return next();
-            });
-            var endpointCounter = Metrics.CreateCounter(appSettings.ApiName.Replace("-", "_") + "_endpoint_counter", $"Counts requests to the {appSettings.ApiName} endpoints", new CounterConfiguration
-            {
-                LabelNames = new[] { "method", "endpoint" }
-            });
-            app.Use((ctx, next) =>
-            {
-                endpointCounter.WithLabels(ctx.Request.Method, ctx.Request.Path).Inc();
-                return next();
-            });
-            app.UseMetricServer();
-            app.UseHttpMetrics();
+            ConfigurePrometheus(app, appSettings);
 
             app.UseGraphQL(path: appSettings.GraphSettings.Path);
 
@@ -210,6 +194,27 @@ namespace Your.Namespace.Api
             services.AddMemoryCache(options => { });
             var connectionString = Configuration.GetConnectionString("ConnectionString");
             services.AddDbContext<Context>(options => options.UseSqlite(connectionString));
+        }
+
+        private void ConfigurePrometheus(IApplicationBuilder app, AppSettings appSettings)
+        {
+            var httpRequestCounter = Metrics.CreateCounter("http_requests_total", $"Counts requests to the {appSettings.ApiName} endpoints", new CounterConfiguration());
+            app.Use((ctx, next) =>
+            {
+                httpRequestCounter.Inc();
+                return next();
+            });
+            var endpointCounter = Metrics.CreateCounter(appSettings.ApiName.Replace("-", "_") + "_endpoint_counter", $"Counts requests to the {appSettings.ApiName} endpoints", new CounterConfiguration
+            {
+                LabelNames = new[] { "method", "endpoint" }
+            });
+            app.Use((ctx, next) =>
+            {
+                endpointCounter.WithLabels(ctx.Request.Method, ctx.Request.Path).Inc();
+                return next();
+            });
+            app.UseMetricServer();
+            app.UseHttpMetrics();
         }
     }
 }

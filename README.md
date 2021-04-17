@@ -36,7 +36,6 @@ Building will also auto-generate front end documentation.
 
 ## Future
 
-- [ ] convert Implicit grant to PKCE due to being vulnerable to [interception attacks](https://tools.ietf.org/html/rfc7636)
 - [ ] upgrade IdentityServer to be https:// (resolve cross platform cert situation)
 - [ ] consider replacing `axios`. The repo is still alive [kinda](https://github.com/axios/axios/issues/1965)
 - [ ] add `terraform` per deployable project
@@ -79,3 +78,10 @@ find -type f -name "*.yaml" | sed 's/.\///' | sed 's/$/,/' | xargs
 docker run --rm -p 9082:9082 -p 9083:9083 -v ~/.aspnet/https:/https -e "ASPNETCORE_URLS=https://+;http://+" -e "ASPNETCORE_HTTPS_PORT=9083" -e "ASPNETCORE_ENVIRONMENT=development" -e "ASPNETCORE_Kestrel__Certificates__Default__Password=password" -e "ASPNETCORE_Kestrel__Certificates__Default__Path=/https/yourentirenamespace.pfx"  yournamespaceidentityserver:latest
 ```
 
+## Load testing
+
+Rust's [drill](https://github.com/fcsonline/drill) is a simple and declarative way to execute load testing. 
+
+```sh
+drill --benchmark ./load-testing/load-test.yml --stats
+```
