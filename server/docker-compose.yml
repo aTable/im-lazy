@@ -149,8 +149,19 @@ services:
     restart: always
     hostname: "localhost"
     environment:
+      # https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/files/gitlab-config-template/gitlab.rb.template
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'http://localhost'
+
+        registry_external_url 'http://localhost:5050'
+        gitlab_rails['registry_enabled'] = true
+        gitlab_rails['registry_host'] = "localhost"
+        gitlab_rails['registry_port'] = "5005"
+        registry['enable'] = true
+        registry['debug_addr'] = "localhost:5001"        
+        registry['log_level'] = "info"
+        registry_nginx['enable'] = true
+        registry_nginx['listen_port'] = "5050"
     # ports:
     #   - "80:80"
     #   - "443:443"
@@ -169,6 +180,8 @@ services:
       - ./gitlab-runner/config:/etc/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock
     network_mode: host
+    depends_on:
+      - gitlab
 
   # zaproxy:
   #   container_name: zaproxy
