@@ -151,14 +151,24 @@ services:
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'http://localhost'
-    ports:
-      - "80:80"
-      - "443:443"
-      - "22:22"
+    # ports:
+    #   - "80:80"
+    #   - "443:443"
+    #   - "22:22"
+    network_mode: host
     volumes:
       - "./gitlab/config:/etc/gitlab"
       - "./gitlab/logs:/var/log/gitlab"
       - "./gitlab/data:/var/opt/gitlab"
+
+  gitlab-runner:
+    image: gitlab/gitlab-runner:latest
+    container_name: gitlab-runner
+    restart: always
+    volumes:
+      - ./gitlab-runner/config:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+    network_mode: host
 
   # zaproxy:
   #   container_name: zaproxy
