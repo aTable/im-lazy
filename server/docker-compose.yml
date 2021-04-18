@@ -128,6 +128,22 @@ services:
     deploy:
       mode: global
 
+  plantuml:
+    image: "plantuml/plantuml-server:jetty"
+    container_name: plantuml
+    command:
+      - "-Djetty.port=9999"
+    network_mode: host
+
+  dockerregistry:
+    image: registry:2
+    container_name: dockerregistry
+    network_mode: host
+    restart: always
+    env_file: ./docker-registry/.env
+    volumes:
+      - ./docker-registry/:/var/lib/registry
+
   # zaproxy:
   #   container_name: zaproxy
   #   image: owasp/zap2docker-stable

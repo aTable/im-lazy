@@ -383,3 +383,4 @@ server/prometheus
 server/mailserver/maildata
 server/mailserver/maillogs
 server/mailserver/mailstate
+documentation/dist

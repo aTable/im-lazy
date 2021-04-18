@@ -85,3 +85,57 @@ Rust's [drill](https://github.com/fcsonline/drill) is a simple and declarative w
 ```sh
 drill --benchmark ./load-testing/load-test.yml --stats
 ```
+
+Example `load-test.yml` contents:
+```yml
+---
+concurrency: 50
+base: 'http://localhost:9080'
+iterations: 100
+rampup: 5
+
+plan:
+  - name: Fetch todos
+    request:
+      url: /api/todos
+  - name: Fetch weather
+    request:
+      url: /weatherforecast
+  
+```
+
+## Show and tell
+
+Here's a list of things to call out in this repository.
+
+### Monitoring
+
+Dashboards are setup to monitor
+
+- [Host nodes](http://localhost:3000/d/node-exporter-dashboard/node-exporter-for-prometheus-dashboard-en-v20201010?orgId=1)
+- [Containers](http://localhost:3000/d/cadvisor-dashboard/docker-and-system-monitoring?orgId=1&refresh=5m)
+- [Your application dashboard](http://localhost:3000/d/mfyFMAuGk/yournamespaceapi-dashboard?orgId=1&refresh=5s)
+
+Default username and password is `admin`. 
+
+These dashboards are found `~/server/grafana/provisioning/dashboards`
+
+
+
+### Alerting
+
+Alert rules are defined in `~/server/prometheus/alert.rules` and are actioned by `~/server/alertmanager/alertmanager/config.yml` which are:
+
+| Receiver | Location | 
+| -------| -------| 
+| Webhook | `~/server/Your.Namespace.Api/Controllers/AlertsController.cs` |
+| Email | `~/server/mailserver/maildata/example.org/operations-team/new` |
+
+### Documentation
+
+Authoring documents located `~/documentation` assumes writing in markdown and uses
+
+- [Pandoc](https://pandoc.org)
+- [PlantUML](https://plantuml.com/)
+
+to generate human friendly versions by running `~/documentation/build.sh` outputting to `~/documentation/dist` 

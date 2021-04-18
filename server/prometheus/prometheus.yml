@@ -62,3 +62,13 @@ scrape_configs:
     #     port: 9100
     static_configs:
       - targets: ["127.0.0.1:9080"]
+
+  - job_name: "docker-registry"
+    scrape_interval: 5s
+    # dns_sd_configs:
+    #   - names:
+    #       - "tasks.node-exporter"
+    #     type: "A"
+    #     port: 9100
+    static_configs:
+      - targets: ["127.0.0.1:5001"]
