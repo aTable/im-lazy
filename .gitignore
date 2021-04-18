@@ -384,3 +384,6 @@ server/mailserver/maildata
 server/mailserver/maillogs
 server/mailserver/mailstate
 documentation/dist
+server/gitlab/config
+server/gitlab/data
+server/gitlab/logs
