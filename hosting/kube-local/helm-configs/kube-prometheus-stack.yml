@@ -1,0 +1,36 @@
+prometheus:
+  prometheusSpec:
+    additionalScrapeConfigs:
+      - job_name: "yournamespaceapi"
+        scrape_interval: 5s
+        # dns_sd_configs:
+        #   - names:
+        #       - "tasks.node-exporter"
+        #     type: "A"
+        #     port: 9100
+        static_configs:
+          - targets: ["127.0.0.1:9080"]
+
+alertmanager:
+  config:
+    route:
+      group_by: ['job']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 10m
+      receiver: 'webhook-demo'
+      routes:      
+      - match_re:
+          service: ^(.*)$
+        receiver: 'webhook-demo'
+    receivers:
+    - name: 'webhook-demo'
+      webhook_configs:
+      - send_resolved: true
+        url: "http://localhost:9080/alerts"
+      # email_configs:
+      # - send_resolved: true
+      #   to: 'operations-team@example.org'
+      #   html: '<h1>something bad </h1>'
+      #   text: 'something bad'
+    

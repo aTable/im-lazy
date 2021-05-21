@@ -24,7 +24,7 @@ before_script:
 build:
   stage: build
   script:
-    - docker build --pull -t "$IMAGE_TAG" ./server/Your.Namespace.Api/
+    - docker build --pull -t "$IMAGE_TAG" ./Your.Namespace.Api/
     - docker push $IMAGE_TAG
 
 # test1:

@@ -45,11 +45,9 @@ Building will also auto-generate front end documentation.
 
 ## Development setup
 
-This repository has been setup for an `F5` experience to lower the barrier to entry in aim to be more productive. As a result, there are some things that should be attended to if you were to commit to this boilerplate. For example: 
+This repository has been setup for an `F5` experience to lower the barrier to entry in aim to be more productive. As a result, there are some things that should be attended to if you were to commit to this boilerplate. For example:
 
 - leveraging [user secrets](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-5.0&tabs=linux) in .NET instead of `appsettings.json` containing connection strings and secrets
-
-
 
 ## Development helpers
 
@@ -80,17 +78,18 @@ docker run --rm -p 9082:9082 -p 9083:9083 -v ~/.aspnet/https:/https -e "ASPNETCO
 
 ## Load testing
 
-Rust's [drill](https://github.com/fcsonline/drill) is a simple and declarative way to execute load testing. 
+Rust's [drill](https://github.com/fcsonline/drill) is a simple and declarative way to execute load testing.
 
 ```sh
 drill --benchmark ./load-testing/load-test.yml --stats
 ```
 
 Example `load-test.yml` contents:
+
 ```yml
 ---
 concurrency: 50
-base: 'http://localhost:9080'
+base: "http://localhost:9080"
 iterations: 100
 rampup: 5
 
@@ -101,12 +100,21 @@ plan:
   - name: Fetch weather
     request:
       url: /weatherforecast
-  
 ```
 
 ## Show and tell
 
 Here's a list of things to call out in this repository.
+
+### Start up
+
+Provision your local environment with:
+
+| Provider                                           |                                                                                                                        | Command |
+| -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------- |
+| [kind](https://kind.sigs.k8s.io/)                  | `kind create cluster --config ./hosting/kind-yournamespace.yml` <br/><br/>`kind delete cluster --name example-cluster` |
+|                                                    |
+| [docker-compose](https://docs.docker.com/compose/) | `docker-compose up -f ./server/docker-compose.yml`                                                                     |
 
 ### Monitoring
 
@@ -116,20 +124,18 @@ Dashboards are setup to monitor
 - [Containers](http://localhost:3000/d/cadvisor-dashboard/docker-and-system-monitoring?orgId=1&refresh=5m)
 - [Your application dashboard](http://localhost:3000/d/mfyFMAuGk/yournamespaceapi-dashboard?orgId=1&refresh=5s)
 
-Default username and password is `admin`. 
+Default username and password is `admin`.
 
 These dashboards are found `~/server/grafana/provisioning/dashboards`
-
-
 
 ### Alerting
 
 Alert rules are defined in `~/server/prometheus/alert.rules` and are actioned by `~/server/alertmanager/alertmanager/config.yml` which are:
 
-| Receiver | Location | 
-| -------| -------| 
-| Webhook | `~/server/Your.Namespace.Api/Controllers/AlertsController.cs` |
-| Email | `~/server/mailserver/maildata/example.org/operations-team/new` |
+| Receiver | Location                                                       |
+| -------- | -------------------------------------------------------------- |
+| Webhook  | `~/Your.Namespace.Api/Controllers/AlertsController.cs`         |
+| Email    | `~/server/mailserver/maildata/example.org/operations-team/new` |
 
 ### Documentation
 
@@ -138,4 +144,10 @@ Authoring documents located `~/documentation` assumes writing in markdown and us
 - [Pandoc](https://pandoc.org)
 - [PlantUML](https://plantuml.com/)
 
-to generate human friendly versions by running `~/documentation/build.sh` outputting to `~/documentation/dist` 
+to generate human friendly versions by running `~/documentation/build.sh` outputting to `~/documentation/dist`
+
+## k8s
+
+- grafana
+  - username: `admin`
+  - password: `prom-operator`
