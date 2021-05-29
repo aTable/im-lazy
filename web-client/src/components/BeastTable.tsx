@@ -28,6 +28,7 @@ const BeastTable = ({
     pageCount: controlledPageCount,
     defaultPageSize,
     isDebug,
+    isShowPagination = true,
 }: any) => {
     const {
         getTableProps,
@@ -70,6 +71,7 @@ const BeastTable = ({
     ) //as TableInstance<TodoJsx> & UsePaginationInstanceProps<TodoJsx> & { state: UsePaginationState<TodoJsx> }
 
     useEffect(() => {
+        if (!fetchData) return
         fetchData({ pageIndex, pageSize })
     }, [fetchData, pageIndex, pageSize])
 
@@ -128,57 +130,59 @@ const BeastTable = ({
                     </tr>
                 </tbody>
             </table>
-            <nav aria-label="Table data navigation">
-                <ul className="pagination">
-                    <li className={`page-item ${canPreviousPage ? '' : 'disabled'}`}>
-                        <button
-                            className="page-link"
-                            aria-label="Previous"
-                            onClick={() => gotoPage(0)}
-                            disabled={!canPreviousPage}
-                        >
-                            <span aria-hidden="true">&laquo;&laquo;</span>
-                        </button>
-                    </li>
-                    <li className={`page-item ${canPreviousPage ? '' : 'disabled'}`}>
-                        <button
-                            className="page-link"
-                            aria-label="Previous"
-                            onClick={() => previousPage()}
-                            disabled={!canPreviousPage}
-                        >
-                            <span aria-hidden="true">&laquo;</span>
-                        </button>
-                    </li>
-                    {pageOptions.map((x: any, i: number) => (
-                        <li key={x} className={`page-item  ${pageIndex === i ? 'active' : ''}`}>
-                            <button className="page-link" aria-label={x} onClick={() => gotoPage(x)}>
-                                <span aria-hidden="true">{x + 1}</span>
+            {isShowPagination && (
+                <nav aria-label="Table data navigation">
+                    <ul className="pagination">
+                        <li className={`page-item ${canPreviousPage ? '' : 'disabled'}`}>
+                            <button
+                                className="page-link"
+                                aria-label="Previous"
+                                onClick={() => gotoPage(0)}
+                                disabled={!canPreviousPage}
+                            >
+                                <span aria-hidden="true">&laquo;&laquo;</span>
                             </button>
                         </li>
-                    ))}
-                    <li className={`page-item ${canNextPage ? '' : 'disabled'}`}>
-                        <button
-                            className="page-link"
-                            aria-label="Next"
-                            onClick={() => nextPage()}
-                            disabled={!canNextPage}
-                        >
-                            <span aria-hidden="true">&raquo;</span>
-                        </button>
-                    </li>
-                    <li className={`page-item ${canNextPage ? '' : 'disabled'}`}>
-                        <button
-                            className="page-link"
-                            aria-label="Last"
-                            onClick={() => gotoPage(pageCount - 1)}
-                            disabled={!canNextPage}
-                        >
-                            <span aria-hidden="true">&raquo;&raquo;</span>
-                        </button>
-                    </li>
-                </ul>
-            </nav>
+                        <li className={`page-item ${canPreviousPage ? '' : 'disabled'}`}>
+                            <button
+                                className="page-link"
+                                aria-label="Previous"
+                                onClick={() => previousPage()}
+                                disabled={!canPreviousPage}
+                            >
+                                <span aria-hidden="true">&laquo;</span>
+                            </button>
+                        </li>
+                        {pageOptions.map((x: any, i: number) => (
+                            <li key={x} className={`page-item  ${pageIndex === i ? 'active' : ''}`}>
+                                <button className="page-link" aria-label={x} onClick={() => gotoPage(x)}>
+                                    <span aria-hidden="true">{x + 1}</span>
+                                </button>
+                            </li>
+                        ))}
+                        <li className={`page-item ${canNextPage ? '' : 'disabled'}`}>
+                            <button
+                                className="page-link"
+                                aria-label="Next"
+                                onClick={() => nextPage()}
+                                disabled={!canNextPage}
+                            >
+                                <span aria-hidden="true">&raquo;</span>
+                            </button>
+                        </li>
+                        <li className={`page-item ${canNextPage ? '' : 'disabled'}`}>
+                            <button
+                                className="page-link"
+                                aria-label="Last"
+                                onClick={() => gotoPage(pageCount - 1)}
+                                disabled={!canNextPage}
+                            >
+                                <span aria-hidden="true">&raquo;&raquo;</span>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            )}
         </>
     )
 }
