@@ -20,8 +20,8 @@ const config: IConfig = {
         response_type: process.env.REACT_APP_OIDC_RESPONSE_TYPE,
         scope: process.env.REACT_APP_OIDC_SCOPE,
         post_logout_redirect_uri: process.env.REACT_APP_OIDC_LOGOUT_REDIRECT_URI,
-        automaticSilentRenew: (process.env.REACT_APP_OIDC_ENABLE_SILENT_RENEW! as unknown) as boolean,
-        loadUserInfo: (process.env.REACT_APP_OIDC_LOAD_USER_INFO! as unknown) as boolean,
+        automaticSilentRenew: process.env.REACT_APP_OIDC_ENABLE_SILENT_RENEW! as unknown as boolean,
+        loadUserInfo: process.env.REACT_APP_OIDC_LOAD_USER_INFO! as unknown as boolean,
         // silent_redirect_uri: "https://localhost:3000/silent-renew"
     },
 }

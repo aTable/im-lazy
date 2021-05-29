@@ -80,31 +80,24 @@ const Artists = (props: IArtistProps) => {
         },
     })
 
-    const {
-        handleSubmit,
-        handleChange,
-        isSubmitting,
-        dirty,
-        values,
-        errors,
-        isValid,
-    } = useFormik<IUpdateArtistFormData>({
-        initialValues: {
-            artistName: data?.artist?.name! || '',
-        },
-        onSubmit(values) {
-            updateArtist({
-                variables: {
-                    artist: {
-                        name: values.artistName,
-                        id: parseInt(props.match.params.artistId, 10),
+    const { handleSubmit, handleChange, isSubmitting, dirty, values, errors, isValid } =
+        useFormik<IUpdateArtistFormData>({
+            initialValues: {
+                artistName: data?.artist?.name! || '',
+            },
+            onSubmit(values) {
+                updateArtist({
+                    variables: {
+                        artist: {
+                            name: values.artistName,
+                            id: parseInt(props.match.params.artistId, 10),
+                        },
                     },
-                },
-            })
-        },
-        validationSchema: updateArtistSchema,
-        enableReinitialize: true,
-    })
+                })
+            },
+            validationSchema: updateArtistSchema,
+            enableReinitialize: true,
+        })
 
     if (loading) return <LoadingRoot />
     if (error) return <p>Errors broskie</p>

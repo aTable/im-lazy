@@ -11,7 +11,14 @@ const NavBar = (props: INavBarProps) => {
     }
     return (
         <nav className="navbar navbar-expand-sm navbar-light bg-light">
-            <Link className="navbar-brand" to="/">
+            <Link
+                className="navbar-brand"
+                to="/"
+                data-bs-toggle="tooltip"
+                data-bs-placement="bottom"
+                title="Go home"
+                data-bs-original-title="Go home"
+            >
                 Boilerplate
             </Link>
             <button

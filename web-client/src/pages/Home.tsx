@@ -15,6 +15,7 @@ const Home = (_: IHomeProps) => {
     useEffect(() => {
         getWeather().then(setWeather)
     }, [])
+
     return (
         <div className="container">
             <h1>A boilerplate ...</h1>

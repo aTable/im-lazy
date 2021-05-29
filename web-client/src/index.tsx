@@ -2,8 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-import $ from 'jquery'
-import Popper from 'popper.js'
+import * as Popper from '@popperjs/core'
+import * as bootstrap from 'bootstrap'
 import '@fortawesome/fontawesome-free/css/fontawesome.css'
 import '@fortawesome/fontawesome-free/css/regular.min.css'
 import '@fortawesome/fontawesome-free/css/brands.min.css'
@@ -14,15 +14,10 @@ import './css/base.scss'
 
 if (!window.location.protocol.includes('https')) window.location.protocol = 'https:'
 
-// TODO: replace bootstrap with TailwindCSS, Bulma or bootstrap-v5-alpha
-/* Shim to provide dependent plugins without ejecting create-react-app */
-// @ts-ignore
-window.jQuery = $
-// @ts-ignore
-window.$ = $
 // @ts-ignore
 window.Popper = Popper
-require('bootstrap')
+// @ts-ignore
+window.bootstrap = bootstrap
 
 ReactDOM.render(
     <React.StrictMode>

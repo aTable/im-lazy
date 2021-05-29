@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { ToastContainer } from 'react-toastify'
 import { HashRouter as Router, Route, Switch } from 'react-router-dom'
 import Navbar from './components/Navbar'
@@ -12,10 +12,9 @@ import Artist from './pages/Artist'
 import Protected from './pages/Protected'
 import ErrorDemo from './pages/ErrorDemo'
 import Unauthorized from './pages/Unauthorized'
-import Oidc, { User } from 'oidc-client'
+import Oidc from 'oidc-client'
 import config from './config'
-import { AuthContextProvider, authKeys } from './stores/AuthContext'
-import { mutateQueryStringWithoutReload } from './utils/utils'
+import { AuthContextProvider } from './stores/AuthContext'
 import LoggedOut from './pages/LoggedOut'
 import { client } from './api/api'
 import { ApolloProvider } from '@apollo/client'
@@ -26,6 +25,8 @@ import TodoCreateUpdate from './pages/TodoCreateUpdate'
 import Test from './pages/Test'
 
 import { QueryClient, QueryClientProvider } from 'react-query'
+import ScrollToTop from './components/ScrollToTop'
+import BootstrapTooltipActivator from './components/BootstrapTooltipActivator'
 const queryClient = new QueryClient()
 
 const mgr = new Oidc.UserManager(config.oidc)
@@ -51,7 +52,6 @@ interface IAppProps {}
  */
 const App = (props: IAppProps) => {
     useEffect(() => {
-        const g = 2 + 2
         // do init
     }, [])
 
@@ -62,6 +62,8 @@ const App = (props: IAppProps) => {
                 <ApolloProvider client={client}>
                     <AuthContextProvider>
                         <Router>
+                            <ScrollToTop />
+                            <BootstrapTooltipActivator />
                             <Navbar />
                             <ErrorBoundary>
                                 <Switch>

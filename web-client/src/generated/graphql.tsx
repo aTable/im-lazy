@@ -4,6 +4,7 @@ export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+const defaultOptions =  {}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -11,72 +12,14 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The `DateTime` scalar represents an ISO-8601 compliant date time type. */
+  DateTime: any;
   /** The multiplier path scalar represents a valid GraphQL multiplier path string. */
   MultiplierPath: any;
   PaginationAmount: any;
-  /** The `DateTime` scalar represents an ISO-8601 compliant date time type. */
-  DateTime: any;
-};
-
-export type Query = {
-  __typename?: 'Query';
-  album?: Maybe<Album>;
-  albums?: Maybe<AlbumConnection>;
-  artist?: Maybe<Artist>;
-  artists?: Maybe<Array<Maybe<Artist>>>;
-  health?: Maybe<Health>;
 };
 
 
-export type QueryAlbumArgs = {
-  id: Scalars['Int'];
-};
-
-
-export type QueryAlbumsArgs = {
-  after?: Maybe<Scalars['String']>;
-  before?: Maybe<Scalars['String']>;
-  first?: Maybe<Scalars['PaginationAmount']>;
-  last?: Maybe<Scalars['PaginationAmount']>;
-  order_by?: Maybe<AlbumSort>;
-  where?: Maybe<AlbumFilter>;
-};
-
-
-export type QueryArtistArgs = {
-  id: Scalars['Int'];
-};
-
-export type Mutation = {
-  __typename?: 'Mutation';
-  createArtist?: Maybe<Artist>;
-  deleteAlbum?: Maybe<Album>;
-  updateArtist?: Maybe<Artist>;
-};
-
-
-export type MutationCreateArtistArgs = {
-  input?: Maybe<CreateArtistInput>;
-};
-
-
-export type MutationDeleteAlbumArgs = {
-  input?: Maybe<DeleteAlbumInput>;
-};
-
-
-export type MutationUpdateArtistArgs = {
-  input?: Maybe<UpdateArtistInput>;
-};
-
-
-export type Artist = {
-  __typename?: 'Artist';
-  albums?: Maybe<Array<Maybe<Album>>>;
-  id: Scalars['Int'];
-  name?: Maybe<Scalars['String']>;
-  totalRevenue: Scalars['Float'];
-};
 
 export type Album = {
   __typename?: 'Album';
@@ -88,10 +31,25 @@ export type Album = {
   releaseDate: Scalars['DateTime'];
 };
 
-export type Health = {
-  __typename?: 'Health';
-  apiStatus?: Maybe<Scalars['String']>;
-  databaseStatus?: Maybe<Scalars['String']>;
+/** A connection to a list of items. */
+export type AlbumConnection = {
+  __typename?: 'AlbumConnection';
+  /** A list of edges. */
+  edges?: Maybe<Array<AlbumEdge>>;
+  /** A flattened list of the nodes. */
+  nodes?: Maybe<Array<Maybe<Album>>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+/** An edge in a connection. */
+export type AlbumEdge = {
+  __typename?: 'AlbumEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String'];
+  /** The item at the end of the edge. */
+  node?: Maybe<Album>;
 };
 
 export type AlbumFilter = {
@@ -165,22 +123,56 @@ export type AlbumSort = {
   releaseDate?: Maybe<SortOperationKind>;
 };
 
-/** A connection to a list of items. */
-export type AlbumConnection = {
-  __typename?: 'AlbumConnection';
-  /** A list of edges. */
-  edges?: Maybe<Array<AlbumEdge>>;
-  /** A flattened list of the nodes. */
-  nodes?: Maybe<Array<Maybe<Album>>>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+export type Artist = {
+  __typename?: 'Artist';
+  albums?: Maybe<Array<Maybe<Album>>>;
+  id: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
+  totalRevenue: Scalars['Float'];
+};
+
+export type CreateArtistInput = {
+  name?: Maybe<Scalars['String']>;
 };
 
 
-export enum SortOperationKind {
-  Asc = 'ASC',
-  Desc = 'DESC'
+export type DeleteAlbumInput = {
+  albumId: Scalars['Int'];
+};
+
+export type Health = {
+  __typename?: 'Health';
+  apiStatus?: Maybe<Scalars['String']>;
+  databaseStatus?: Maybe<Scalars['String']>;
+};
+
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  createArtist?: Maybe<Artist>;
+  deleteAlbum?: Maybe<Album>;
+  updateArtist?: Maybe<Artist>;
+};
+
+
+export type MutationCreateArtistArgs = {
+  input?: Maybe<CreateArtistInput>;
+};
+
+
+export type MutationDeleteAlbumArgs = {
+  input?: Maybe<DeleteAlbumInput>;
+};
+
+
+export type MutationUpdateArtistArgs = {
+  input?: Maybe<UpdateArtistInput>;
+};
+
+export enum MyRating {
+  None = 'NONE',
+  Okayish = 'OKAYISH',
+  Legendary = 'LEGENDARY'
 }
 
 /** Information about pagination in a connection. */
@@ -196,32 +188,43 @@ export type PageInfo = {
   startCursor?: Maybe<Scalars['String']>;
 };
 
-/** An edge in a connection. */
-export type AlbumEdge = {
-  __typename?: 'AlbumEdge';
-  /** A cursor for use in pagination. */
-  cursor: Scalars['String'];
-  /** The item at the end of the edge. */
-  node?: Maybe<Album>;
+
+export type Query = {
+  __typename?: 'Query';
+  album?: Maybe<Album>;
+  albums?: Maybe<AlbumConnection>;
+  artist?: Maybe<Artist>;
+  artists?: Maybe<Array<Maybe<Artist>>>;
+  health?: Maybe<Health>;
 };
 
-export enum MyRating {
-  None = 'NONE',
-  Okayish = 'OKAYISH',
-  Legendary = 'LEGENDARY'
+
+export type QueryAlbumArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type QueryAlbumsArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['PaginationAmount']>;
+  last?: Maybe<Scalars['PaginationAmount']>;
+  order_by?: Maybe<AlbumSort>;
+  where?: Maybe<AlbumFilter>;
+};
+
+
+export type QueryArtistArgs = {
+  id: Scalars['Int'];
+};
+
+export enum SortOperationKind {
+  Asc = 'ASC',
+  Desc = 'DESC'
 }
-
-
-export type DeleteAlbumInput = {
-  albumId: Scalars['Int'];
-};
 
 export type UpdateArtistInput = {
   id: Scalars['Int'];
-  name?: Maybe<Scalars['String']>;
-};
-
-export type CreateArtistInput = {
   name?: Maybe<Scalars['String']>;
 };
 
@@ -392,10 +395,12 @@ export const AlbumFinderDocument = gql`
  * });
  */
 export function useAlbumFinderQuery(baseOptions: Apollo.QueryHookOptions<AlbumFinderQuery, AlbumFinderQueryVariables>) {
-        return Apollo.useQuery<AlbumFinderQuery, AlbumFinderQueryVariables>(AlbumFinderDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AlbumFinderQuery, AlbumFinderQueryVariables>(AlbumFinderDocument, options);
       }
 export function useAlbumFinderLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AlbumFinderQuery, AlbumFinderQueryVariables>) {
-          return Apollo.useLazyQuery<AlbumFinderQuery, AlbumFinderQueryVariables>(AlbumFinderDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AlbumFinderQuery, AlbumFinderQueryVariables>(AlbumFinderDocument, options);
         }
 export type AlbumFinderQueryHookResult = ReturnType<typeof useAlbumFinderQuery>;
 export type AlbumFinderLazyQueryHookResult = ReturnType<typeof useAlbumFinderLazyQuery>;
@@ -432,10 +437,12 @@ export const GetArtistDocument = gql`
  * });
  */
 export function useGetArtistQuery(baseOptions: Apollo.QueryHookOptions<GetArtistQuery, GetArtistQueryVariables>) {
-        return Apollo.useQuery<GetArtistQuery, GetArtistQueryVariables>(GetArtistDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetArtistQuery, GetArtistQueryVariables>(GetArtistDocument, options);
       }
 export function useGetArtistLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetArtistQuery, GetArtistQueryVariables>) {
-          return Apollo.useLazyQuery<GetArtistQuery, GetArtistQueryVariables>(GetArtistDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetArtistQuery, GetArtistQueryVariables>(GetArtistDocument, options);
         }
 export type GetArtistQueryHookResult = ReturnType<typeof useGetArtistQuery>;
 export type GetArtistLazyQueryHookResult = ReturnType<typeof useGetArtistLazyQuery>;
@@ -469,10 +476,12 @@ export const GetArtistsDocument = gql`
  * });
  */
 export function useGetArtistsQuery(baseOptions?: Apollo.QueryHookOptions<GetArtistsQuery, GetArtistsQueryVariables>) {
-        return Apollo.useQuery<GetArtistsQuery, GetArtistsQueryVariables>(GetArtistsDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetArtistsQuery, GetArtistsQueryVariables>(GetArtistsDocument, options);
       }
 export function useGetArtistsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetArtistsQuery, GetArtistsQueryVariables>) {
-          return Apollo.useLazyQuery<GetArtistsQuery, GetArtistsQueryVariables>(GetArtistsDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetArtistsQuery, GetArtistsQueryVariables>(GetArtistsDocument, options);
         }
 export type GetArtistsQueryHookResult = ReturnType<typeof useGetArtistsQuery>;
 export type GetArtistsLazyQueryHookResult = ReturnType<typeof useGetArtistsLazyQuery>;
@@ -505,7 +514,8 @@ export type CreateArtistMutationFn = Apollo.MutationFunction<CreateArtistMutatio
  * });
  */
 export function useCreateArtistMutation(baseOptions?: Apollo.MutationHookOptions<CreateArtistMutation, CreateArtistMutationVariables>) {
-        return Apollo.useMutation<CreateArtistMutation, CreateArtistMutationVariables>(CreateArtistDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateArtistMutation, CreateArtistMutationVariables>(CreateArtistDocument, options);
       }
 export type CreateArtistMutationHookResult = ReturnType<typeof useCreateArtistMutation>;
 export type CreateArtistMutationResult = Apollo.MutationResult<CreateArtistMutation>;
@@ -538,7 +548,8 @@ export type DeleteAlbumMutationFn = Apollo.MutationFunction<DeleteAlbumMutation,
  * });
  */
 export function useDeleteAlbumMutation(baseOptions?: Apollo.MutationHookOptions<DeleteAlbumMutation, DeleteAlbumMutationVariables>) {
-        return Apollo.useMutation<DeleteAlbumMutation, DeleteAlbumMutationVariables>(DeleteAlbumDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteAlbumMutation, DeleteAlbumMutationVariables>(DeleteAlbumDocument, options);
       }
 export type DeleteAlbumMutationHookResult = ReturnType<typeof useDeleteAlbumMutation>;
 export type DeleteAlbumMutationResult = Apollo.MutationResult<DeleteAlbumMutation>;
@@ -568,10 +579,12 @@ export const GetHealthDetailedDocument = gql`
  * });
  */
 export function useGetHealthDetailedQuery(baseOptions?: Apollo.QueryHookOptions<GetHealthDetailedQuery, GetHealthDetailedQueryVariables>) {
-        return Apollo.useQuery<GetHealthDetailedQuery, GetHealthDetailedQueryVariables>(GetHealthDetailedDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetHealthDetailedQuery, GetHealthDetailedQueryVariables>(GetHealthDetailedDocument, options);
       }
 export function useGetHealthDetailedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetHealthDetailedQuery, GetHealthDetailedQueryVariables>) {
-          return Apollo.useLazyQuery<GetHealthDetailedQuery, GetHealthDetailedQueryVariables>(GetHealthDetailedDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetHealthDetailedQuery, GetHealthDetailedQueryVariables>(GetHealthDetailedDocument, options);
         }
 export type GetHealthDetailedQueryHookResult = ReturnType<typeof useGetHealthDetailedQuery>;
 export type GetHealthDetailedLazyQueryHookResult = ReturnType<typeof useGetHealthDetailedLazyQuery>;
@@ -600,10 +613,12 @@ export const GetHealthDocument = gql`
  * });
  */
 export function useGetHealthQuery(baseOptions?: Apollo.QueryHookOptions<GetHealthQuery, GetHealthQueryVariables>) {
-        return Apollo.useQuery<GetHealthQuery, GetHealthQueryVariables>(GetHealthDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetHealthQuery, GetHealthQueryVariables>(GetHealthDocument, options);
       }
 export function useGetHealthLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetHealthQuery, GetHealthQueryVariables>) {
-          return Apollo.useLazyQuery<GetHealthQuery, GetHealthQueryVariables>(GetHealthDocument, baseOptions);
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetHealthQuery, GetHealthQueryVariables>(GetHealthDocument, options);
         }
 export type GetHealthQueryHookResult = ReturnType<typeof useGetHealthQuery>;
 export type GetHealthLazyQueryHookResult = ReturnType<typeof useGetHealthLazyQuery>;
@@ -636,7 +651,8 @@ export type UpdateArtistMutationFn = Apollo.MutationFunction<UpdateArtistMutatio
  * });
  */
 export function useUpdateArtistMutation(baseOptions?: Apollo.MutationHookOptions<UpdateArtistMutation, UpdateArtistMutationVariables>) {
-        return Apollo.useMutation<UpdateArtistMutation, UpdateArtistMutationVariables>(UpdateArtistDocument, baseOptions);
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateArtistMutation, UpdateArtistMutationVariables>(UpdateArtistDocument, options);
       }
 export type UpdateArtistMutationHookResult = ReturnType<typeof useUpdateArtistMutation>;
 export type UpdateArtistMutationResult = Apollo.MutationResult<UpdateArtistMutation>;

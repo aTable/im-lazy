@@ -91,18 +91,22 @@ export function extractAllPagedData(
     continuePredicate: Function
 ): Promise<any[]> {
     const output: any[] = []
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
         let counter = 0
         let lastRes = null
+
+        const success = (res: any) => {
+            lastRes = res
+            output.push(...res.data)
+            counter++
+        }
+        const error = (err: Error) => {
+            reject(err)
+        }
         do {
-            try {
-                const res = await promiseFactory(counter * pageSize)
-                lastRes = res
-                output.push(...res.data)
-                counter++
-            } catch (err) {
-                reject(err)
-            }
+            promiseFactory(counter * pageSize)
+                .then(success)
+                .catch(error)
         } while (continuePredicate(lastRes))
         resolve(output)
     })

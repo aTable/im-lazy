@@ -53,7 +53,7 @@ class ErrorBoundary extends Component<IErrorBoundaryProps, IErrorBoundaryState> 
                         >
                             Clear Error
                         </span>
-                        &nbsp;otherwise you'll re-trigger the error (by being on the current route)
+                        &nbsp;otherwise you&quot;ll re-trigger the error (by being on the current route)
                     </p>
 
                     <br />

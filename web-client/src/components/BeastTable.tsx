@@ -1,11 +1,11 @@
-// @ts-nochecky
+// @ts-nocheck
 import { useEffect } from 'react'
 import {
     Column,
-    TableInstance,
+    //TableInstance,
     usePagination,
-    UsePaginationInstanceProps,
-    UsePaginationState,
+    //UsePaginationInstanceProps,
+    //UsePaginationState,
     useTable,
 } from 'react-table'
 
@@ -52,7 +52,7 @@ const BeastTable = ({
         // @ts-ignore
         previousPage,
         // @ts-ignore
-        setPageSize,
+        //setPageSize,
         // @ts-ignore
         state: { pageIndex, pageSize },
     } = useTable(
@@ -97,9 +97,9 @@ const BeastTable = ({
             <table className="table table-sm" {...getTableProps()}>
                 <thead>
                     {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
+                        <tr key={headerGroup.getHeaderGroupProps().key} {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map((column: any) => (
-                                <th {...column.getHeaderProps()}>
+                                <th key={column.getHeaderProps().key} {...column.getHeaderProps()}>
                                     {column.render('Header')}
                                     <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
                                 </th>
@@ -111,9 +111,13 @@ const BeastTable = ({
                     {page.map((row: any, i: number) => {
                         prepareRow(row)
                         return (
-                            <tr {...row.getRowProps()}>
+                            <tr key={row.getRowProps().key} {...row.getRowProps()}>
                                 {row.cells.map((cell: any) => {
-                                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                    return (
+                                        <td key={cell.getCellProps().key} {...cell.getCellProps()}>
+                                            {cell.render('Cell')}
+                                        </td>
+                                    )
                                 })}
                             </tr>
                         )

@@ -1,19 +1,10 @@
-import React, { ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { getTodos } from '../api/api'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
-import {
-    Column,
-    TableInstance,
-    usePagination,
-    UsePaginationInstanceProps,
-    UsePaginationState,
-    useSortBy,
-    useTable,
-} from 'react-table'
+import { Column } from 'react-table'
 import { Todo, TodoJsx } from '../types/server'
 import BeastTable from '../components/BeastTable'
-import UiContext from '../stores/UiContext'
 interface ITodosProps {
     store: any
 }

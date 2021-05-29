@@ -1,9 +1,21 @@
 {
-    "extends": ["react-app", "react-app/jest", "prettier", "plugin:react-hooks/recommended"],
-    "plugins": ["prettier", "react-hooks"],
+    "extends": [
+        "eslint:recommended",
+        "prettier",
+        "react-app",
+        "plugin:react/recommended",
+        "plugin:jest/recommended",
+        "plugin:react-hooks/recommended"
+    ],
+    "plugins": ["prettier", "react", "react-hooks", "jest"],
+    "env": {
+        "es6": true,
+        "browser": true
+    },
     "rules": {
-        "prettier/prettier": "error",
+        "prettier/prettier": "warn",
         "react-hooks/rules-of-hooks": "error",
-        "react-hooks/exhaustive-deps": ["warn"]
+        "react-hooks/exhaustive-deps": ["warn"],
+        "react/react-in-jsx-scope": "off"
     }
 }
