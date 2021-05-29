@@ -79,7 +79,7 @@ const App = (props: IAppProps) => {
                                     <Route path="/todos/:id" component={TodoCreateUpdate} />
                                     <Route path="/todos" component={Todos} />
                                     <Route path="/test" component={Test} />
-                                    <Route path="/" component={Home} />
+                                    <Route exact path="/" component={Home} />
                                     <Route component={NotFound} />
                                 </Switch>
                             </ErrorBoundary>
