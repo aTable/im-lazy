@@ -27,6 +27,12 @@ using Your.Namespace.Api.GraphSchema.Albums;
 using Your.Namespace.Api.GraphSchema.Artists;
 using Your.Namespace.Api.GraphSchema.Health;
 using Your.Namespace.Api.Validators;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Data.Sqlite;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using System.Text.Json;
+using System.Net.Mime;
+using System.IO;
 
 namespace Your.Namespace.Api
 {
@@ -39,13 +45,13 @@ namespace Your.Namespace.Api
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             var appSettings = ConfigureAppSettings(services);
             var logger = ConfigureLogger(services);
             ConfigureWebServer(appSettings, services);
             ConfigureGraphQL(appSettings, services);
+            ConfigureHealthChecks(appSettings, services);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AppSettings appSettings, Context context)
@@ -75,23 +81,26 @@ namespace Your.Namespace.Api
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/health", new HealthCheckOptions
+                {
+                    ResponseWriter = async (context, report) =>
+                    {
+                        var result = JsonSerializer.Serialize(
+                            new
+                            {
+                                status = report.Status.ToString(),
+                                monitors = report.Entries.Select(e => new { key = e.Key, value = Enum.GetName(typeof(HealthStatus), e.Value.Status) })
+                            });
+                        context.Response.ContentType = MediaTypeNames.Application.Json;
+                        await context.Response.WriteAsync(result);
+                    },
+                });
                 endpoints.MapControllers();
             });
 
             ConfigurePrometheus(app, appSettings);
 
             app.UseGraphQL(path: appSettings.GraphSettings.Path);
-
-            if (appSettings.IsRunMigrations)
-            {
-                context.Database.EnsureCreated();
-                context.Database.Migrate();
-            }
-
-            if (appSettings.IsRunSeed)
-            {
-                SeedData.EnsureSeedData(context);
-            }
         }
 
         private AppSettings ConfigureAppSettings(IServiceCollection services)
@@ -102,6 +111,7 @@ namespace Your.Namespace.Api
             Configuration.Bind("App", appSettings);
             return appSettings;
         }
+
         private Serilog.ILogger ConfigureLogger(IServiceCollection services)
         {
             var logger = new LoggerConfiguration()
@@ -111,6 +121,39 @@ namespace Your.Namespace.Api
             services.AddSingleton<Serilog.ILogger>(provider => logger);
 
             return logger;
+        }
+
+        private void ConfigureHealthChecks(AppSettings appSettings, IServiceCollection services)
+        {
+            var connectionString = Configuration.GetConnectionString("ConnectionString");
+
+            services.AddHealthChecks()
+                .AddCheck(
+                    name: "local-volume",
+                    check: () =>
+                    {
+                        var logDirectoryExists = Directory.Exists("logs");
+                        return new HealthCheckResult(status: logDirectoryExists ? HealthStatus.Healthy : HealthStatus.Degraded);
+                    }
+                )
+                .AddAsyncCheck(
+                    name: "sqlite",
+                    check: async cancellationToken =>
+                    {
+                        try
+                        {
+                            using var conn = new SqliteConnection(connectionString);
+                            await conn.OpenAsync(cancellationToken);
+                            return new HealthCheckResult(status: HealthStatus.Healthy);
+                        }
+                        catch
+                        {
+                            return new HealthCheckResult(status: HealthStatus.Unhealthy);
+                        }
+                    },
+                    tags: new[] { "db", "storage" },
+                    timeout: TimeSpan.FromSeconds(5)
+                );
         }
 
         private void ConfigureGraphQL(AppSettings appSettings, IServiceCollection services)
@@ -188,8 +231,7 @@ namespace Your.Namespace.Api
                         options.Authority = appSettings.AuthorizationServerUri;
                         options.RequireHttpsMetadata = appSettings.AuthorizationServerRequiresHttps; // TODO: figure cross platform cert shenanigans for https during dev
                         options.ApiName = appSettings.ApiName;
-                        //ptions.JwtBearerEvents.AuthenticationFailed
-
+                        //options.JwtBearerEvents.AuthenticationFailed
                         options.Validate();
                     });
             services.AddSingleton(provider => new HttpClient

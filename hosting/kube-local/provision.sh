@@ -1,5 +1,13 @@
 # kind
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
+kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/usage.yaml
+CLUSTER_NAME=clusterr
+kind load docker-image yournamespaceapi:latest --name=$CLUSTER_NAME
+kind load docker-image yournamespaceapi2:latest --name=$CLUSTER_NAME
+kind load docker-image yournamespaceapi3:latest --name=$CLUSTER_NAME
+kind load docker-image yournamespaceapi4:latest --name=$CLUSTER_NAME
+kubectl apply -f test.yml
+kubectl apply -f test-ingress.yml
 
 # helm charts
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
@@ -17,5 +25,5 @@ kubectl create configmap docker-registry-config --from-env-file=../docker-regist
 # apply configs
 kubectl apply -f docker-registry-config.yml
 
-kind load docker-image yournamespaceapi:dev --name=example-cluster
+
 # kubectl apply -f app.yml
