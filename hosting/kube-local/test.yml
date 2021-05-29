@@ -23,9 +23,9 @@ spec:
           - name: ASPNETCORE_ENVIRONMENT
             value: Development
         ports:
-          - containerPort: 5000
+          - containerPort: 80
             name: http
-          - containerPort: 5001
+          - containerPort: 443
             name: https
         resources:
           limits:
@@ -47,11 +47,11 @@ spec:
   ports:
   - port: 5000
     protocol: TCP
-    targetPort: 5000
+    targetPort: 80
     name: http
   - port: 5001
     protocol: TCP
-    targetPort: 5001
+    targetPort: 443
     name: https
   selector:
     app: yournamespaceapi

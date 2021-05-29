@@ -34,7 +34,7 @@ items:
             service:
               name: yournamespaceapi-service
               port:
-                number: 5000
+                number: 80
           path: /aaa(/|$)(.*)
           pathType: ImplementationSpecific
         - backend:

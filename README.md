@@ -63,6 +63,19 @@ Update `npm` packages
 npx npm-check-updates -u
 ```
 
+Add migration
+
+```bash
+export YOURNAMESPACEAPI2_SERVICE_SERVICE_HOST=localhost
+export YOURNAMESPACEAPI2_SERVICE_SERVICE_PORT=8002
+export YOURNAMESPACEAPI3_SERVICE_SERVICE_HOST=localhost
+export YOURNAMESPACEAPI3_SERVICE_SERVICE_PORT=8003
+export YOURNAMESPACEAPI4_SERVICE_SERVICE_HOST=localhost
+export YOURNAMESPACEAPI4_SERVICE_SERVICE_PORT=8004
+
+dotnet ef migrations add Init --verbose
+```
+
 Launch k8s
 
 ```bash
