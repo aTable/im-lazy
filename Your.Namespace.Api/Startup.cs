@@ -33,6 +33,8 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using System.Text.Json;
 using System.Net.Mime;
 using System.IO;
+using OpenIddict.Validation.AspNetCore;
+using OpenIddict.Validation.SystemNetHttp;
 
 namespace Your.Namespace.Api
 {
@@ -225,15 +227,44 @@ namespace Your.Namespace.Api
                 options.AddPolicy(Policies.God, policy => policy.RequireAssertion(context => context.User.HasClaim(x => x.Type == ClaimTypes.Upn && x.Value == "god")));
             });
 
-            services.AddAuthentication("Bearer")
-                    .AddIdentityServerAuthentication(options =>
-                    {
-                        options.Authority = appSettings.AuthorizationServerUri;
-                        options.RequireHttpsMetadata = appSettings.AuthorizationServerRequiresHttps; // TODO: figure cross platform cert shenanigans for https during dev
-                        options.ApiName = appSettings.ApiName;
-                        //options.JwtBearerEvents.AuthenticationFailed
-                        options.Validate();
-                    });
+            services.AddHttpClient(typeof(OpenIddictValidationSystemNetHttpOptions).Assembly.GetName().Name)
+                .ConfigurePrimaryHttpMessageHandler(_ => new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                });
+            services.AddAuthentication(options =>
+                        {
+                            options.DefaultScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+                        });
+            services.AddOpenIddict()
+                .AddValidation(options =>
+                {
+                    // Note: the validation handler uses OpenID Connect discovery
+                    // to retrieve the address of the introspection endpoint.
+                    options.SetIssuer("https://localhost:44319/");
+                    options.AddAudiences("yournamespaceapi");
+
+                    // Configure the validation handler to use introspection and register the client
+                    // credentials used when communicating with the remote introspection endpoint.
+                    options.UseIntrospection()
+                        .SetClientId("yournamespaceapi")
+                        .SetClientSecret("846B62D0-DEF9-4215-A99D-86E6B8DAB343");
+
+                    // Register the System.Net.Http integration.
+                    options.UseSystemNetHttp();
+
+                    // Register the ASP.NET Core host.
+                    options.UseAspNetCore();
+                });
+            // services.AddAuthentication("Bearer")
+            //         .AddIdentityServerAuthentication(options =>
+            //         {
+            //             options.Authority = appSettings.AuthorizationServerUri;
+            //             options.RequireHttpsMetadata = appSettings.AuthorizationServerRequiresHttps; // TODO: figure cross platform cert shenanigans for https during dev
+            //             options.ApiName = appSettings.ApiName;
+            //             //options.JwtBearerEvents.AuthenticationFailed
+            //             options.Validate();
+            //         });
             services.AddSingleton(provider => new HttpClient
             {
                 Timeout = TimeSpan.FromSeconds(10),

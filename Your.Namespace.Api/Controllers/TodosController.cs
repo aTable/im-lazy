@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Your.Namespace.Api.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Your.Namespace.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class TodosController : ControllerBase
     {
         private readonly ILogger<TodosController> _logger;

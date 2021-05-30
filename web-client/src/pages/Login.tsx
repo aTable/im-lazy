@@ -8,9 +8,10 @@ const Login = (props: ILoginProps) => {
 
     return (
         <div className="container">
-            <p>You will be redirected to the IdentityServer</p>
+            <h1>Access Denied</h1>
+            <p>Please login to continue - you will be redirected to the authorization server</p>
             <button type="button" className="btn btn-primary" onClick={handleLogin}>
-                Login
+                <i className="fas fa-unlock" /> Login Now
             </button>
         </div>
     )

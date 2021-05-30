@@ -58,6 +58,7 @@ export const AuthContextProvider = (props: IAuthContextProviderProps) => {
     const [state, dispatch] = useReducer(reducer, { token: undefined, claims: undefined }, (init) => init)
 
     useEffect(() => {
+        console.log('AuthContext.tsx useEffect init')
         if (window.location.search.includes('code')) {
             ;(window as any).mgr
                 .signinRedirectCallback()
@@ -71,11 +72,11 @@ export const AuthContextProvider = (props: IAuthContextProviderProps) => {
                 })
         }
 
-        const userSerialized = localStorage.getItem(authKeys.user)
-        if (userSerialized) {
-            const user: User = User.fromStorageString(userSerialized)
-            dispatch({ type: 'SET_TOKEN', payload: user })
-        }
+        // const userSerialized = localStorage.getItem(authKeys.user)
+        // if (userSerialized) {
+        //     const user: User = User.fromStorageString(userSerialized)
+        //     dispatch({ type: 'SET_TOKEN', payload: user })
+        // }
     }, [])
 
     return <AuthContext.Provider value={{ state, dispatch }}>{props.children}</AuthContext.Provider>

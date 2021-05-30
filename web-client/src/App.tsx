@@ -12,11 +12,11 @@ import Artist from './pages/Artist'
 import Protected from './pages/Protected'
 import ErrorDemo from './pages/ErrorDemo'
 import Unauthorized from './pages/Unauthorized'
-import Oidc from 'oidc-client'
+import Oidc, { User } from 'oidc-client'
 import config from './config'
-import { AuthContextProvider } from './stores/AuthContext'
+import { AuthContextProvider, authKeys } from './stores/AuthContext'
 import LoggedOut from './pages/LoggedOut'
-import { client } from './api/api'
+import { client, setBearer } from './api/api'
 import { ApolloProvider } from '@apollo/client'
 import ErrorBoundary from './components/ErrorBoundary'
 import { UiContextProvider } from './stores/UiContext'
@@ -27,11 +27,36 @@ import Test from './pages/Test'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import ScrollToTop from './components/ScrollToTop'
 import BootstrapTooltipActivator from './components/BootstrapTooltipActivator'
+import SigninOidc from './pages/Signin-oidc'
+import SignoutOidc from './pages/Signout-oidc'
+import { extractParamsFromHash } from './utils/utils'
 const queryClient = new QueryClient()
 
 const mgr = new Oidc.UserManager(config.oidc)
 // @ts-ignore
 window.mgr = mgr
+
+const hashParams = extractParamsFromHash(window.location.hash)
+const isImplicitGrantSignin = hashParams['access_token'] && hashParams['token_type'] === 'Bearer'
+const locationFromAuthorizationServer = window.location.href
+window.location.hash = '#/'
+if (isImplicitGrantSignin) {
+    mgr.signinRedirectCallback(locationFromAuthorizationServer)
+        .then((user: User) => {
+            console.log('user', user)
+            setBearer(user.access_token)
+            localStorage.setItem(authKeys.user, user.toStorageString())
+        })
+        .catch((err: Error) => {
+            console.error(err)
+        })
+} else {
+    const userSerialized = localStorage.getItem(authKeys.user)
+    if (userSerialized) {
+        const user: User = User.fromStorageString(userSerialized)
+        setBearer(user.access_token)
+    }
+}
 // if (window.location.search.includes('code')) {
 //     ;(window as any).mgr
 //         .signinRedirectCallback()
@@ -53,6 +78,7 @@ interface IAppProps {}
 const App = (props: IAppProps) => {
     useEffect(() => {
         // do init
+        console.log('App.tsx useEffect init')
     }, [])
 
     return (
@@ -79,6 +105,9 @@ const App = (props: IAppProps) => {
                                     <Route path="/todos/:id" component={TodoCreateUpdate} />
                                     <Route path="/todos" component={Todos} />
                                     <Route path="/test" component={Test} />
+                                    <Route path="/signin-oidc" component={SigninOidc} />
+                                    <Route path="/signout-oidc" component={SignoutOidc} />
+
                                     <Route exact path="/" component={Home} />
                                     <Route component={NotFound} />
                                 </Switch>

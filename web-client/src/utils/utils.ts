@@ -123,7 +123,7 @@ export function extractQueryString(querystring: string): object {
     return qs
 }
 
-export function extractParamsFromHash(hash: string) {
+export function extractParamsFromHash(hash: string): { [key: string]: string } {
     const params = window.location.hash
         .slice(1)
         .split('&')

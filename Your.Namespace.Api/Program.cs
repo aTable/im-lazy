@@ -19,9 +19,9 @@ namespace Your.Namespace.Api
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("GetEnvironmentVariables: ");
-            foreach (DictionaryEntry de in Environment.GetEnvironmentVariables())
-                Console.WriteLine("\t{0} = {1}", de.Key, de.Value);
+            // Console.WriteLine("GetEnvironmentVariables: ");
+            // foreach (DictionaryEntry de in Environment.GetEnvironmentVariables())
+            //     Console.WriteLine("\t{0} = {1}", de.Key, de.Value);
 
             var host = CreateHostBuilder(args).Build();
 

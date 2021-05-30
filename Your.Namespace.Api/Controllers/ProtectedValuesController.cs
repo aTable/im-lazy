@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using OpenIddict.Validation.AspNetCore;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Your.Namespace.Api;
 
@@ -27,10 +29,19 @@ namespace Your.Namespace.Api.Controllers
 
         // GET api/values
         [HttpGet]
+        //[Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
         [Authorize(Policy = Policies.User)]
         public ActionResult<IEnumerable<string>> Get()
         {
             Logger.LogInformation("protected values were requested");
+            var identity = User.Identity as ClaimsIdentity;
+            if (identity == null)
+            {
+                return BadRequest();
+            }
+
+            //return Content($"You have authorized access to resources belonging to {identity.Name} on Zirku.Api1.");
+
             return new string[] { "value1", "value2" };
         }
 
