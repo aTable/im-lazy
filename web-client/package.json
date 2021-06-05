@@ -62,7 +62,7 @@
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "generate-docs": "typedoc",
-        "gql-codegen": "VERBOSE=1 DEBUG=1 NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen --config codegen.yml -r dotenv/config",
+        "gql-codegen": "NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen --config codegen.yml",
         "update-packages": "npx npm-check-updates -u"
     },
     "browserslist": {
