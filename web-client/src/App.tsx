@@ -87,7 +87,7 @@ const App = (props: IAppProps) => {
                 <ToastContainer />
                 <ApolloProvider client={client}>
                     <AuthContextProvider>
-                        <Router>
+                        <Router basename={''}>
                             <ScrollToTop />
                             <BootstrapTooltipActivator />
                             <Navbar />

@@ -12,7 +12,7 @@ const config: IConfig = {
     serverUri: process.env.REACT_APP_SERVER_URI!,
     loginRoute: process.env.REACT_APP_LOGIN_ROUTE!,
     postLoginRoute: process.env.REACT_APP_POST_LOGIN_ROUTE!,
-    routerBasename: process.env.REACT_APP_CLIENT_SIDE_ROUTER_BASENAME!,
+    routerBasename: process.env.REACT_APP_ROUTER_BASENAME!,
     oidc: {
         authority: process.env.REACT_APP_OIDC_AUTHORIZATION_SERVER_URI,
         client_id: process.env.REACT_APP_OIDC_CLIENT_ID,

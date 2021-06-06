@@ -49,6 +49,9 @@ Run this snippet if you use Minikube until https://github.com/kubernetes/minikub
 
 ```bash
 sudo sysctl net/netfilter/nf_conntrack_max=131072
+minikube addons enable ingress
+minikube start
+minikube dashboard
 ```
 
 This repository has been setup for an `F5` experience to lower the barrier to entry in aim to be more productive. As a result, there are some things that should be attended to if you were to commit to this boilerplate. For example:

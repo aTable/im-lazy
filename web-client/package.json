@@ -1,6 +1,7 @@
 {
     "name": "im-lazy",
     "version": "0.4.0",
+    "homepage": "/frontend",
     "private": true,
     "dependencies": {
         "@apollo/client": "^3.3.19",
@@ -21,6 +22,7 @@
         "axios": "^0.21.1",
         "bootstrap": "^5.0.1",
         "date-fns": "^2.22.1",
+        "env-cmd": "^10.1.0",
         "formik": "^2.2.8",
         "jwt-decode": "^3.1.2",
         "oidc-client": "^1.11.5",
@@ -56,9 +58,10 @@
     },
     "scripts": {
         "s": "npm run start",
-        "start": "npm run gql-codegen && react-scripts start",
+        "start": "react-scripts start",
         "start-no-codegen": "react-scripts start",
         "build": "react-scripts build && npm run generate-docs",
+        "build:qa": "env-cmd -f ./.env.qa react-scripts build && npm run generate-docs",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "generate-docs": "typedoc",

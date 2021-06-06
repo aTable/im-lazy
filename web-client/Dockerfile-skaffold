@@ -6,12 +6,15 @@ COPY package-lock.json ./
 RUN npm install --verbose
 
 WORKDIR /frontend
-VOLUME /src
-VOLUME /public
+# VOLUME /src
+#VOLUME /public
 ENV PATH $PATH:/frontend/node_modules/.bin
 
-COPY ./codegen.yml /frontend/codegen.yml
-#COPY . ./
+#COPY ./codegen.yml /frontend/codegen.yml
+#COPY ./src /frontend/src
+#COPY ./public /frontend/public
+
+COPY . /frontend
 
 EXPOSE 3000
 CMD ["npm", "run", "start"]
