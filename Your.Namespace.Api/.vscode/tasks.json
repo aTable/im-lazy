@@ -75,25 +75,11 @@
         "ports": [
           { "hostPort": 9081, "containerPort": 443 },
           { "hostPort": 9080, "containerPort": 80 }
+          // { "hostPort": 9081, "containerPort": 5001 },
+          // { "hostPort": 9080, "containerPort": 5000 }
           // { "hostPort": 9081, "containerPort": 9081 },
           // { "hostPort": 9080, "containerPort": 9080 }
         ]
-      },
-      "netCore": {
-        "appProject": "${workspaceFolder}/Your.Namespace.Api.csproj",
-        "enableDebugging": true
-      }
-    },
-    {
-      "type": "docker-run",
-      "label": "docker-run: debug using network host",
-      "dependsOn": ["docker-build: debug"],
-      "dockerRun": {
-        "ports": [
-          { "hostPort": 9081, "containerPort": 443 },
-          { "hostPort": 9080, "containerPort": 80 }
-        ],
-        "network": "host"
       },
       "netCore": {
         "appProject": "${workspaceFolder}/Your.Namespace.Api.csproj",

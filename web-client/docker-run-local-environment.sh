@@ -1,3 +1,4 @@
+# for some reason vscode launch.json and docker isnt playing nice so this file is how you start the local debug server and environment
 docker run --rm \
   -v $PWD/src:/frontend/src \
   -v $PWD/public:/frontend/public \
@@ -14,5 +15,5 @@ docker run --rm \
   -v $PWD/tsconfig.json:/frontend/tsconfig.json \
   -v $PWD/typedoc.json:/frontend/typedoc.json \
   --network=host \
-  -e REACT_APP_SERVER_URI=https://localhost:5001 \
+  -e REACT_APP_SERVER_URI=http://localhost:9080 \
   yournamespacewebclient:latest

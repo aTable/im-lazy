@@ -40,15 +40,15 @@
       "preLaunchTask": "docker-run: debug",
       "netCore": {
         "appProject": "${workspaceFolder}/Your.Namespace.Api.csproj"
-      }
-    },
-    {
-      "name": "Docker .NET Core Launch using network host",
-      "type": "docker",
-      "request": "launch",
-      "preLaunchTask": "docker-run: debug using network host",
-      "netCore": {
-        "appProject": "${workspaceFolder}/Your.Namespace.Api.csproj"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "YOURNAMESPACEAPI2_SERVICE_SERVICE_HOST": "localhost",
+        "YOURNAMESPACEAPI2_SERVICE_SERVICE_PORT": "8002",
+        "YOURNAMESPACEAPI3_SERVICE_SERVICE_HOST": "localhost",
+        "YOURNAMESPACEAPI3_SERVICE_SERVICE_PORT": "8003",
+        "YOURNAMESPACEAPI4_SERVICE_SERVICE_HOST": "localhost",
+        "YOURNAMESPACEAPI4_SERVICE_SERVICE_PORT": "8004"
       }
     }
   ]
