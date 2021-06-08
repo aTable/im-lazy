@@ -49,8 +49,8 @@ Run this snippet if you use Minikube until https://github.com/kubernetes/minikub
 
 ```bash
 sudo sysctl net/netfilter/nf_conntrack_max=131072
-minikube addons enable ingress
 minikube start
+minikube addons enable ingress
 minikube dashboard
 ```
 

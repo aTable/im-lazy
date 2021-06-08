@@ -27,5 +27,6 @@ build:
 deploy:
   kubectl:
     manifests:
+    - hosting/kube-local/test-ingress-web-client.yml
     - hosting/kube-local/test-ingress.yml
     - hosting/kube-local/test.yml

@@ -237,7 +237,7 @@ spec:
             value: http://$(YOURNAMESPACEAPI_SERVICE_SERVICE_HOST):$(YOURNAMESPACEAPI_SERVICE_SERVICE_PORT)
         ports:
           - containerPort: 3000
-            name: https
+            name: http
         resources:
           limits:
             cpu: 2000m

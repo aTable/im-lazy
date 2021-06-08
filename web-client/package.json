@@ -1,7 +1,7 @@
 {
     "name": "im-lazy",
     "version": "0.4.0",
-    "homepage": "/frontend",
+    "homepage": ".",
     "private": true,
     "dependencies": {
         "@apollo/client": "^3.3.19",

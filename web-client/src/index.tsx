@@ -12,7 +12,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'react-toastify/dist/ReactToastify.css'
 import './css/base.scss'
 
-if (!window.location.protocol.includes('https')) window.location.protocol = 'https:'
+//if (!window.location.protocol.includes('https')) window.location.protocol = 'https:'
 
 // @ts-ignore
 window.Popper = Popper
