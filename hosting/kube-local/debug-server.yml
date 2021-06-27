@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: echo
+  name: echo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echo
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: echo
+    spec:
+      containers:
+      - image: hashicorp/http-echo:latest
+        name: echo
+        args:
+          - "-text=Hellocruelworl"
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 5678
+            name: http
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+            
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: echo-service
+  name: echo-service
+spec:
+  ports:
+  - port: 5500
+    protocol: TCP
+    targetPort: 5678
+    name: http
+  selector:
+    app: echo
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      kubernetes.io/ingress.class: "nginx"
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+    name: debug-ingress
+    namespace: default
+  spec:
+    rules:
+    - host: yournamespacecluster.local
+      http:
+        paths:
+        - backend:
+            service:
+              name: echo-service
+              port:
+                number: 5678
+          path: /echo(/|$)(.*)
+          pathType: ImplementationSpecific
+    - http:
+        paths:
+        - backend:
+            service:
+              name: echo-service
+              port:
+                number: 5678
+          path: /echo(/|$)(.*)
+          pathType: ImplementationSpecific
+  status:
+    loadBalancer:
+      ingress:
+      - hostname: localhost
+kind: List
+metadata:

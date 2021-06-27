@@ -8,25 +8,28 @@ build:
     context: Your.Namespace.Api
     docker:
       dockerfile: Dockerfile-skaffold
-  - image: yournamespaceapi2
-    context: yournamespaceapi2
-    docker:
-      dockerfile: Dockerfile-skaffold
-  - image: yournamespaceapi3
-    context: yournamespaceapi3
-    docker:
-      dockerfile: Dockerfile-skaffold
-  - image: yournamespaceapi4
-    context: yournamespaceapi4
-    docker:
-      dockerfile: Dockerfile-skaffold
-  - image: yournamespacewebclient
-    context: web-client
-    docker:
-      dockerfile: Dockerfile-skaffold
+  # - image: yournamespaceapi2
+  #   context: yournamespaceapi2
+  #   docker:
+  #     dockerfile: Dockerfile-skaffold
+  # - image: yournamespaceapi3
+  #   context: yournamespaceapi3
+  #   docker:
+  #     dockerfile: Dockerfile-skaffold
+  # - image: yournamespaceapi4
+  #   context: yournamespaceapi4
+  #   docker:
+  #     dockerfile: Dockerfile-skaffold
+  # - image: yournamespacewebclient
+  #   context: web-client
+  #   docker:
+  #     dockerfile: Dockerfile-skaffold
 deploy:
   kubectl:
     manifests:
-    - hosting/kube-local/test-ingress-web-client.yml
-    - hosting/kube-local/test-ingress.yml
-    - hosting/kube-local/test.yml
+    #- hosting/kube-local/test-ingress-web-client.yml
+    #- hosting/kube-local/test-ingress.yml
+    #- hosting/kube-local/test.yml
+    # - hosting/kube-local/basic-auth-secret.yml
+    - hosting/kube-local/debug-server.yml
+    - hosting/kube-local/app.yml

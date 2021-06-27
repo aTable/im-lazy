@@ -1,4 +1,12 @@
 prometheus:
+  enabled: true
+  ingress: 
+    enabled: true
+    ingressClassName: nginx
+    hosts: ["prometheus.yournamespacecluster.local"]
+    paths: ["/"]
+    pathType: ImplementationSpecific
+
   prometheusSpec:
     additionalScrapeConfigs:
       - job_name: "yournamespaceapi"
@@ -10,8 +18,11 @@ prometheus:
         #     port: 9100
         static_configs:
           - targets: ["127.0.0.1:9080"]
+    externalUrl: http://prometheus.yournamespacecluster.local
+    routePrefix: "/"
 
 alertmanager:
+  enabled: true
   config:
     route:
       group_by: ['job']
@@ -33,4 +44,32 @@ alertmanager:
       #   to: 'operations-team@example.org'
       #   html: '<h1>something bad </h1>'
       #   text: 'something bad'
-    
+  ingress:
+    enabled: true
+    ingressClassName: "nginx"
+    hosts: ["alertmanager.yournamespacecluster.local"]
+    paths: ["/"]
+    pathType: ImplementationSpecific
+  alertManagerSpec:
+    externalUrl: http://alertmanager.yournamespacecluster.local
+    routePrefix: /
+
+grafana:
+  enabled: true
+  adminPassword: prom-operator
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+    hosts: ["grafana.yournamespacecluster.local"]    
+    path: /
+  # config:
+    # sections:
+    #   server:
+    #     root_url: http://yournamespacecluster.local/grafana
+
+prometheusOperator: 
+  tls:
+    enabled: false
+  clusterDomain: yournamespacecluster.local
+  

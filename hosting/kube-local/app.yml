@@ -1,0 +1,330 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: yournamespaceapi
+  name: yournamespaceapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yournamespaceapi
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: yournamespaceapi
+    spec:
+      containers:
+      - image: yournamespaceapi:latest
+        name: yournamespaceapi
+        imagePullPolicy: Never
+        env:
+          - name: ASPNETCORE_ENVIRONMENT
+            value: Development
+        ports:
+          - containerPort: 80
+            name: http
+          - containerPort: 443
+            name: https
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+            
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: yournamespaceapi-svc
+  name: yournamespaceapi-svc
+spec:
+  ports:
+  - port: 5000
+    protocol: TCP
+    targetPort: 80
+    name: http
+  - port: 5001
+    protocol: TCP
+    targetPort: 443
+    name: https
+  selector:
+    app: yournamespaceapi
+status:
+  loadBalancer: {}
+---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   labels:
+#     app: yournamespaceapi2
+#   name: yournamespaceapi2
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: yournamespaceapi2
+#   strategy: {}
+#   template:
+#     metadata:
+#       labels:
+#         app: yournamespaceapi2
+#     spec:
+#       containers:
+#       - image: yournamespaceapi2:latest
+#         name: yournamespaceapi2
+#         imagePullPolicy: Never
+#         ports:
+#           - containerPort: 8000
+#         resources:
+#           limits:
+#             cpu: 100m
+#             memory: 100Mi
+#           requests:
+#             cpu: 100m
+#             memory: 100Mi
+            
+# status: {}
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   labels:
+#     app: yournamespaceapi2-svc
+#   name: yournamespaceapi2-svc
+# spec:
+#   ports:
+#   - port: 8002
+#     protocol: TCP
+#     targetPort: 8000
+#   selector:
+#     app: yournamespaceapi2
+# status:
+#   loadBalancer: {}
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   labels:
+#     app: yournamespaceapi3
+#   name: yournamespaceapi3
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: yournamespaceapi3
+#   strategy: {}
+#   template:
+#     metadata:
+#       labels:
+#         app: yournamespaceapi3
+#     spec:
+#       containers:
+#       - image: yournamespaceapi3:latest
+#         name: yournamespaceapi3
+#         imagePullPolicy: Never
+#         ports:
+#           - containerPort: 8000
+#         resources:
+#           limits:
+#             cpu: 100m
+#             memory: 100Mi
+#           requests:
+#             cpu: 100m
+#             memory: 100Mi
+            
+# status: {}
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   labels:
+#     app: yournamespaceapi3-svc
+#   name: yournamespaceapi3-svc
+# spec:
+#   ports:
+#   - port: 8003
+#     protocol: TCP
+#     targetPort: 8000
+#   selector:
+#     app: yournamespaceapi3
+# status:
+#   loadBalancer: {}
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   labels:
+#     app: yournamespaceapi4
+#   name: yournamespaceapi4
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: yournamespaceapi4
+#   strategy: {}
+#   template:
+#     metadata:
+#       labels:
+#         app: yournamespaceapi4
+#     spec:
+#       containers:
+#       - image: yournamespaceapi4:latest
+#         name: yournamespaceapi4
+#         imagePullPolicy: Never
+#         ports:
+#           - containerPort: 8000
+#         resources:
+#           limits:
+#             cpu: 100m
+#             memory: 100Mi
+#           requests:
+#             cpu: 100m
+#             memory: 100Mi
+            
+# status: {}
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   labels:
+#     app: yournamespaceapi4-svc
+#   name: yournamespaceapi4-svc
+# spec:
+#   ports:
+#   - port: 8004
+#     protocol: TCP
+#     targetPort: 8000
+#   selector:
+#     app: yournamespaceapi4
+# status:
+#   loadBalancer: {}
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   labels:
+#     app: yournamespacewebclient
+#   name: yournamespacewebclient
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: yournamespacewebclient
+#   strategy: {}
+#   template:
+#     metadata:
+#       labels:
+#         app: yournamespacewebclient
+#     spec:
+#       containers:
+#       - image: yournamespacewebclient:latest
+#         name: yournamespacewebclient
+#         imagePullPolicy: Never
+#         env:
+#           - name: NODE_ENV
+#             value: development
+#           - name: HTTPS
+#             value: "false"
+#           - name: REACT_APP_ROUTER_BASENAME
+#             value: "/frontend"
+#           - name: REACT_APP_SERVER_URI
+#             value: http://$(YOURNAMESPACEAPI_SERVICE_SERVICE_HOST):$(YOURNAMESPACEAPI_SERVICE_SERVICE_PORT)
+#         ports:
+#           - containerPort: 3000
+#             name: http
+#         resources:
+#           limits:
+#             cpu: 2000m
+#             memory: 20000Mi
+#           requests:
+#             cpu: 2000m
+#             memory: 20000Mi
+            
+# status: {}
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   labels:
+#     app: yournamespacewebclient-svc
+#   name: yournamespacewebclient-svc
+# spec:
+#   ports:
+#   - port: 7999
+#     protocol: TCP
+#     targetPort: 3000
+#     name: http
+#   selector:
+#     app: yournamespacewebclient
+# status:
+#   loadBalancer: {}
+---
+apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    annotations:
+      kubernetes.io/ingress.class: "nginx"
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+    name: application-ingress
+    namespace: default
+  spec:
+    rules:
+    - host: yournamespacecluster.local
+      http:
+        paths:
+        - backend:
+            service:
+              name: foo-svc
+              port:
+                number: 5678
+          path: /foo(/|$)(.*)
+          pathType: ImplementationSpecific
+        - backend:
+            service:
+              name: bar-svc
+              port:
+                number: 5678
+          path: /bar(/|$)(.*)
+          pathType: ImplementationSpecific
+        - backend:
+            service:
+              name: yournamespaceapi-svc
+              port:
+                number: 80
+          path: /aaa(/|$)(.*)
+          pathType: ImplementationSpecific
+        - backend:
+            service:
+              name: yournamespaceapi2-svc
+              port:
+                number: 8002
+          path: /bbb(/|$)(.*)
+          pathType: ImplementationSpecific
+        - backend:
+            service:
+              name: yournamespaceapi3-svc
+              port:
+                number: 8003
+          path: /ccc(/|$)(.*)
+          pathType: ImplementationSpecific
+        - backend:
+            service:
+              name: yournamespaceapi4-svc
+              port:
+                number: 8004
+          path: /ddd(/|$)(.*)
+          pathType: ImplementationSpecific              
+  status:
+    loadBalancer:
+      ingress:
+      - hostname: localhost
+kind: List
+metadata:

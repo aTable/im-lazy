@@ -8,9 +8,12 @@ namespace Your.Namespace.Api
         {
             get
             {
-                var host = Environment.GetEnvironmentVariable("YOURNAMESPACEAPI2_SERVICE_SERVICE_HOST");
-                var port = Environment.GetEnvironmentVariable("YOURNAMESPACEAPI2_SERVICE_SERVICE_PORT");
-                return new Uri($"http://{host}:{port}");
+                var host = Environment.GetEnvironmentVariable("YOURNAMESPACEAPI2_SVC_SERVICE_HOST");
+                var port = Environment.GetEnvironmentVariable("YOURNAMESPACEAPI2_SVC_SERVICE_PORT");
+                if (Uri.TryCreate($"http://{host}:{port}", UriKind.Absolute, out Uri result))
+                    return result;
+                else
+                    return null;
             }
         }
 
@@ -18,9 +21,12 @@ namespace Your.Namespace.Api
         {
             get
             {
-                var host = Environment.GetEnvironmentVariable("YOURNAMESPACEAPI3_SERVICE_SERVICE_HOST");
-                var port = Environment.GetEnvironmentVariable("YOURNAMESPACEAPI3_SERVICE_SERVICE_PORT");
-                return new Uri($"http://{host}:{port}");
+                var host = Environment.GetEnvironmentVariable("YOURNAMESPACEAPI3_SVC_SERVICE_HOST");
+                var port = Environment.GetEnvironmentVariable("YOURNAMESPACEAPI3_SVC_SERVICE_PORT");
+                if (Uri.TryCreate($"http://{host}:{port}", UriKind.Absolute, out Uri result))
+                    return result;
+                else
+                    return null;
             }
         }
 
@@ -28,9 +34,12 @@ namespace Your.Namespace.Api
         {
             get
             {
-                var host = Environment.GetEnvironmentVariable("YOURNAMESPACEAPI4_SERVICE_SERVICE_HOST");
-                var port = Environment.GetEnvironmentVariable("YOURNAMESPACEAPI4_SERVICE_SERVICE_PORT");
-                return new Uri($"http://{host}:{port}");
+                var host = Environment.GetEnvironmentVariable("YOURNAMESPACEAPI4_SVC_SERVICE_HOST");
+                var port = Environment.GetEnvironmentVariable("YOURNAMESPACEAPI4_SVC_SERVICE_PORT");
+                if (Uri.TryCreate($"http://{host}:{port}", UriKind.Absolute, out Uri result))
+                    return result;
+                else
+                    return null;
             }
         }
 
@@ -50,6 +59,7 @@ namespace Your.Namespace.Api
     {
         public string Path { get; set; }
         public string PlaygroundPath { get; set; }
+
 
     }
 }
