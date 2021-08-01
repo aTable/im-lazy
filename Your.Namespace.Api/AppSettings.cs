@@ -52,6 +52,8 @@ namespace Your.Namespace.Api
         public bool IsRunMigrations { get; set; }
         public bool IsRunSeed { get; set; }
         public GraphSettings GraphSettings { get; set; }
+        public JaegerSettings JaegerSettings { get; set; }
+
 
     }
 
@@ -59,7 +61,13 @@ namespace Your.Namespace.Api
     {
         public string Path { get; set; }
         public string PlaygroundPath { get; set; }
+    }
 
+    public class JaegerSettings
+    {
+        public string JaegerServiceName { get; set; }
+        public string JaegerAgentHost { get; set; }
+        public int JaegerAgentPort { get; set; }
 
     }
 }

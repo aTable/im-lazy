@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Your.Namespace.Api.ViewModels;
 using System.Net.Http;
 using Microsoft.AspNetCore.Authorization;
+using OpenTelemetry.Context.Propagation;
+using System.Diagnostics;
+using OpenTelemetry;
 
 namespace Your.Namespace.Api.Controllers
 {
@@ -18,6 +21,9 @@ namespace Your.Namespace.Api.Controllers
     [AllowAnonymous]
     public class TestController : ControllerBase
     {
+        private static readonly ActivitySource Activity = new(nameof(TestController));
+        private static readonly TextMapPropagator Propagator = Propagators.DefaultTextMapPropagator;
+
         private readonly ILogger<TestController> _logger;
 
         public TestController(
@@ -34,25 +40,40 @@ namespace Your.Namespace.Api.Controllers
         public AppSettings AppSettings { get; }
         public HttpClient HttpClient { get; }
 
+        [HttpGet("one")]
+        public async Task<ActionResult<string>> GetOne()
+        {
+            var uri = new Uri(AppSettings.YourNamespaceApi2BaseUri + "/one");
+            var res = await HttpClient.GetStringAsync(uri);
+            return res;
+        }
+
         [HttpGet("two")]
         public async Task<ActionResult<string>> GetTwo()
         {
-            var res = await HttpClient.GetStringAsync(AppSettings.YourNamespaceApi2BaseUri);
+            var uri = new Uri(AppSettings.YourNamespaceApi2BaseUri + "/two");
+            var res = await HttpClient.GetStringAsync(uri);
             return res;
         }
 
         [HttpGet("three")]
         public async Task<ActionResult<string>> GetThree()
         {
-            var res = await HttpClient.GetStringAsync(AppSettings.YourNamespaceApi3BaseUri);
+            var uri = new Uri(AppSettings.YourNamespaceApi2BaseUri + "/three");
+            var res = await HttpClient.GetStringAsync(uri);
             return res;
         }
 
-        [HttpGet("four")]
-        public async Task<ActionResult<string>> GetFour()
+        [HttpGet("echo")]
+        public async Task<ActionResult<string>> Echo(string message)
         {
-            var res = await HttpClient.GetStringAsync(AppSettings.YourNamespaceApi4BaseUri);
-            return res;
+            var parentContext = Propagator.Extract(default, Request.Headers, (headers, key) => headers[key]);
+            Baggage.Current = parentContext.Baggage;
+            using var activity = Activity.StartActivity("Process Message by echo", ActivityKind.Consumer, parentContext.ActivityContext);
+            activity?.SetTag("processing.system", "text");
+            activity?.SetTag("processing.metadata", "text");
+            _logger.LogInformation("Message Received: " + message);
+            return message;
         }
 
     }

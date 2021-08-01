@@ -3,14 +3,14 @@
 #[macro_use]
 extern crate rocket;
 extern crate chrono;
-use chrono::Local;
-use rocket::Request;
+use chrono::prelude::*;
+// use rocket::Request;
 use rocket_contrib::json::Json;
 use std::fs::File;
-use std::io::Read;
+// use std::io::Read;
 use std::io::Write;
 use std::path::Path;
-use std::time::SystemTime;
+// use std::time::SystemTime;
 
 use rand::Rng;
 use serde::{Deserialize, Serialize};
@@ -62,9 +62,27 @@ fn init() -> Vec<User> {
 }
 
 #[get("/")]
-fn index() -> Json<Vec<User>> {
+fn index() -> Json<String> {
+    return Json("hello world".to_string());
+}
+
+#[get("/one")]
+fn one() -> Json<Vec<User>> {
     return Json(init());
 }
+
+#[get("/two")]
+fn two() -> String {
+	let utc: DateTime<Utc> = Utc::now();
+	return utc.format("%Y-%m-%dT%H:%M:%S").to_string();
+}
+
+#[get("/three")]
+fn three() -> Json<u32> {
+	let num: u32 = rand::thread_rng().gen_range(0..100);
+	return Json(num);
+}
+
 
 #[get("/health")]
 fn health() -> Json<Health> {
@@ -102,6 +120,6 @@ fn receive_alert(data: String) -> Json<String> {
 
 fn main() {
     rocket::ignite()
-        .mount("/", routes![index, health, receive_alert])
+        .mount("/", routes![index, one, two, three, health, receive_alert])
         .launch();
 }

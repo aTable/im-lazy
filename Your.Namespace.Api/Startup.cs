@@ -35,17 +35,29 @@ using System.Net.Mime;
 using System.IO;
 using OpenIddict.Validation.AspNetCore;
 using OpenIddict.Validation.SystemNetHttp;
+using OpenTelemetry.Trace;
+using Jaeger;
+using Jaeger.Reporters;
+using Jaeger.Samplers;
+using Jaeger.Senders;
+using Jaeger.Senders.Thrift;
+using OpenTelemetry.Exporter;
+using OpenTelemetry.Resources;
+using OpenTelemetry;
+using Your.Namespace.Api.Controllers;
 
 namespace Your.Namespace.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment hostEnvironment)
         {
             Configuration = configuration;
+            HostEnvironment = hostEnvironment;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment HostEnvironment { get; set; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -265,11 +277,61 @@ namespace Your.Namespace.Api
             //             //options.JwtBearerEvents.AuthenticationFailed
             //             options.Validate();
             //         });
-            services.AddSingleton(provider => new HttpClient
+            services.AddHttpClient("httpclient", (serviceProvider, httpClient) =>
             {
-                Timeout = TimeSpan.FromSeconds(10),
+                httpClient.Timeout = TimeSpan.FromSeconds(10);
+            }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            {
+                ClientCertificateOptions = ClientCertificateOption.Manual,
+                ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) =>
+                {
+                    return true;
+                }
             });
+            services.AddScoped<HttpClient>(provider => provider.GetService<IHttpClientFactory>().CreateClient("httpclient"));
+
+            var g = typeof(Startup).Assembly.GetName();
+
             services.AddMemoryCache(options => { });
+            var metricsPath = new PathString("/metrics");
+            services.AddOpenTelemetryTracing(builder =>
+            {
+                if (HostEnvironment.IsDevelopment())
+                    builder.AddConsoleExporter(options => options.Targets = ConsoleExporterOutputTargets.Debug);
+                builder
+                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(HostEnvironment.ApplicationName))
+                    .SetSampler(new AlwaysOnSampler())
+                    // .AddRequestCollector()
+                    .AddSource(nameof(WeatherForecastController), nameof(TestController))
+                    .AddHttpClientInstrumentation()
+                    .AddAspNetCoreInstrumentation((options) =>
+                    {
+                        options.RecordException = true;
+                        options.Filter = httpContext =>
+                        {
+                            return true;
+                            // return httpContext.Request.Path != metricsPath;
+                        };
+                        options.Enrich = (activity, eventName, rawObject) =>
+                        {
+                            if (eventName.Equals("OnStartActivity"))
+                            {
+                                if (rawObject is HttpRequest httpRequest)
+                                {
+                                    activity.SetTag("requestProtocol", httpRequest.Protocol);
+                                }
+                            }
+                            else if (eventName.Equals("OnStopActivity"))
+                            {
+                                if (rawObject is HttpResponse httpResponse)
+                                {
+                                    activity.SetTag("responseLength", httpResponse.ContentLength);
+                                }
+                            }
+                        };
+                    })
+                    .AddJaegerExporter();
+            });
             var connectionString = Configuration.GetConnectionString("ConnectionString");
             services.AddDbContext<Context>(options => options.UseSqlite(connectionString));
         }

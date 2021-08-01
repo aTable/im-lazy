@@ -34,18 +34,18 @@ namespace Your.Namespace.Api.DataAccess
         }
     }
 
-    public class ContextFactory : IDesignTimeDbContextFactory<Context>
-    {
-        public Context CreateDbContext(string[] args)
-        {
-            var host = Program.CreateHostBuilder(args).Build();
-            using var scope = host.Services.CreateScope();
-            var configuration = host.Services.GetService<IConfiguration>();
-            var connectionString = configuration.GetConnectionString("ConnectionString");
-            var optionsBuilder = new DbContextOptionsBuilder<Context>();
-            optionsBuilder.UseSqlite(connectionString);
-            return new Context(optionsBuilder.Options);
-        }
-    }
+    // public class ContextFactory : IDesignTimeDbContextFactory<Context>
+    // {
+    //     public Context CreateDbContext(string[] args)
+    //     {
+    //         var host = Program.CreateHostBuilder(args).Build();
+    //         using var scope = host.Services.CreateScope();
+    //         var configuration = host.Services.GetService<IConfiguration>();
+    //         var connectionString = configuration.GetConnectionString("ConnectionString");
+    //         var optionsBuilder = new DbContextOptionsBuilder<Context>();
+    //         optionsBuilder.UseSqlite(connectionString);
+    //         return new Context(optionsBuilder.Options);
+    //     }
+    // }
 
 }

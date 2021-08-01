@@ -125,7 +125,7 @@ status:
 #         app: yournamespaceapi3
 #     spec:
 #       containers:
-#       - image: yournamespaceapi3:latest
+#       - image: yournamespaceapi2:latest
 #         name: yournamespaceapi3
 #         imagePullPolicy: Never
 #         ports:
@@ -174,7 +174,7 @@ status:
 #         app: yournamespaceapi4
 #     spec:
 #       containers:
-#       - image: yournamespaceapi4:latest
+#       - image: yournamespaceapi2:latest
 #         name: yournamespaceapi4
 #         imagePullPolicy: Never
 #         ports:
