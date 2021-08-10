@@ -45,6 +45,7 @@ using OpenTelemetry.Exporter;
 using OpenTelemetry.Resources;
 using OpenTelemetry;
 using Your.Namespace.Api.Controllers;
+using MassTransit;
 
 namespace Your.Namespace.Api
 {
@@ -167,7 +168,14 @@ namespace Your.Namespace.Api
                     },
                     tags: new[] { "db", "storage" },
                     timeout: TimeSpan.FromSeconds(5)
-                );
+                // ).AddCheck(
+                //     name: "masstransit",
+                //     check: (j) =>
+                //     {
+                //         j.Contains
+                //     }
+                // )
+                ;
         }
 
         private void ConfigureGraphQL(AppSettings appSettings, IServiceCollection services)
@@ -332,8 +340,26 @@ namespace Your.Namespace.Api
                     })
                     .AddJaegerExporter();
             });
+
             var connectionString = Configuration.GetConnectionString("ConnectionString");
             services.AddDbContext<Context>(options => options.UseSqlite(connectionString));
+
+            services.AddMassTransit(x =>
+            {
+                x.SetKebabCaseEndpointNameFormatter();
+                x.UsingInMemory((context, cfg) =>
+                {
+                    cfg.ConfigureEndpoints(context);
+                });
+                // x.UsingRabbitMq((context, cfg) =>
+                // {
+                //     cfg.ConfigureEndpoints(context);
+                // });
+                x.AddConsumer<MessageConsumer>();
+            });
+            services.AddMassTransitHostedService(waitUntilStarted: true);
+            services.AddHostedService<Worker>();
+
         }
 
         private void ConfigurePrometheus(IApplicationBuilder app, AppSettings appSettings)

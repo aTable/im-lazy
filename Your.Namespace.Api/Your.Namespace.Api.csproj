@@ -10,6 +10,8 @@
     <PackageReference Include="FluentValidation.AspNetCore" Version="10.0.4" />
     <PackageReference Include="Jaeger.Core" Version="1.0.2" />
     <PackageReference Include="Jaeger.Senders.Thrift" Version="1.0.2" />
+    <PackageReference Include="MassTransit.AspNetCore" Version="7.2.1" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.1" />
     <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="3.0.4" />
     <PackageReference Include="OpenIddict.Validation.SystemNetHttp" Version="3.0.4" />
     <PackageReference Include="OpenTelemetry" Version="1.1.0" />

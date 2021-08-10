@@ -13,14 +13,24 @@ To deliver value, not code.
 
 Run this snippet if you use Minikube until https://github.com/kubernetes/minikube/issues/11513 is resolved. A recent change in the linux kernel has required virtualization tools to update (Kind has resolved this in v0.11).
 
-````bash
+```bash
 sudo sysctl net/netfilter/nf_conntrack_max=131072
+```
+
+and now normal minikube init
+
+```bash
 minikube start
 minikube
 addons enable ingress
+```
+
+You'll probably also want
+
+```bash
 minikube dashboard
-k port-forward
 minikube tunnel
+
 ```
 
 This repository has tried to stay simple for an `F5` experience to lower the barrier to entry in aim to be more productive.
@@ -29,7 +39,7 @@ Update your local device hosts file
 
 ```bash
 sudo /etc/hosts
-````
+```
 
 to include the IP address to your minikube cluster
 

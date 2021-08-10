@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: infra
+  name: infra
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: infra
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: infra
+    spec:
+      containers:
+      - image: gotify/server
+        name: gotify
+        ports:
+          - containerPort: 80
+            name: http
+        env:
+          - name: GOTIFY_DEFAULTUSER_PASS
+            value: custom
+        volumeMounts:
+          - mountPath: /app/data
+            name: gotify-data
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+      volumes:
+          - name: gotify-data
+            emptyDir:
+              sizeLimit: 100Mi
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: gotify-svc
+  name: gotify-svc
+spec:
+  ports:
+  - port: 30001
+    protocol: TCP
+    targetPort: 80
+    name: http
+  selector:
+    app: infra
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      kubernetes.io/ingress.class: "nginx"
+      #nginx.ingress.kubernetes.io/rewrite-target: /$2
+    name: infra-ingress
+    namespace: default
+  spec:
+    rules:
+    - host: gotify.yournamespacecluster.local
+      http:
+        paths:
+        - backend:
+            service:
+              name: gotify-svc
+              port:
+                number: 80
+          path: /
+          pathType: ImplementationSpecific
+  status:
+    loadBalancer:
+      ingress:
+      - hostname: localhost
+kind: List
+metadata:
