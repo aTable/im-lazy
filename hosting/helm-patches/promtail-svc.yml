@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: promtail
+  name: promtail
+  namespace: monitoring
+spec:
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: http-metrics
+    port: 3101
+    protocol: TCP
+    targetPort: http-metrics
+  selector:
+    app.kubernetes.io/instance: promtail
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

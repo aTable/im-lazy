@@ -29,11 +29,11 @@ prometheus:
       - job_name: "loki"
         scrape_interval: 5s
         static_configs:
-          - targets: ["lokistack:3100"]
+          - targets: ["loki:3100"]
       - job_name: "promtail"
         scrape_interval: 5s
         static_configs:
-          - targets: ["promtailstacklokiwhatisthis:9080"]
+          - targets: ["promtail:3101"]
     externalUrl: prometheus.yournamespacecluster.local
     routePrefix: "/"
 

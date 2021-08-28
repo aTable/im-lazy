@@ -12,7 +12,11 @@ helm repo update
 
 # helm uninstall kubepromstack -n monitoring
 helm upgrade --install kubepromstack prometheus-community/kube-prometheus-stack -f helm-configs/kube-prometheus-stack.yml --create-namespace --namespace monitoring
-helm upgrade --install lokistack grafana/loki-stack -f helm-configs/loki-stack.yml --create-namespace --namespace=monitoring
+# helm upgrade --install lokistack grafana/loki-stack -f helm-configs/loki-stack.yml --create-namespace --namespace=monitoring
+helm upgrade --install loki grafana/loki -f helm-configs/loki.yml --create-namespace --namespace=monitoring
+helm upgrade --install promtail grafana/promtail -f helm-configs/promtail.yml --create-namespace --namespace=monitoring
+kubectl apply -f helm-patches/promtail-svc.yml
+kubectl apply -f helm-patches/promtail-headless-svc.yml
 helm upgrade --install -f helm-configs/vault.yml vault hashicorp/vault
 
 
