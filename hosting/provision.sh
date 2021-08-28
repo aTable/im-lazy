@@ -19,6 +19,19 @@ kubectl apply -f helm-patches/promtail-svc.yml
 kubectl apply -f helm-patches/promtail-headless-svc.yml
 helm upgrade --install -f helm-configs/vault.yml vault hashicorp/vault
 
+# rabbitmq
+kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml"
+kubectl create role rabbitmq:psp:unprivileged \
+    --verb=use \
+    --resource=podsecuritypolicy \
+    --resource-name=some-pod-security-policy
+kubectl create rolebinding rabbitmq-mycluster:psp:unprivileged \
+    --role=rabbitmq:psp:unprivileged \
+    --serviceaccount=some-namespace:mycluster-server
+kubectl apply -f rabbit-configs/rabbitmq.yml
+kubectl apply -f rabbit-configs/pod-disruption-budget.yml
+kubectl apply --filename https://raw.githubusercontent.com/rabbitmq/cluster-operator/main/observability/prometheus/monitors/rabbitmq-servicemonitor.yml
+kubectl apply --filename https://raw.githubusercontent.com/rabbitmq/cluster-operator/main/observability/prometheus/monitors/rabbitmq-cluster-operator-podmonitor.yml
 
 # jaeger
 kubectl create namespace observability
@@ -38,4 +51,4 @@ kubectl create configmap docker-registry-config --from-env-file=../docker-regist
 kubectl apply -f docker-registry-config.yml
 
 
-# kubectl apply -f app.yml
+kubectl apply -f infra.yml

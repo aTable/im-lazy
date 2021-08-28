@@ -34,7 +34,31 @@ spec:
           requests:
             cpu: 100m
             memory: 100Mi
-            
+        startupProbe:
+          httpGet:
+            path: /health/startup
+            port: 80
+          failureThreshold: 10
+          initialDelaySeconds: 30
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /health/liveness
+            port: 80
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health/readiness
+            port: 80
+          initialDelaySeconds: 10
+          failureThreshold: 10
+          periodSeconds: 5
+
+
+          
 status: {}
 ---
 apiVersion: v1
@@ -57,7 +81,7 @@ spec:
     app: yournamespaceapi
 status:
   loadBalancer: {}
----
+# ---
 # apiVersion: apps/v1
 # kind: Deployment
 # metadata:
@@ -90,23 +114,23 @@ status:
 #             memory: 100Mi
             
 # status: {}
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   labels:
-#     app: yournamespaceapi2-svc
-#   name: yournamespaceapi2-svc
-# spec:
-#   ports:
-#   - port: 8002
-#     protocol: TCP
-#     targetPort: 8000
-#   selector:
-#     app: yournamespaceapi2
-# status:
-#   loadBalancer: {}
-# ---
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: yournamespaceapi2-svc
+  name: yournamespaceapi2-svc
+spec:
+  ports:
+  - port: 8002
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: yournamespaceapi2
+status:
+  loadBalancer: {}
+---
 # apiVersion: apps/v1
 # kind: Deployment
 # metadata:
@@ -139,23 +163,23 @@ status:
 #             memory: 100Mi
             
 # status: {}
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   labels:
-#     app: yournamespaceapi3-svc
-#   name: yournamespaceapi3-svc
-# spec:
-#   ports:
-#   - port: 8003
-#     protocol: TCP
-#     targetPort: 8000
-#   selector:
-#     app: yournamespaceapi3
-# status:
-#   loadBalancer: {}
-# ---
+#---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: yournamespaceapi3-svc
+  name: yournamespaceapi3-svc
+spec:
+  ports:
+  - port: 8003
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: yournamespaceapi3
+status:
+  loadBalancer: {}
+---
 # apiVersion: apps/v1
 # kind: Deployment
 # metadata:
@@ -188,23 +212,23 @@ status:
 #             memory: 100Mi
             
 # status: {}
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   labels:
-#     app: yournamespaceapi4-svc
-#   name: yournamespaceapi4-svc
-# spec:
-#   ports:
-#   - port: 8004
-#     protocol: TCP
-#     targetPort: 8000
-#   selector:
-#     app: yournamespaceapi4
-# status:
-#   loadBalancer: {}
-# ---
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: yournamespaceapi4-svc
+  name: yournamespaceapi4-svc
+spec:
+  ports:
+  - port: 8004
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: yournamespaceapi4
+status:
+  loadBalancer: {}
+---
 # apiVersion: apps/v1
 # kind: Deployment
 # metadata:
@@ -247,23 +271,23 @@ status:
 #             memory: 20000Mi
             
 # status: {}
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   labels:
-#     app: yournamespacewebclient-svc
-#   name: yournamespacewebclient-svc
-# spec:
-#   ports:
-#   - port: 7999
-#     protocol: TCP
-#     targetPort: 3000
-#     name: http
-#   selector:
-#     app: yournamespacewebclient
-# status:
-#   loadBalancer: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: yournamespacewebclient-svc
+  name: yournamespacewebclient-svc
+spec:
+  ports:
+  - port: 7999
+    protocol: TCP
+    targetPort: 3000
+    name: http
+  selector:
+    app: yournamespacewebclient
+status:
+  loadBalancer: {}
 ---
 apiVersion: v1
 items:
@@ -280,20 +304,6 @@ items:
     - host: yournamespacecluster.local
       http:
         paths:
-        - backend:
-            service:
-              name: foo-svc
-              port:
-                number: 5678
-          path: /foo(/|$)(.*)
-          pathType: ImplementationSpecific
-        - backend:
-            service:
-              name: bar-svc
-              port:
-                number: 5678
-          path: /bar(/|$)(.*)
-          pathType: ImplementationSpecific
         - backend:
             service:
               name: yournamespaceapi-svc

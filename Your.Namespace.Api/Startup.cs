@@ -110,6 +110,18 @@ namespace Your.Namespace.Api
                         await context.Response.WriteAsync(result);
                     },
                 });
+                endpoints.MapHealthChecks("/health/startup", new HealthCheckOptions
+                {
+                    Predicate = (check) => check.Tags.Contains("startup-probe"),
+                });
+                endpoints.MapHealthChecks("/health/liveness", new HealthCheckOptions
+                {
+                    Predicate = (check) => check.Tags.Contains("liveness-probe"),
+                });
+                endpoints.MapHealthChecks("/health/readiness", new HealthCheckOptions
+                {
+                    Predicate = (check) => check.Tags.Contains("readiness-probe"),
+                });
                 endpoints.MapControllers();
             });
 
@@ -168,14 +180,32 @@ namespace Your.Namespace.Api
                     },
                     tags: new[] { "db", "storage" },
                     timeout: TimeSpan.FromSeconds(5)
-                // ).AddCheck(
-                //     name: "masstransit",
-                //     check: (j) =>
-                //     {
-                //         j.Contains
-                //     }
-                // )
-                ;
+                )
+                .AddCheck(
+                    name: "startup-probe",
+                    check: () =>
+                    {
+                        return new HealthCheckResult(HealthStatus.Healthy);
+                    },
+                    tags: new[] { "startup-probe" })
+                .AddCheck<LongRunningStartupCheck>(
+                    name: "readiness-probe",
+                    tags: new[] { "readiness-probe" })
+                .AddCheck(
+                    name: "liveness-probe",
+                    check: () =>
+                    {
+                        return new HealthCheckResult(HealthStatus.Healthy);
+                    },
+                    tags: new[] { "liveness-probe" })
+            // ).AddCheck(
+            //     name: "masstransit",
+            //     check: (j) =>
+            //     {
+            //         j.Contains
+            //     }
+            // )
+            ;
         }
 
         private void ConfigureGraphQL(AppSettings appSettings, IServiceCollection services)
@@ -359,6 +389,9 @@ namespace Your.Namespace.Api
             });
             services.AddMassTransitHostedService(waitUntilStarted: true);
             services.AddHostedService<Worker>();
+
+            services.AddHostedService<StarterUpperHostedService>();
+            services.AddSingleton<LongRunningStartupCheck>();
 
         }
 

@@ -27,10 +27,8 @@ build:
 deploy:
   kubectl:
     manifests:
-    #- hosting/kube-local/test-ingress-web-client.yml
-    #- hosting/kube-local/test-ingress.yml
-    #- hosting/kube-local/test.yml
-    # - hosting/kube-local/basic-auth-secret.yml
-    - hosting/kube-local/debug-server.yml
-    - hosting/kube-local/app.yml
-    - hosting/kube-local/infra.yml
+    #- hosting/basic-auth-secret.yml
+    # - hosting/debug-server.yml
+    # - hosting/app.yml
+    #- hosting/infra.yml
+    - hosting/local-development.yml

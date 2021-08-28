@@ -40,33 +40,10 @@ namespace Your.Namespace.Api.Controllers
         public AppSettings AppSettings { get; }
         public HttpClient HttpClient { get; }
 
-        [HttpGet("one")]
-        public async Task<ActionResult<string>> GetOne()
-        {
-            var uri = new Uri(AppSettings.YourNamespaceApi2BaseUri + "/one");
-            var res = await HttpClient.GetStringAsync(uri);
-            return res;
-        }
-
-        [HttpGet("two")]
-        public async Task<ActionResult<string>> GetTwo()
-        {
-            var uri = new Uri(AppSettings.YourNamespaceApi2BaseUri + "/two");
-            var res = await HttpClient.GetStringAsync(uri);
-            return res;
-        }
-
-        [HttpGet("three")]
-        public async Task<ActionResult<string>> GetThree()
-        {
-            var uri = new Uri(AppSettings.YourNamespaceApi2BaseUri + "/three");
-            var res = await HttpClient.GetStringAsync(uri);
-            return res;
-        }
-
         [HttpGet("echo")]
         public async Task<ActionResult<string>> Echo(string message)
         {
+            await Task.FromResult(true);
             var parentContext = Propagator.Extract(default, Request.Headers, (headers, key) => headers[key]);
             Baggage.Current = parentContext.Baggage;
             using var activity = Activity.StartActivity("Process Message by echo", ActivityKind.Consumer, parentContext.ActivityContext);
@@ -75,6 +52,32 @@ namespace Your.Namespace.Api.Controllers
             _logger.LogInformation("Message Received: " + message);
             return message;
         }
+
+        [HttpGet("two")]
+        public async Task<ActionResult<string>> GetDownstreamApp2()
+        {
+            var uri = new Uri(AppSettings.YourNamespaceApi2BaseUri + "/one");
+            var res = await HttpClient.GetStringAsync(uri);
+            return res;
+        }
+
+        [HttpGet("three")]
+        public async Task<ActionResult<string>> GetDownstreamApp3()
+        {
+            var uri = new Uri(AppSettings.YourNamespaceApi3BaseUri + "/two");
+            var res = await HttpClient.GetStringAsync(uri);
+            return res;
+        }
+
+        [HttpGet("four")]
+        public async Task<ActionResult<string>> GetDownstreamApp4()
+        {
+            var uri = new Uri(AppSettings.YourNamespaceApi4BaseUri + "/three");
+            var res = await HttpClient.GetStringAsync(uri);
+            return res;
+        }
+
+
 
     }
 }

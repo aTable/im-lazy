@@ -4,13 +4,12 @@ namespace Your.Namespace.Api
 {
     public class AppSettings
     {
+
         public static Uri YourNamespaceApi2BaseUri
         {
             get
             {
-                var host = Environment.GetEnvironmentVariable("YOURNAMESPACEAPI2_SVC_SERVICE_HOST");
-                var port = Environment.GetEnvironmentVariable("YOURNAMESPACEAPI2_SVC_SERVICE_PORT");
-                if (Uri.TryCreate($"http://{host}:{port}", UriKind.Absolute, out Uri result))
+                if (Uri.TryCreate($"http://yournamespaceapi2-svc.default", UriKind.Absolute, out Uri result))
                     return result;
                 else
                     return null;
@@ -21,9 +20,7 @@ namespace Your.Namespace.Api
         {
             get
             {
-                var host = Environment.GetEnvironmentVariable("YOURNAMESPACEAPI3_SVC_SERVICE_HOST");
-                var port = Environment.GetEnvironmentVariable("YOURNAMESPACEAPI3_SVC_SERVICE_PORT");
-                if (Uri.TryCreate($"http://{host}:{port}", UriKind.Absolute, out Uri result))
+                if (Uri.TryCreate($"http://yournamespaceapi3-svc.default", UriKind.Absolute, out Uri result))
                     return result;
                 else
                     return null;
@@ -34,9 +31,7 @@ namespace Your.Namespace.Api
         {
             get
             {
-                var host = Environment.GetEnvironmentVariable("YOURNAMESPACEAPI4_SVC_SERVICE_HOST");
-                var port = Environment.GetEnvironmentVariable("YOURNAMESPACEAPI4_SVC_SERVICE_PORT");
-                if (Uri.TryCreate($"http://{host}:{port}", UriKind.Absolute, out Uri result))
+                if (Uri.TryCreate($"http://yournamespaceapi4-svc.default", UriKind.Absolute, out Uri result))
                     return result;
                 else
                     return null;
