@@ -1,0 +1,241 @@
+# -----------------------
+# this is basically a dumping ground of things that don't have their own 
+# helm charts / operators available yet
+# -----------------------
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: infra
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: infra-gotify
+  name: infra-gotify
+  namespace: infra
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: infra-gotify
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: infra-gotify
+    spec:
+      containers:
+      - image: gotify/server
+        name: gotify
+        ports:
+          - containerPort: 80
+            name: http
+        env:
+          - name: GOTIFY_DEFAULTUSER_PASS
+            value: custom
+        volumeMounts:
+          - mountPath: /app/data
+            name: gotify-data
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+      volumes:
+        - name: gotify-data
+          emptyDir: 
+            sizeLimit: 10Mi
+      dnsPolicy: "ClusterFirst"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: infra-alertmanagergotifybridge
+  name: infra-alertmanagergotifybridge
+  namespace: infra
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: infra-alertmanagergotifybridge
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: infra-alertmanagergotifybridge
+    spec:
+      containers:
+      - image: nathaneaston/alertmanager_gotify_bridge-docker
+        name: alertmanagergotifybridge
+        ports:
+          - containerPort: 8080
+            name: http
+        env:
+          - name: ENDPOINT
+            value: "http://$(GOTIFY_SVC_SERVICE_HOST):$(GOTIFY_SVC_SERVICE_PORT)"
+          - name: GOTIFY_TOKEN # // TODO: move to secret / configmap
+            value: A.iFUb.q5z-WBaM
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+      dnsPolicy: "ClusterFirst"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: infra-pushgateway
+  name: infra-pushgateway
+  namespace: infra
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: infra-pushgateway
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: infra-pushgateway
+    spec:
+      containers:
+      - image: prom/pushgateway
+        name: pushgateway
+        ports:
+          - containerPort: 9091
+            name: http
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+      dnsPolicy: "ClusterFirst"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: gotify-svc
+  name: gotify-svc
+  namespace: infra
+spec:
+  ports:
+  - port: 30001
+    protocol: TCP
+    targetPort: 80
+    name: http
+  selector:
+    app: infra-gotify
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: alertmanagergotifybridge-svc
+  name: alertmanagergotifybridge-svc
+  namespace: infra
+spec:
+  # type: ExternalName
+  # externalName: alertmanagergotifybridge-svc.infra.svc.cluster.local
+  ports:
+  - port: 30002
+    protocol: TCP
+    targetPort: 8080
+    name: http
+  selector:
+    app: infra-alertmanagergotifybridge
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pushgateway-svc
+  name: pushgateway-svc
+  namespace: infra
+spec:
+  ports:
+  - port: 9091
+    protocol: TCP
+    targetPort: 9091
+    name: http
+  selector:
+    app: infra-pushgateway
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      kubernetes.io/ingress.class: "nginx"
+      #nginx.ingress.kubernetes.io/rewrite-target: /$2
+    name: infra-ingress
+    namespace: infra
+  spec:
+    rules:
+    - host: gotify.yournamespacecluster.local
+      http:
+        paths:
+        - backend:
+            service:
+              name: gotify-svc
+              port:
+                name: http
+          path: /
+          pathType: ImplementationSpecific
+    - host: alertmanagergotifybridge.yournamespacecluster.local
+      http:
+        paths:
+        - backend:
+            service:
+              name: alertmanagergotifybridge-svc
+              port:
+                name: http
+          path: /
+          pathType: ImplementationSpecific
+    - host: pushgateway.yournamespacecluster.local
+      http:
+        paths:
+        - backend:
+            service:
+              name: pushgateway-svc
+              port:
+                name: http
+          path: /
+          pathType: ImplementationSpecific
+    - host: loki.yournamespacecluster.local
+      http:
+        paths:
+        - backend:
+            service:
+              name: loki
+              port:
+                number: 3100
+          path: /
+          pathType: ImplementationSpecific
+  status:
+    loadBalancer:
+      ingress:
+      - hostname: localhost
+kind: List
+metadata:

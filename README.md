@@ -11,7 +11,9 @@ To deliver value, not code.
 
 ## Development setup
 
-Run this snippet if you use Minikube until https://github.com/kubernetes/minikube/issues/11513 is resolved. A recent change in the linux kernel has required virtualization tools to update (Kind has resolved this in v0.11).
+Run this snippet if you use Minikube until https://github.com/kubernetes/minikube/issues/11513 is resolved.
+
+A recent change in the linux kernel has required virtualization tools to update (Kind has resolved this in v0.11).
 
 ```bash
 sudo sysctl net/netfilter/nf_conntrack_max=131072
@@ -20,31 +22,70 @@ sudo sysctl net/netfilter/nf_conntrack_max=131072
 and now normal minikube init
 
 ```bash
-minikube start
-minikube
-addons enable ingress
+minikube start --addons=ingress
 ```
 
-You'll probably also want
+You may also experience [DNS service resolution issues and consider modifying](https://github.com/coredns/coredns/issues/2087)
+
+```bash
+kubectl -n kube-system edit configmap coredns
+```
+
+to add `log` and remove `loop` indicated by the `++` and `--`
+
+```bash
+data:
+  Corefile: |
+    .:53 {
+        errors
+        ++log
+        health {
+           lameduck 5s
+        }
+        ready
+        kubernetes cluster.local in-addr.arpa ip6.arpa {
+           pods insecure
+           fallthrough in-addr.arpa ip6.arpa
+           ttl 30
+        }
+        prometheus :9153
+        hosts {
+           192.168.49.1 host.minikube.internal
+           fallthrough
+        }
+        forward . /etc/resolv.conf {
+           max_concurrent 1000
+        }
+        --loop
+        cache 30
+        reload
+        loadbalance
+    }
+kind: ConfigMap
+...
+```
+
+See `provision.sh` for full configuration. You'll probably also want
 
 ```bash
 minikube dashboard
 minikube tunnel
-
 ```
 
-This repository has tried to stay simple for an `F5` experience to lower the barrier to entry in aim to be more productive.
+This repository has tried to stay simple for an `F5` experience to lower the barrier to entry in aim to be more productive. For setup, there are still things to configure:
 
 Update your local device hosts file
 
 ```bash
-sudo /etc/hosts
+sudo vim /etc/hosts
 ```
 
 to include the IP address to your minikube cluster
 
 ```
+...
 192.168.49.2 yournamespacecluster.local
+...
 ```
 
 ## Helpers..?
@@ -128,9 +169,3 @@ Authoring documents located `~/documentation` assumes writing in markdown and us
 - [PlantUML](https://plantuml.com/)
 
 to generate human friendly versions by running `~/documentation/build.sh` outputting to `~/documentation/dist`
-
-## k8s
-
-- grafana
-  - username: `admin`
-  - password: `prom-operator`

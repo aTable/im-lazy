@@ -33,3 +33,4 @@ deploy:
     # - hosting/kube-local/basic-auth-secret.yml
     - hosting/kube-local/debug-server.yml
     - hosting/kube-local/app.yml
+    - hosting/kube-local/infra.yml

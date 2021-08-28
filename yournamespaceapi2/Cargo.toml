@@ -1,5 +1,5 @@
 [package]
-name = "YourNamespaceApi2"
+name = "yournamespaceapi2"
 version = "0.1.0"
 authors = ["aTable <goforthejuggular@gmail.com>"]
 edition = "2018"

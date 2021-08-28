@@ -73,16 +73,15 @@ fn one() -> Json<Vec<User>> {
 
 #[get("/two")]
 fn two() -> String {
-	let utc: DateTime<Utc> = Utc::now();
-	return utc.format("%Y-%m-%dT%H:%M:%S").to_string();
+    let utc: DateTime<Utc> = Utc::now();
+    return utc.format("%Y-%m-%dT%H:%M:%S").to_string();
 }
 
 #[get("/three")]
 fn three() -> Json<u32> {
-	let num: u32 = rand::thread_rng().gen_range(0..100);
-	return Json(num);
+    let num: u32 = rand::thread_rng().gen_range(0..100);
+    return Json(num);
 }
-
 
 #[get("/health")]
 fn health() -> Json<Health> {

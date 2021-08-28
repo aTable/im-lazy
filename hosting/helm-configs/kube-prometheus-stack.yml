@@ -17,8 +17,24 @@ prometheus:
         #     type: "A"
         #     port: 9100
         static_configs:
-          - targets: ["127.0.0.1:9080"]
-    externalUrl: http://prometheus.yournamespacecluster.local
+          - targets: ["yournamespaceapi-svc.default:9080"]
+      - job_name: "alertmanagergotifybridge"
+        scrape_interval: 5s
+        static_configs:
+          - targets: ["alertmanagergotifybridge-svc.infra:30002"]
+      - job_name: "pushgateway"
+        scrape_interval: 5s
+        static_configs:
+          - targets: ["pushgateway-svc.infra:9091"]
+      - job_name: "loki"
+        scrape_interval: 5s
+        static_configs:
+          - targets: ["lokistack:3100"]
+      - job_name: "promtail"
+        scrape_interval: 5s
+        static_configs:
+          - targets: ["promtailstacklokiwhatisthis:9080"]
+    externalUrl: prometheus.yournamespacecluster.local
     routePrefix: "/"
 
 alertmanager:
@@ -29,12 +45,16 @@ alertmanager:
       group_wait: 30s
       group_interval: 5m
       repeat_interval: 10m
-      receiver: 'webhook-demo'
+      receiver: 'system-administrators'
       routes:      
       - match_re:
           service: ^(.*)$
-        receiver: 'webhook-demo'
+        receiver: 'system-administrators'
     receivers:
+    - name: 'system-administrators'
+      webhook_configs:
+      - send_resolved: true
+        url: "http://alertmanagergotifybridge-svc.infra:30002/gotify_webhook"
     - name: 'webhook-demo'
       webhook_configs:
       - send_resolved: true
@@ -51,12 +71,12 @@ alertmanager:
     paths: ["/"]
     pathType: ImplementationSpecific
   alertManagerSpec:
-    externalUrl: http://alertmanager.yournamespacecluster.local
+    externalUrl: "alertmanager.yournamespacecluster.local"
     routePrefix: /
 
 grafana:
   enabled: true
-  adminPassword: prom-operator
+  adminPassword: password
   ingress:
     enabled: true
     annotations:
@@ -72,4 +92,7 @@ prometheusOperator:
   tls:
     enabled: false
   clusterDomain: yournamespacecluster.local
-  
+  namespaces:
+    releaseNamespace: true
+    additional:
+      - infra
