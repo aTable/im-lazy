@@ -180,62 +180,56 @@ spec:
 status:
   loadBalancer: {}
 ---
-apiVersion: v1
-items:
-- apiVersion: networking.k8s.io/v1
-  kind: Ingress
-  metadata:
-    annotations:
-      nginx.ingress.kubernetes.io/ssl-redirect: "false"
-      kubernetes.io/ingress.class: "nginx"
-      #nginx.ingress.kubernetes.io/rewrite-target: /$2
-    name: infra-ingress
-    namespace: infra
-  spec:
-    rules:
-    - host: gotify.yournamespacecluster.local
-      http:
-        paths:
-        - backend:
-            service:
-              name: gotify-svc
-              port:
-                name: http
-          path: /
-          pathType: ImplementationSpecific
-    - host: alertmanagergotifybridge.yournamespacecluster.local
-      http:
-        paths:
-        - backend:
-            service:
-              name: alertmanagergotifybridge-svc
-              port:
-                name: http
-          path: /
-          pathType: ImplementationSpecific
-    - host: pushgateway.yournamespacecluster.local
-      http:
-        paths:
-        - backend:
-            service:
-              name: pushgateway-svc
-              port:
-                name: http
-          path: /
-          pathType: ImplementationSpecific
-    - host: loki.yournamespacecluster.local
-      http:
-        paths:
-        - backend:
-            service:
-              name: loki
-              port:
-                number: 3100
-          path: /
-          pathType: ImplementationSpecific
-  status:
-    loadBalancer:
-      ingress:
-      - hostname: localhost
-kind: List
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    kubernetes.io/ingress.class: "nginx"
+    #nginx.ingress.kubernetes.io/rewrite-target: /$2
+  name: infra-ingress
+  namespace: infra
+spec:
+  rules:
+  - host: gotify.yournamespacecluster.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: gotify-svc
+            port:
+              name: http
+        path: /
+        pathType: ImplementationSpecific
+  - host: alertmanagergotifybridge.yournamespacecluster.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: alertmanagergotifybridge-svc
+            port:
+              name: http
+        path: /
+        pathType: ImplementationSpecific
+  - host: pushgateway.yournamespacecluster.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: pushgateway-svc
+            port:
+              name: http
+        path: /
+        pathType: ImplementationSpecific
+  - host: loki.yournamespacecluster.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: loki
+            port:
+              number: 3100
+        path: /
+        pathType: ImplementationSpecific
+
+

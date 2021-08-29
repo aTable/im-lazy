@@ -14,7 +14,7 @@ using System.Collections;
 using System.Threading;
 using MassTransit;
 
-namespace Your.Namespace.Api
+namespace Your.Namespace.Api.HostedServices
 {
     public class Worker : BackgroundService
     {
@@ -30,7 +30,6 @@ namespace Your.Namespace.Api
             while (!stoppingToken.IsCancellationRequested)
             {
                 await Bus.Publish(new Message { Text = $"The time is {DateTimeOffset.Now}" });
-
                 await Task.Delay(1000, stoppingToken);
             }
         }

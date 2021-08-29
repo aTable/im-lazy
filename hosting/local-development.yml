@@ -41,14 +41,6 @@ spec:
           failureThreshold: 10
           initialDelaySeconds: 30
           periodSeconds: 5
-        livenessProbe:
-          httpGet:
-            path: /health/liveness
-            port: 80
-          initialDelaySeconds: 60
-          periodSeconds: 10
-          timeoutSeconds: 1
-          failureThreshold: 3
         readinessProbe:
           httpGet:
             path: /health/readiness
@@ -56,6 +48,11 @@ spec:
           initialDelaySeconds: 10
           failureThreshold: 10
           periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /health/liveness
+            port: 80
+          initialDelaySeconds: 60
 
 
           
@@ -212,7 +209,7 @@ status:
 #             memory: 100Mi
             
 # status: {}
----
+#---
 apiVersion: v1
 kind: Service
 metadata:
@@ -271,7 +268,7 @@ status:
 #             memory: 20000Mi
             
 # status: {}
----
+# ---
 apiVersion: v1
 kind: Service
 metadata:
@@ -289,52 +286,45 @@ spec:
 status:
   loadBalancer: {}
 ---
-apiVersion: v1
-items:
-- apiVersion: networking.k8s.io/v1
-  kind: Ingress
-  metadata:
-    annotations:
-      kubernetes.io/ingress.class: "nginx"
-      nginx.ingress.kubernetes.io/rewrite-target: /$2
-    name: application-ingress
-    namespace: default
-  spec:
-    rules:
-    - host: yournamespacecluster.local
-      http:
-        paths:
-        - backend:
-            service:
-              name: yournamespaceapi-svc
-              port:
-                number: 80
-          path: /aaa(/|$)(.*)
-          pathType: ImplementationSpecific
-        - backend:
-            service:
-              name: yournamespaceapi2-svc
-              port:
-                number: 8002
-          path: /bbb(/|$)(.*)
-          pathType: ImplementationSpecific
-        - backend:
-            service:
-              name: yournamespaceapi3-svc
-              port:
-                number: 8003
-          path: /ccc(/|$)(.*)
-          pathType: ImplementationSpecific
-        - backend:
-            service:
-              name: yournamespaceapi4-svc
-              port:
-                number: 8004
-          path: /ddd(/|$)(.*)
-          pathType: ImplementationSpecific              
-  status:
-    loadBalancer:
-      ingress:
-      - hostname: localhost
-kind: List
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  name: application-ingress
+  namespace: default
+spec:
+  rules:
+  - host: yournamespacecluster.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: yournamespaceapi-svc
+            port:
+              number: 80
+        path: /aaa(/|$)(.*)
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: yournamespaceapi2-svc
+            port:
+              number: 8002
+        path: /bbb(/|$)(.*)
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: yournamespaceapi3-svc
+            port:
+              number: 8003
+        path: /ccc(/|$)(.*)
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: yournamespaceapi4-svc
+            port:
+              number: 8004
+        path: /ddd(/|$)(.*)
+        pathType: ImplementationSpecific              
+

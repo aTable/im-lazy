@@ -21,17 +21,14 @@ helm upgrade --install -f helm-configs/vault.yml vault hashicorp/vault
 
 # rabbitmq
 kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml"
-kubectl create role rabbitmq:psp:unprivileged \
-    --verb=use \
-    --resource=podsecuritypolicy \
-    --resource-name=some-pod-security-policy
-kubectl create rolebinding rabbitmq-mycluster:psp:unprivileged \
-    --role=rabbitmq:psp:unprivileged \
-    --serviceaccount=some-namespace:mycluster-server
-kubectl apply -f rabbit-configs/rabbitmq.yml
-kubectl apply -f rabbit-configs/pod-disruption-budget.yml
+kubectl create role rabbitmq:psp:unprivileged --verb=use --resource=podsecuritypolicy --resource-name=some-pod-security-policy 
+kubectl create rolebinding rabbitmq-mycluster:psp:unprivileged --role=rabbitmq:psp:unprivileged --serviceaccount=some-namespace:mycluster-server
 kubectl apply --filename https://raw.githubusercontent.com/rabbitmq/cluster-operator/main/observability/prometheus/monitors/rabbitmq-servicemonitor.yml
 kubectl apply --filename https://raw.githubusercontent.com/rabbitmq/cluster-operator/main/observability/prometheus/monitors/rabbitmq-cluster-operator-podmonitor.yml
+kubectl apply -f rabbit-configs/rabbitmq-simple.yml
+# kubectl apply -f rabbit-configs/pod-disruption-budget.yml
+# kubectl delete rabbitmqcluster INSTANCE
+
 
 # jaeger
 kubectl create namespace observability

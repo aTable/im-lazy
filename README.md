@@ -169,3 +169,19 @@ Authoring documents located `~/documentation` assumes writing in markdown and us
 - [PlantUML](https://plantuml.com/)
 
 to generate human friendly versions by running `~/documentation/build.sh` outputting to `~/documentation/dist`
+
+### rabbitmq
+
+admin ui credentials, you will need to change `hello-world` to your rabbit cluster name
+
+username
+
+```bash
+k -n default get secret hello-world-default-user -o jsonpath='{.data.username}' | base64 --decode
+```
+
+admin ui password
+
+```bash
+k -n default get secret hello-world-default-user -o jsonpath='{.data.password}' | base64 --decode
+```

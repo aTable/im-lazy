@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    kubernetes.io/ingress.class: "nginx"
+    #nginx.ingress.kubernetes.io/rewrite-target: /$2
+  name: default-ingress
+  namespace: default
+spec:
+  rules:
+  - host: rabbit.yournamespacecluster.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: rabbit-simple-cluster
+            port:
+              name: management
+        path: /
+        pathType: ImplementationSpecific
+  - host: rabbitamqp.yournamespacecluster.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: rabbit-simple-cluster
+            port:
+              name: amqp
+        path: /
+        pathType: ImplementationSpecific
+
+

@@ -1,0 +1,24 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: rabbit-simple-cluster
+spec:
+  rabbitmq:
+    additionalConfig: |
+            log.console.level = info
+            channel_max = 1700
+            default_user= admin 
+            default_pass = password
+            default_user_tags.administrator = true
+  replicas: 2
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 1
+      memory: 2Gi
+  service:
+    #type: LoadBalancer
+    annotations: 
+      app: rabbitmqserviceannotation

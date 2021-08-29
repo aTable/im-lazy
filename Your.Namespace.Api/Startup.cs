@@ -46,6 +46,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry;
 using Your.Namespace.Api.Controllers;
 using MassTransit;
+using Your.Namespace.Api.HostedServices;
 
 namespace Your.Namespace.Api
 {
@@ -377,14 +378,24 @@ namespace Your.Namespace.Api
             services.AddMassTransit(x =>
             {
                 x.SetKebabCaseEndpointNameFormatter();
-                x.UsingInMemory((context, cfg) =>
-                {
-                    cfg.ConfigureEndpoints(context);
-                });
-                // x.UsingRabbitMq((context, cfg) =>
+                // x.UsingInMemory((context, cfg) =>
                 // {
                 //     cfg.ConfigureEndpoints(context);
                 // });
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host(
+                        host: appSettings.RabbitMqSettings.Host,
+                        port: appSettings.RabbitMqSettings.Port,
+                        virtualHost: appSettings.RabbitMqSettings.VirtualHost,
+                        configure: hostConfigure =>
+                        {
+                            hostConfigure.Username(appSettings.RabbitMqSettings.Username);
+                            hostConfigure.Password(appSettings.RabbitMqSettings.Password);
+                        }
+                    );
+                    cfg.ConfigureEndpoints(context);
+                });
                 x.AddConsumer<MessageConsumer>();
             });
             services.AddMassTransitHostedService(waitUntilStarted: true);

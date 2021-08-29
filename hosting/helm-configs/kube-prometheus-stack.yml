@@ -11,13 +11,8 @@ prometheus:
     additionalScrapeConfigs:
       - job_name: "yournamespaceapi"
         scrape_interval: 5s
-        # dns_sd_configs:
-        #   - names:
-        #       - "tasks.node-exporter"
-        #     type: "A"
-        #     port: 9100
         static_configs:
-          - targets: ["yournamespaceapi-svc.default:9080"]
+          - targets: ["yournamespaceapi-svc.default:5000"]
       - job_name: "alertmanagergotifybridge"
         scrape_interval: 5s
         static_configs:

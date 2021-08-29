@@ -4,44 +4,47 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-public class StarterUpperHostedService : IHostedService, IDisposable
+namespace Your.Namespace.Api.HostedServices
 {
-
-    public StarterUpperHostedService(
-        ILogger<StarterUpperHostedService> logger,
-        LongRunningStartupCheck startupHostedServiceHealthCheck
-        )
+    public sealed class StarterUpperHostedService : IHostedService, IDisposable
     {
-        Logger = logger;
-        StartupHostedServiceHealthCheck = startupHostedServiceHealthCheck;
-    }
 
-    public ILogger<StarterUpperHostedService> Logger { get; }
-    public LongRunningStartupCheck StartupHostedServiceHealthCheck { get; }
-    public Task StartAsync(CancellationToken cancellationToken)
-    {
-        Logger.LogInformation("Startup Background Service is starting.");
-
-        // add initialization actions here
-
-        Task.Run(async () =>
+        public StarterUpperHostedService(
+            ILogger<StarterUpperHostedService> logger,
+            LongRunningStartupCheck startupHostedServiceHealthCheck
+            )
         {
-            await Task.Delay(10000);
-            StartupHostedServiceHealthCheck.IsReady = true;
-            Logger.LogInformation("Startup Background Service has started.");
-        });
+            Logger = logger;
+            StartupHostedServiceHealthCheck = startupHostedServiceHealthCheck;
+        }
 
-        return Task.CompletedTask;
-    }
+        public ILogger<StarterUpperHostedService> Logger { get; }
+        public LongRunningStartupCheck StartupHostedServiceHealthCheck { get; }
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            Logger.LogInformation("Startup Background Service is starting.");
 
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-        Logger.LogInformation("Startup Background Service is stopping.");
+            // add initialization actions here
 
-        return Task.CompletedTask;
-    }
+            Task.Run(async () =>
+            {
+                await Task.Delay(3000);
+                StartupHostedServiceHealthCheck.IsReady = true;
+                Logger.LogInformation("Startup Background Service startup completed.");
+            });
 
-    public void Dispose()
-    {
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            Logger.LogInformation("Startup Background Service is stopping.");
+
+            return Task.CompletedTask;
+        }
+
+        public void Dispose()
+        {
+        }
     }
 }

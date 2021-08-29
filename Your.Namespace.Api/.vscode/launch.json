@@ -16,12 +16,9 @@
       },
       "env": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "YOURNAMESPACEAPI2_SERVICE_SERVICE_HOST": "localhost",
-        "YOURNAMESPACEAPI2_SERVICE_SERVICE_PORT": "8002",
-        "YOURNAMESPACEAPI3_SERVICE_SERVICE_HOST": "localhost",
-        "YOURNAMESPACEAPI3_SERVICE_SERVICE_PORT": "8003",
-        "YOURNAMESPACEAPI4_SERVICE_SERVICE_HOST": "localhost",
-        "YOURNAMESPACEAPI4_SERVICE_SERVICE_PORT": "8004"
+        "Kestrel__EndPoints__Http__Url": "http://0.0.0.0:9080",
+        "Kestrel__EndPoints__Https__Url": "https://0.0.0.0:9081"
+        //"App__RabbitMqSettings__Host": "127.0.0.1"
       },
       "sourceFileMap": {
         "/Views": "${workspaceFolder}/Views"
@@ -42,13 +39,7 @@
         "appProject": "${workspaceFolder}/Your.Namespace.Api.csproj"
       },
       "env": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "YOURNAMESPACEAPI2_SERVICE_SERVICE_HOST": "localhost",
-        "YOURNAMESPACEAPI2_SERVICE_SERVICE_PORT": "8002",
-        "YOURNAMESPACEAPI3_SERVICE_SERVICE_HOST": "localhost",
-        "YOURNAMESPACEAPI3_SERVICE_SERVICE_PORT": "8003",
-        "YOURNAMESPACEAPI4_SERVICE_SERVICE_HOST": "localhost",
-        "YOURNAMESPACEAPI4_SERVICE_SERVICE_PORT": "8004"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
   ]
