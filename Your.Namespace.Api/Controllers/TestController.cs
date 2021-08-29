@@ -105,23 +105,47 @@ namespace Your.Namespace.Api.Controllers
             var random = new Random();
             var parentContext = Propagator.Extract(default, Request.Headers, (headers, key) => headers[key]);
             Baggage.Current = parentContext.Baggage;
-            using var activity = Activity.StartActivity("Performing orchestrated step: one", ActivityKind.Consumer, parentContext.ActivityContext);
-            activity?.SetTag("complex-orchestration", "step one");
-            _logger.LogInformation($"Complex execution step one starting...");
-            await Task.Delay(random.Next(0, 5000));
-            _logger.LogInformation($"Complex execution step one finished...");
+            using var activity1 = Activity.StartActivity("Performing orchestrated step 1", ActivityKind.Consumer, parentContext.ActivityContext);
+            activity1?.SetTag("complex-orchestration", "step 1");
+            _logger.LogInformation($"Complex execution step 1 starting...");
+            using var activity11 = Activity.StartActivity("Performing orchestrated step 1.1", ActivityKind.Consumer, parentContext.ActivityContext);
+            activity11?.SetTag("complex-orchestration", "step 1.1");
+            _logger.LogInformation($"Complex execution step 1.1 starting...");
+            await Task.Delay(random.Next(0, 1000));
+            _logger.LogInformation($"Complex execution step 1.1 finished...");
+            using var activity12 = Activity.StartActivity("Performing orchestrated step 1.2", ActivityKind.Consumer, parentContext.ActivityContext);
+            activity12?.SetTag("complex-orchestration", "step 1.2");
+            _logger.LogInformation($"Complex execution step 1.2 starting...");
+            await Task.Delay(random.Next(0, 1000));
+            _logger.LogInformation($"Complex execution step 1.2 finished...");
+            using var activity13 = Activity.StartActivity("Performing orchestrated step 1.3", ActivityKind.Consumer, parentContext.ActivityContext);
+            activity13?.SetTag("complex-orchestration", "step 1.3");
+            _logger.LogInformation($"Complex execution step 1.3 starting...");
+            await Task.Delay(random.Next(0, 1000));
+            _logger.LogInformation($"Complex execution step 1.3 finished...");
+            _logger.LogInformation($"Complex execution step 1 finished...");
 
-            using var activity2 = Activity.StartActivity("Performing orchestrated step: two", ActivityKind.Consumer, parentContext.ActivityContext);
-            activity2?.SetTag("complex-orchestration", "step two");
-            _logger.LogInformation($"Complex execution step two starting...");
-            await Task.Delay(random.Next(0, 5000));
-            _logger.LogInformation($"Complex execution step two finished...");
+            using var activity2 = Activity.StartActivity("Performing orchestrated step 2", ActivityKind.Consumer, parentContext.ActivityContext);
+            activity2?.SetTag("complex-orchestration", "step 2");
+            _logger.LogInformation($"Complex execution step 2 starting...");
+            using var activity21 = Activity.StartActivity("Performing orchestrated step 2.1", ActivityKind.Consumer, parentContext.ActivityContext);
+            activity21?.SetTag("complex-orchestration", "step 2.1");
+            _logger.LogInformation($"Complex execution step 2.1 starting...");
+            await Task.Delay(random.Next(0, 2000));
+            _logger.LogInformation($"Complex execution step 2.1 finished...");
+            using var activity22 = Activity.StartActivity("Performing orchestrated step 2.2", ActivityKind.Consumer, parentContext.ActivityContext);
+            activity22?.SetTag("complex-orchestration", "step 2.2");
+            _logger.LogInformation($"Complex execution step 2.2 starting...");
+            await Task.Delay(random.Next(0, 2000));
+            _logger.LogInformation($"Complex execution step 2.2 finished...");
+            _logger.LogInformation($"Complex execution step 2 finished...");
 
-            using var activity3 = Activity.StartActivity("Performing orchestrated step: three", ActivityKind.Consumer, parentContext.ActivityContext);
-            activity3?.SetTag("complex-orchestration", "step three");
-            _logger.LogInformation($"Complex execution step three starting...");
-            await Task.Delay(random.Next(0, 5000));
-            _logger.LogInformation($"Complex execution step three finished...");
+            using var activity3 = Activity.StartActivity("Performing orchestrated step 3", ActivityKind.Consumer, parentContext.ActivityContext);
+            activity3?.SetTag("complex-orchestration", "step 3");
+            _logger.LogInformation($"Complex execution step 3 starting...");
+            await Task.Delay(random.Next(0, 3000));
+            _logger.LogInformation($"Complex execution step 3 finished...");
+
 
             return "complex thing done!";
         }
