@@ -31,4 +31,4 @@ deploy:
     # - hosting/debug-server.yml
     # - hosting/app.yml
     #- hosting/infra.yml
-    - hosting/local-development.yml
+    - hosting/local-development-backend.yml

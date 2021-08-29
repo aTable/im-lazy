@@ -22,6 +22,8 @@ spec:
         env:
           - name: ASPNETCORE_ENVIRONMENT
             value: Development
+          - name: App__RabbitMqSettings__Host
+            value: rabbit-simple-cluster.default
         ports:
           - containerPort: 80
             name: http
@@ -223,66 +225,6 @@ spec:
     targetPort: 8000
   selector:
     app: yournamespaceapi4
-status:
-  loadBalancer: {}
----
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   labels:
-#     app: yournamespacewebclient
-#   name: yournamespacewebclient
-# spec:
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: yournamespacewebclient
-#   strategy: {}
-#   template:
-#     metadata:
-#       labels:
-#         app: yournamespacewebclient
-#     spec:
-#       containers:
-#       - image: yournamespacewebclient:latest
-#         name: yournamespacewebclient
-#         imagePullPolicy: Never
-#         env:
-#           - name: NODE_ENV
-#             value: development
-#           - name: HTTPS
-#             value: "false"
-#           - name: REACT_APP_ROUTER_BASENAME
-#             value: "/frontend"
-#           - name: REACT_APP_SERVER_URI
-#             value: http://$(YOURNAMESPACEAPI_SERVICE_SERVICE_HOST):$(YOURNAMESPACEAPI_SERVICE_SERVICE_PORT)
-#         ports:
-#           - containerPort: 3000
-#             name: http
-#         resources:
-#           limits:
-#             cpu: 2000m
-#             memory: 20000Mi
-#           requests:
-#             cpu: 2000m
-#             memory: 20000Mi
-            
-# status: {}
-# ---
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: yournamespacewebclient-svc
-  name: yournamespacewebclient-svc
-spec:
-  ports:
-  - port: 7999
-    protocol: TCP
-    targetPort: 3000
-    name: http
-  selector:
-    app: yournamespacewebclient
 status:
   loadBalancer: {}
 ---
