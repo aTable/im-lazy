@@ -4,6 +4,7 @@
 extern crate rocket;
 extern crate chrono;
 use chrono::prelude::*;
+use rocket::http::Status;
 // use rocket::Request;
 use rocket_contrib::json::Json;
 use std::fs::File;
@@ -66,18 +67,18 @@ fn index() -> Json<String> {
     return Json("hello world".to_string());
 }
 
-#[get("/one")]
+#[get("/two")]
 fn one() -> Json<Vec<User>> {
     return Json(init());
 }
 
-#[get("/two")]
+#[get("/three")]
 fn two() -> String {
     let utc: DateTime<Utc> = Utc::now();
     return utc.format("%Y-%m-%dT%H:%M:%S").to_string();
 }
 
-#[get("/three")]
+#[get("/four")]
 fn three() -> Json<u32> {
     let num: u32 = rand::thread_rng().gen_range(0..100);
     return Json(num);
@@ -93,6 +94,21 @@ fn health() -> Json<Health> {
     } else {
         return Json(Health::Unhealthy);
     }
+}
+
+#[get("/health/startup")]
+fn startup_probe() -> Status {
+    Status::Ok
+}
+
+#[get("/health/readiness")]
+fn readiness_probe() -> Status {
+    Status::Ok
+}
+
+#[get("/health/liveness")]
+fn liveness_probe() -> Status {
+    Status::Ok
 }
 
 #[post("/alerts", format = "application/json", data = "<data>")]
@@ -119,6 +135,19 @@ fn receive_alert(data: String) -> Json<String> {
 
 fn main() {
     rocket::ignite()
-        .mount("/", routes![index, one, two, three, health, receive_alert])
+        .mount(
+            "/",
+            routes![
+                index,
+                one,
+                two,
+                three,
+                health,
+                startup_probe,
+                liveness_probe,
+                readiness_probe,
+                receive_alert
+            ],
+        )
         .launch();
 }

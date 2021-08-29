@@ -54,30 +54,76 @@ namespace Your.Namespace.Api.Controllers
         }
 
         [HttpGet("two")]
-        public async Task<ActionResult<string>> GetDownstreamApp2()
+        public async Task<ActionResult<string>> CallDownstreamApp2()
         {
-            var uri = new Uri(AppSettings.YourNamespaceApi2BaseUri + "/one");
+            var parentContext = Propagator.Extract(default, Request.Headers, (headers, key) => headers[key]);
+            Baggage.Current = parentContext.Baggage;
+            using var activity = Activity.StartActivity("Call downstream application", ActivityKind.Consumer, parentContext.ActivityContext);
+            activity?.SetTag("processing.system", "text here");
+            activity?.SetTag("processing.metadata", "text goes here");
+            var uri = new Uri(AppSettings.DownstreamServers.Server2 + "/two");
             var res = await HttpClient.GetStringAsync(uri);
+            _logger.LogInformation($"{nameof(CallDownstreamApp2)} received: " + res);
             return res;
         }
 
         [HttpGet("three")]
-        public async Task<ActionResult<string>> GetDownstreamApp3()
+        public async Task<ActionResult<string>> CallDownstreamApp3()
         {
-            var uri = new Uri(AppSettings.YourNamespaceApi3BaseUri + "/two");
+            var uri = new Uri(AppSettings.DownstreamServers.Server3 + "/three");
             var res = await HttpClient.GetStringAsync(uri);
             return res;
         }
 
         [HttpGet("four")]
-        public async Task<ActionResult<string>> GetDownstreamApp4()
+        public async Task<ActionResult<string>> CallDownstreamApp4()
         {
-            var uri = new Uri(AppSettings.YourNamespaceApi4BaseUri + "/three");
+            var uri = new Uri(AppSettings.DownstreamServers.Server4 + "/four");
             var res = await HttpClient.GetStringAsync(uri);
             return res;
         }
 
+        [HttpGet("start-complex-orchestration")]
+        public async Task<ActionResult<string>> CallPseudoDownstreamApplication()
+        {
+            var parentContext = Propagator.Extract(default, Request.Headers, (headers, key) => headers[key]);
+            Baggage.Current = parentContext.Baggage;
+            using var activity = Activity.StartActivity("Preparing to start complex orchestration", ActivityKind.Consumer, parentContext.ActivityContext);
+            activity?.SetTag("complex-orchestration", "preprocessing");
+            _logger.LogInformation($"Preprocessing for complex orchestration...");
+            string myHostUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+            var uri = new Uri(myHostUrl + "/api/test/pseudo-downstream");
+            var res = await HttpClient.GetStringAsync(uri);
+            _logger.LogInformation($"Complex orchestration completed...");
+            return res;
+        }
 
 
+        [HttpGet("pseudo-downstream")]
+        public async Task<ActionResult<string>> PretendDownstreamApplication()
+        {
+            var random = new Random();
+            var parentContext = Propagator.Extract(default, Request.Headers, (headers, key) => headers[key]);
+            Baggage.Current = parentContext.Baggage;
+            using var activity = Activity.StartActivity("Performing orchestrated step: one", ActivityKind.Consumer, parentContext.ActivityContext);
+            activity?.SetTag("complex-orchestration", "step one");
+            _logger.LogInformation($"Complex execution step one starting...");
+            await Task.Delay(random.Next(0, 5000));
+            _logger.LogInformation($"Complex execution step one finished...");
+
+            using var activity2 = Activity.StartActivity("Performing orchestrated step: two", ActivityKind.Consumer, parentContext.ActivityContext);
+            activity2?.SetTag("complex-orchestration", "step two");
+            _logger.LogInformation($"Complex execution step two starting...");
+            await Task.Delay(random.Next(0, 5000));
+            _logger.LogInformation($"Complex execution step two finished...");
+
+            using var activity3 = Activity.StartActivity("Performing orchestrated step: three", ActivityKind.Consumer, parentContext.ActivityContext);
+            activity3?.SetTag("complex-orchestration", "step three");
+            _logger.LogInformation($"Complex execution step three starting...");
+            await Task.Delay(random.Next(0, 5000));
+            _logger.LogInformation($"Complex execution step three finished...");
+
+            return "complex thing done!";
+        }
     }
 }

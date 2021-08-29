@@ -8,10 +8,10 @@ build:
     context: Your.Namespace.Api
     docker:
       dockerfile: Dockerfile-skaffold
-  # - image: yournamespaceapi2
-  #   context: yournamespaceapi2
-  #   docker:
-  #     dockerfile: Dockerfile-skaffold
+  - image: yournamespaceapi2
+    context: yournamespaceapi2
+    docker:
+      dockerfile: Dockerfile-skaffold
   # - image: yournamespaceapi3
   #   context: yournamespaceapi3
   #   docker:

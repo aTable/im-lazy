@@ -4,40 +4,6 @@ namespace Your.Namespace.Api
 {
     public class AppSettings
     {
-
-        public static Uri YourNamespaceApi2BaseUri
-        {
-            get
-            {
-                if (Uri.TryCreate($"http://yournamespaceapi2-svc.default", UriKind.Absolute, out Uri result))
-                    return result;
-                else
-                    return null;
-            }
-        }
-
-        public static Uri YourNamespaceApi3BaseUri
-        {
-            get
-            {
-                if (Uri.TryCreate($"http://yournamespaceapi3-svc.default", UriKind.Absolute, out Uri result))
-                    return result;
-                else
-                    return null;
-            }
-        }
-
-        public static Uri YourNamespaceApi4BaseUri
-        {
-            get
-            {
-                if (Uri.TryCreate($"http://yournamespaceapi4-svc.default", UriKind.Absolute, out Uri result))
-                    return result;
-                else
-                    return null;
-            }
-        }
-
         public string ApiName { get; set; }
         public string CorsPolicyName { get; set; }
         public string WebClientOrigin { get; set; }
@@ -47,6 +13,7 @@ namespace Your.Namespace.Api
         public bool IsRunMigrations { get; set; }
         public bool IsRunSeed { get; set; }
         public GraphSettings GraphSettings { get; set; }
+        public DownstreamServers DownstreamServers { get; set; }
         public JaegerSettings JaegerSettings { get; set; }
         public RabbitMqSettings RabbitMqSettings { get; set; }
 
@@ -57,6 +24,13 @@ namespace Your.Namespace.Api
     {
         public string Path { get; set; }
         public string PlaygroundPath { get; set; }
+    }
+
+    public class DownstreamServers
+    {
+        public string Server2 { get; set; }
+        public string Server3 { get; set; }
+        public string Server4 { get; set; }
     }
 
     public class JaegerSettings

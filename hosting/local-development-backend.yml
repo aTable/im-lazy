@@ -24,6 +24,12 @@ spec:
             value: Development
           - name: App__RabbitMqSettings__Host
             value: rabbit-simple-cluster.default
+          - name: App__DownstreamServers__Server2
+            value: "http://yournamespaceapi2-svc.default"
+          - name: App__DownstreamServers__Server3
+            value: "http://yournamespaceapi3-svc.default"
+          - name: App__DownstreamServers__Server4
+            value: "http://yournamespaceapi4-svc.default"
         ports:
           - containerPort: 80
             name: http
@@ -80,39 +86,39 @@ spec:
     app: yournamespaceapi
 status:
   loadBalancer: {}
-# ---
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   labels:
-#     app: yournamespaceapi2
-#   name: yournamespaceapi2
-# spec:
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: yournamespaceapi2
-#   strategy: {}
-#   template:
-#     metadata:
-#       labels:
-#         app: yournamespaceapi2
-#     spec:
-#       containers:
-#       - image: yournamespaceapi2:latest
-#         name: yournamespaceapi2
-#         imagePullPolicy: Never
-#         ports:
-#           - containerPort: 8000
-#         resources:
-#           limits:
-#             cpu: 100m
-#             memory: 100Mi
-#           requests:
-#             cpu: 100m
-#             memory: 100Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: yournamespaceapi2
+  name: yournamespaceapi2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yournamespaceapi2
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: yournamespaceapi2
+    spec:
+      containers:
+      - image: yournamespaceapi2:latest
+        name: yournamespaceapi2
+        imagePullPolicy: Never
+        ports:
+          - containerPort: 8000
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
             
-# status: {}
+status: {}
 ---
 apiVersion: v1
 kind: Service
@@ -130,39 +136,39 @@ spec:
 status:
   loadBalancer: {}
 ---
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   labels:
-#     app: yournamespaceapi3
-#   name: yournamespaceapi3
-# spec:
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: yournamespaceapi3
-#   strategy: {}
-#   template:
-#     metadata:
-#       labels:
-#         app: yournamespaceapi3
-#     spec:
-#       containers:
-#       - image: yournamespaceapi2:latest
-#         name: yournamespaceapi3
-#         imagePullPolicy: Never
-#         ports:
-#           - containerPort: 8000
-#         resources:
-#           limits:
-#             cpu: 100m
-#             memory: 100Mi
-#           requests:
-#             cpu: 100m
-#             memory: 100Mi
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: yournamespaceapi3
+  name: yournamespaceapi3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yournamespaceapi3
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: yournamespaceapi3
+    spec:
+      containers:
+      - image: yournamespaceapi2:latest
+        name: yournamespaceapi3
+        imagePullPolicy: Never
+        ports:
+          - containerPort: 8000
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
             
-# status: {}
-#---
+status: {}
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -179,39 +185,39 @@ spec:
 status:
   loadBalancer: {}
 ---
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   labels:
-#     app: yournamespaceapi4
-#   name: yournamespaceapi4
-# spec:
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: yournamespaceapi4
-#   strategy: {}
-#   template:
-#     metadata:
-#       labels:
-#         app: yournamespaceapi4
-#     spec:
-#       containers:
-#       - image: yournamespaceapi2:latest
-#         name: yournamespaceapi4
-#         imagePullPolicy: Never
-#         ports:
-#           - containerPort: 8000
-#         resources:
-#           limits:
-#             cpu: 100m
-#             memory: 100Mi
-#           requests:
-#             cpu: 100m
-#             memory: 100Mi
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: yournamespaceapi4
+  name: yournamespaceapi4
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yournamespaceapi4
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: yournamespaceapi4
+    spec:
+      containers:
+      - image: yournamespaceapi2:latest
+        name: yournamespaceapi4
+        imagePullPolicy: Never
+        ports:
+          - containerPort: 8000
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
             
-# status: {}
-#---
+status: {}
+---
 apiVersion: v1
 kind: Service
 metadata:

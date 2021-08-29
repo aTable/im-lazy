@@ -318,7 +318,7 @@ namespace Your.Namespace.Api
             //         });
             services.AddHttpClient("httpclient", (serviceProvider, httpClient) =>
             {
-                httpClient.Timeout = TimeSpan.FromSeconds(10);
+                httpClient.Timeout = TimeSpan.FromSeconds(20);
             }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
             {
                 ClientCertificateOptions = ClientCertificateOption.Manual,

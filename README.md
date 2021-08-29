@@ -88,6 +88,14 @@ to include the IP address to your minikube cluster
 ...
 ```
 
+RabbitMQ is required by the application servers. If you run the application by `skaffold dev` then `local-development-backend.yml` is already configured but if you want to launch the app outside of the k8s cluster, maybe via VS Code F5 debugging, you will want to expose the rabbit amqp access:
+
+```bash
+kubectl port-forward service/rabbit-simple-cluster 5672:5672
+```
+
+prior to launching the application server
+
 ## Helpers..?
 
 Install htpasswd (for bare minimal k8s security). // TODO: replace with RBAC from Keycloak/FreeIPA/OpenLDAP
@@ -121,13 +129,6 @@ npx npm-check-updates -u
 Add migration
 
 ```bash
-export YOURNAMESPACEAPI2_SERVICE_SERVICE_HOST=localhost
-export YOURNAMESPACEAPI2_SERVICE_SERVICE_PORT=8002
-export YOURNAMESPACEAPI3_SERVICE_SERVICE_HOST=localhost
-export YOURNAMESPACEAPI3_SERVICE_SERVICE_PORT=8003
-export YOURNAMESPACEAPI4_SERVICE_SERVICE_HOST=localhost
-export YOURNAMESPACEAPI4_SERVICE_SERVICE_PORT=8004
-
 dotnet ef migrations add Init --verbose
 ```
 
