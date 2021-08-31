@@ -13,23 +13,35 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.Threading;
 using MassTransit;
+using Your.Namespace.Api.Events;
 
 namespace Your.Namespace.Api.HostedServices
 {
     public class Worker : BackgroundService
     {
-        public Worker(IBus bus)
+        public Worker(
+            ILogger<Worker> logger,
+            IBus bus
+            )
         {
+            Logger = logger;
             Bus = bus;
         }
-        public IBus Bus { get; set; }
 
+        public ILogger<Worker> Logger { get; }
+        public IBus Bus { get; set; }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                await Bus.Publish(new Message { Text = $"The time is {DateTimeOffset.Now}" });
+                var now = DateTime.Now;
+                Logger.LogInformation($"Publishing something happened at {now.ToLongTimeString()}");
+                await Bus.Publish(new SomethingHappened
+                {
+                    Description = $"The time is {now}",
+                    DateTimeNow = now,
+                });
                 await Task.Delay(1000, stoppingToken);
             }
         }

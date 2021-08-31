@@ -396,7 +396,7 @@ namespace Your.Namespace.Api
                     );
                     cfg.ConfigureEndpoints(context);
                 });
-                x.AddConsumer<MessageConsumer>();
+                //x.AddConsumer<MessageConsumer>();
             });
             services.AddMassTransitHostedService(waitUntilStarted: true);
             services.AddHostedService<Worker>();

@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using MassTransit;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Serilog;
@@ -22,17 +24,75 @@ namespace Your.Namespace.ConsoleApp
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.Configure<AppSettings>(hostContext.Configuration.GetSection("App"));
-                    services.AddSingleton<AppSettings>(provider => provider.GetService<IOptions<AppSettings>>().Value);
+                    var appSettings = ConfigureAppSettings(hostContext.Configuration, services);
+                    var logger = ConfigureLogger(hostContext.Configuration, services);
 
-                    var logger = new LoggerConfiguration()
-                        .ReadFrom.Configuration(hostContext.Configuration)
-                        .CreateLogger();
-                    services.AddSingleton<ILogger>(logger);
-                    services.AddLogging(x =>
-                    {
-                    });
+
                     services.AddHostedService<Worker>();
-                });
+
+                    services.AddMassTransit(x =>
+                    {
+                        x.SetKebabCaseEndpointNameFormatter();
+                        x.UsingRabbitMq((context, cfg) =>
+                        {
+                            cfg.Host(
+                                host: appSettings.RabbitMqSettings.Host,
+                                port: appSettings.RabbitMqSettings.Port,
+                                virtualHost: appSettings.RabbitMqSettings.VirtualHost,
+                                configure: hostConfigure =>
+                                {
+                                    hostConfigure.Username(appSettings.RabbitMqSettings.Username);
+                                    hostConfigure.Password(appSettings.RabbitMqSettings.Password);
+                                }
+                            );
+                            cfg.ConfigureEndpoints(context);
+                        });
+                        x.AddConsumer<SomethingHappenedConsumer>();
+                    });
+                    //services.AddMassTransitHostedService(waitUntilStarted: true);
+
+
+                    // var busControl = Bus.Factory.CreateUsingRabbitMq(cfg =>
+                    // {
+                    //     cfg.Host(
+                    //         host: appSettings.RabbitMqSettings.Host,
+                    //         port: appSettings.RabbitMqSettings.Port,
+                    //         virtualHost: appSettings.RabbitMqSettings.VirtualHost,
+                    //         configure: hostConfigure =>
+                    //         {
+                    //             hostConfigure.Username(appSettings.RabbitMqSettings.Username);
+                    //             hostConfigure.Password(appSettings.RabbitMqSettings.Password);
+                    //         }
+                    //     );
+                    //     cfg.ReceiveEndpoint("Your.Namespace.Api:SomethingHappened", e =>
+                    //     {
+                    //         e.Consumer<SomethingHappenedConsumer>();
+                    //     });
+                    // });
+
+                })
+                .UseSerilog()
+                ;
+
+        private static AppSettings ConfigureAppSettings(IConfiguration configuration, IServiceCollection services)
+        {
+            services.Configure<AppSettings>(configuration.GetSection("App"));
+            services.AddSingleton(provider => provider.GetService<IOptions<AppSettings>>().Value);
+            var appSettings = new AppSettings();
+            configuration.Bind("App", appSettings);
+            return appSettings;
+        }
+
+        private static Serilog.ILogger ConfigureLogger(IConfiguration configuration, IServiceCollection services)
+        {
+            var logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();
+            Log.Logger = logger; // needed for the middlewares on UseSerilog() and UseSerilogRequestLogging()
+            services.AddSingleton<Serilog.ILogger>(provider => logger);
+
+            return logger;
+        }
     }
+
 }

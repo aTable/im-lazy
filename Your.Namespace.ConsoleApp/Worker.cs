@@ -5,30 +5,33 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using MassTransit;
 
 namespace Your.Namespace.ConsoleApp
 {
     public class Worker : IHostedService
     {
-        public Worker(AppSettings appSettings, ILogger<Worker> logger)
+        public Worker(AppSettings appSettings, ILogger<Worker> logger, IBusControl busControl)
         {
             AppSettings = appSettings;
+            Logger = logger;
+            BusControl = busControl;
         }
 
         public AppSettings AppSettings { get; }
         public ILogger<Worker> Logger { get; }
+        public IBusControl BusControl { get; }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            await Task.FromResult(true);
-            for (var i = 0; i < AppSettings.SayHelloWorldThisManyTimes; i++)
-                Logger.LogInformation($"Hello World");
+            var source = new CancellationTokenSource();
+            await BusControl.StartAsync(source.Token);
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync(CancellationToken cancellationToken)
         {
             Logger.LogInformation("shutting down ...");
-            return Task.CompletedTask;
+            await BusControl.StopAsync();
         }
     }
 }
