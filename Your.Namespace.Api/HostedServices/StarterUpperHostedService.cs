@@ -28,7 +28,7 @@ namespace Your.Namespace.Api.HostedServices
 
             Task.Run(async () =>
             {
-                await Task.Delay(3000);
+                await Task.Delay(1000);
                 StartupHostedServiceHealthCheck.IsReady = true;
                 Logger.LogInformation("Startup Background Service startup completed.");
             });

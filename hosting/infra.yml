@@ -79,7 +79,7 @@ spec:
           - name: ENDPOINT
             value: "http://$(GOTIFY_SVC_SERVICE_HOST):$(GOTIFY_SVC_SERVICE_PORT)"
           - name: GOTIFY_TOKEN # // TODO: move to secret / configmap
-            value: A.iFUb.q5z-WBaM
+            value: AJAjThKtSlGfOOp
         imagePullPolicy: IfNotPresent
         resources:
           limits:

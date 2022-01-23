@@ -26,6 +26,7 @@ kubectl create rolebinding rabbitmq-mycluster:psp:unprivileged --role=rabbitmq:p
 kubectl apply --filename https://raw.githubusercontent.com/rabbitmq/cluster-operator/main/observability/prometheus/monitors/rabbitmq-servicemonitor.yml
 kubectl apply --filename https://raw.githubusercontent.com/rabbitmq/cluster-operator/main/observability/prometheus/monitors/rabbitmq-cluster-operator-podmonitor.yml
 kubectl apply -f rabbit-configs/rabbitmq-simple.yml
+kubectl apply -f rabbit-configs/rabbitmq-ingress.yml
 # kubectl apply -f rabbit-configs/pod-disruption-budget.yml
 # kubectl delete rabbitmqcluster INSTANCE
 

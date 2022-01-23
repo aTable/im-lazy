@@ -28,7 +28,6 @@ deploy:
   kubectl:
     manifests:
     #- hosting/basic-auth-secret.yml
-    # - hosting/debug-server.yml
-    # - hosting/app.yml
+    #- hosting/debug-server.yml
     #- hosting/infra.yml
     - hosting/local-development-backend.yml

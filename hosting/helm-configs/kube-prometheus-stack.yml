@@ -2,10 +2,12 @@ prometheus:
   enabled: true
   ingress: 
     enabled: true
-    ingressClassName: nginx
+    # ingressClassName: nginx
     hosts: ["prometheus.yournamespacecluster.local"]
     paths: ["/"]
     pathType: ImplementationSpecific
+    annotations:
+      kubernetes.io/ingress.class: nginx
 
   prometheusSpec:
     additionalScrapeConfigs:
@@ -29,8 +31,8 @@ prometheus:
         scrape_interval: 5s
         static_configs:
           - targets: ["promtail:3101"]
-    externalUrl: prometheus.yournamespacecluster.local
-    routePrefix: "/"
+    # externalUrl: prometheus.yournamespacecluster.local
+    # routePrefix: "/"
 
 alertmanager:
   enabled: true
@@ -61,13 +63,16 @@ alertmanager:
       #   text: 'something bad'
   ingress:
     enabled: true
-    ingressClassName: "nginx"
+    # ingressClassName: "nginx"
     hosts: ["alertmanager.yournamespacecluster.local"]
     paths: ["/"]
     pathType: ImplementationSpecific
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      
   alertManagerSpec:
     externalUrl: "alertmanager.yournamespacecluster.local"
-    routePrefix: /
+    # routePrefix: /
 
 grafana:
   enabled: true

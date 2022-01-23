@@ -35,9 +35,9 @@ namespace Your.Namespace.Api.HostedServices
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                var now = DateTime.Now;
-                Logger.LogInformation($"Publishing something happened at {now.ToLongTimeString()}");
-                await Bus.Publish(new SomethingHappened
+                var now = DateTimeOffset.Now;
+                //Logger.LogInformation($"Publishing something happened at {now.ToLocalTime()}");
+                await Bus.Publish<ISomethingHappened>(new
                 {
                     Description = $"The time is {now}",
                     DateTimeNow = now,

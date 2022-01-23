@@ -47,6 +47,8 @@ using OpenTelemetry;
 using Your.Namespace.Api.Controllers;
 using MassTransit;
 using Your.Namespace.Api.HostedServices;
+using Your.Namespace.Api.StateMachines;
+using MassTransit.Saga;
 
 namespace Your.Namespace.Api
 {
@@ -394,9 +396,15 @@ namespace Your.Namespace.Api
                             hostConfigure.Password(appSettings.RabbitMqSettings.Password);
                         }
                     );
+                    var machine = new TodosStateMachine();
+
+                    var repository = new InMemorySagaRepository<ComplexProcessState>();
+                    cfg.ReceiveEndpoint(appSettings.RabbitMqSettings.TodosSagaQueue, e =>
+                    {
+                        e.StateMachineSaga(machine, repository);
+                    });
                     cfg.ConfigureEndpoints(context);
                 });
-                //x.AddConsumer<MessageConsumer>();
             });
             services.AddMassTransitHostedService(waitUntilStarted: true);
             services.AddHostedService<Worker>();
