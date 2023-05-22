@@ -14,7 +14,6 @@ using Your.Namespace.Api.GraphSchema.Artists;
 
 namespace Your.Namespace.Api.GraphSchema.Albums
 {
-    [ExtendObjectType(Name = "Query")]
     public class AlbumQueries
     {
         [UsePaging]
@@ -22,14 +21,14 @@ namespace Your.Namespace.Api.GraphSchema.Albums
         [UseFiltering]
         [UseSorting]
         public IQueryable<Album> GetAlbums(
-            [Service] Context context) =>
+            [Service] ApplicationDbContext context) =>
             context.Albums;
 
         [UseFirstOrDefault]
         [UseSelection]
         public IQueryable<Album> GetAlbum(
             int id,
-            [Service] Context context) =>
+            [Service] ApplicationDbContext context) =>
             context.Albums.Where(x => x.Id == id);
     }
 }

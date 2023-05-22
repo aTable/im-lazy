@@ -15,7 +15,7 @@ namespace Your.Namespace.Api.GraphSchema.Artists
     {
         public async Task<Artist> CreateArtist(
             CreateArtistInput input,
-            [Service] Context context
+            [Service] ApplicationDbContext context
             //[Service] IEventSender eventSender
             )
         {
@@ -36,7 +36,7 @@ namespace Your.Namespace.Api.GraphSchema.Artists
 
         public async Task<Artist> UpdateArtist(
             UpdateArtistInput input,
-            [Service] Context context
+            [Service] ApplicationDbContext context
             //[Service] IEventSender eventSender
             )
         {

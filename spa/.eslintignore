@@ -1,0 +1,3 @@
+src/generated/**/*.tsx
+src/generated/**/*.ts
+src/reportWebVitals.ts

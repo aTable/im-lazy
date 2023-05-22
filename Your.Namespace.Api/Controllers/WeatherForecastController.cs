@@ -46,7 +46,8 @@ namespace Your.Namespace.Api.Controllers
             activity?.SetTag("weather-stuff.purpose", "demo");
 
             var req = new HttpRequestMessage(HttpMethod.Get, $"{Request.Scheme}://{Request.Host.ToString()}/api/test/echo?message=hello%20world");
-            Propagator.Inject(new PropagationContext(activity.Context, Baggage.Current), req, (props, key, value) => props.Headers.Add($"X-Telemetry-Trace-{key}", value));
+            if (activity != null) 
+                Propagator.Inject(new PropagationContext(activity.Context, Baggage.Current), req, (props, key, value) => props.Headers.Add($"X-Telemetry-Trace-{key}", value));
             var res = await HttpClient.SendAsync(req);
             var rng = new Random();
             var forecast = Enumerable.Range(1, 5).Select(index => new WeatherForecast

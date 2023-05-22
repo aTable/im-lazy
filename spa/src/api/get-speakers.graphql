@@ -1,0 +1,14 @@
+query GetSpeakers {
+  speakers {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      id
+      name
+      bio
+      webSite
+    }
+  }
+}

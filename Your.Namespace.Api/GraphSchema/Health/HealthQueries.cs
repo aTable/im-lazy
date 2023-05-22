@@ -13,7 +13,7 @@ namespace Your.Namespace.Api.GraphSchema.Health
     [ExtendObjectType(Name = "Query")]
     public class HealthQueries
     {
-        public Health GetHealth([Service] Context context)
+        public Health GetHealth()
         {
             var random = new Random().Next(0, 2);
             return new Health

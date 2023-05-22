@@ -1,0 +1,17 @@
+overwrite: true
+schema: '${REACT_APP_SERVER_URI}/graphql'
+documents: 'src/**/*.graphql'
+generates:
+    src/generated/graphql.ts:
+        plugins:
+            - 'typescript'
+            - 'typescript-operations'
+            - 'typescript-react-query'
+            # - 'typescript-graphql-files-modules'
+            # - 'typescript-document-nodes'
+        config:
+            fetcher: graphql-request
+            addInfiniteQuery: true
+    ./graphql.schema.json:
+        plugins:
+            - 'introspection'

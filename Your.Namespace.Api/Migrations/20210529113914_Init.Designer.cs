@@ -8,7 +8,7 @@ using Your.Namespace.Api.DataAccess;
 
 namespace Your.Namespace.Api.Migrations
 {
-    [DbContext(typeof(Context))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20210529113914_Init")]
     partial class Init
     {

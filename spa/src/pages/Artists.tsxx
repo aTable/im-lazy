@@ -1,0 +1,99 @@
+import React, { useState } from 'react'
+import { useQuery, useMutation, gql } from '@apollo/client'
+import { GetArtistsDocument, GetArtistsQuery, CreateArtistDocument, CreateArtistMutation } from '../generated/graphql'
+import { Link } from 'react-router-dom'
+import LoadingRoot from '../components/LoadingRoot'
+
+interface IArtistProps {}
+
+const Artists = (props: IArtistProps) => {
+    const [newArtistName, setNewArtistName] = useState('')
+    const { loading, error, data } = useQuery<GetArtistsQuery>(GetArtistsDocument)
+    const [createArtist] = useMutation<CreateArtistMutation>(CreateArtistDocument, {
+        update(cache, res) {
+            cache.modify({
+                fields: {
+                    artists(existingArtists = []) {
+                        const newArtistRef = cache.writeFragment({
+                            data: res.data?.createArtist,
+                            fragment: gql`
+                                fragment CreateArtist on Artist {
+                                    id
+                                    name
+                                }
+                            `,
+                        })
+                        return [...existingArtists, newArtistRef]
+                    },
+                },
+            })
+        },
+        onCompleted(res) {
+            setNewArtistName('')
+        },
+    })
+
+    if (loading) return <LoadingRoot />
+    if (error) return <p>Errors broskie</p>
+
+    const submitCreateArtist = () => {
+        createArtist({
+            variables: {
+                artist: {
+                    name: newArtistName,
+                },
+            },
+        })
+    }
+
+    return (
+        <div className="container">
+            <h1>Artists</h1>
+
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Revenue</th>
+                        <th>Albums</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {data?.artists?.map((x) => (
+                        <tr key={x?.id}>
+                            <td>
+                                <Link to={`/artists/${x?.id}/`}>{x?.name}</Link>
+                            </td>
+                            <td>?</td>
+                            <td>{x?.albums?.length}</td>
+                        </tr>
+                    ))}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colSpan={2}>
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Name"
+                                value={newArtistName}
+                                onChange={(e) => setNewArtistName(e.target.value)}
+                            />
+                        </td>
+                        <td>
+                            <button
+                                type="button"
+                                className="btn btn-primary"
+                                onClick={submitCreateArtist}
+                                disabled={!newArtistName}
+                            >
+                                <i className="bi bi-plus-lg" /> Add
+                            </button>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    )
+}
+export default Artists

@@ -1,14 +1,6 @@
-using IdentityModel;
-using IdentityServer4.EntityFramework.DbContexts;
-using IdentityServer4.EntityFramework.Mappers;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Your.Namespace.Api.GraphSchema.Albums;
 using Your.Namespace.Api.GraphSchema.Artists;
 
@@ -16,7 +8,7 @@ namespace Your.Namespace.Api.DataAccess
 {
     public static class SeedData
     {
-        public static void EnsureSeedData(Context context)
+        public static void EnsureSeedData(ApplicationDbContext context)
         {
             var jinjer = new Artist
             {

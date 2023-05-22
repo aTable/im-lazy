@@ -16,7 +16,7 @@ namespace Your.Namespace.Api.GraphSchema.Albums
     {
         public async Task<Album> DeleteAlbum(
             DeleteAlbumInput input,
-            [Service] Context context
+            [Service] ApplicationDbContext context
             //[Service] IEventSender eventSender
             )
         {

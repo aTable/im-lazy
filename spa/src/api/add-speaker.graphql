@@ -1,0 +1,10 @@
+mutation AddSpeaker($speaker: AddSpeakerInput!) {
+  addSpeaker(input: $speaker) {
+    speaker {
+      id
+      name
+      bio
+      webSite
+    }
+  }
+}

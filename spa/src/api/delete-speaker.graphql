@@ -1,0 +1,10 @@
+mutation DeleteSpeaker($speaker: DeleteSpeakerInput!) {
+  deleteSpeaker(input: $speaker) {
+    speaker {
+      id
+      name
+      bio
+      webSite
+    }
+  }
+}

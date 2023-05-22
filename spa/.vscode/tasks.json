@@ -1,0 +1,115 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "setup docker infratructure",
+            "command": "ls"
+        },
+        {
+            "type": "docker-build",
+            "label": "docker-build: debug",
+            //"dependsOn": ["build"],
+            "dockerBuild": {
+                "tag": "yournamespacewebclient:latest",
+                "target": "base",
+                "dockerfile": "${workspaceFolder}/Dockerfile",
+                "context": "${workspaceFolder}",
+                "pull": true
+            }
+        },
+        {
+            "type": "docker-run",
+            "label": "docker-run: debug",
+            "dependsOn": ["setup docker infratructure", "docker-build: debug"],
+            "dockerRun": {
+                // "ports": [{ "hostPort": 3001, "containerPort": 3000 }],
+                "containerName": "yournamespacewebclient",
+                "image": "yournamespacewebclient:latest",
+                "volumes": [
+                    {
+                        "localPath": "$PWD/src",
+                        "containerPath": "/frontend/src"
+                    },
+                    {
+                        "localPath": "$PWD/public",
+                        "containerPath": "/frontend/public"
+                    },
+                    {
+                        "localPath": "$PWD/.env",
+                        "containerPath": "/frontend/.env"
+                    },
+                    {
+                        "localPath": "$PWD/.env.development",
+                        "containerPath": "/frontend/.env.development"
+                    },
+                    {
+                        "localPath": "$PWD/.env.production",
+                        "containerPath": "/frontend/.env.production"
+                    },
+                    {
+                        "localPath": "$PWD/.eslintcache",
+                        "containerPath": "/frontend/.eslintcache"
+                    },
+                    {
+                        "localPath": "$PWD/src",
+                        "containerPath": "/frontend/src"
+                    },
+                    {
+                        "localPath": "$PWD/.eslintrc",
+                        "containerPath": "/frontend/.eslintrc"
+                    },
+                    {
+                        "localPath": "$PWD/src",
+                        "containerPath": "/frontend/src"
+                    },
+                    {
+                        "localPath": "$PWD/.nvmrc",
+                        "containerPath": "/frontend/.nvmrc"
+                    },
+                    {
+                        "localPath": "$PWD/src",
+                        "containerPath": "/frontend/src"
+                    },
+                    {
+                        "localPath": "$PWD/.prettierignore",
+                        "containerPath": "/frontend/.prettierignore"
+                    },
+                    {
+                        "localPath": "$PWD/.prettierrc.json",
+                        "containerPath": "/frontend/.prettierrc.json"
+                    },
+                    {
+                        "localPath": "$PWD/.codegen.yml",
+                        "containerPath": "/frontend/.codegen.yml"
+                    },
+                    {
+                        "localPath": "$PWD/.graphql.schema.json",
+                        "containerPath": "/frontend/.graphql.schema.json"
+                    },
+                    {
+                        "localPath": "$PWD/.tsconfig.json",
+                        "containerPath": "/frontend/.tsconfig.json"
+                    },
+                    {
+                        "localPath": "$PWD/.typedoc.json",
+                        "containerPath": "/frontend/.typedoc.json"
+                    }
+                ],
+                "labels": {
+                    "includeDefaults": false
+                },
+                "network": "host",
+                "envFiles": [".env", ".env.development"],
+                "remove": true,
+                "env": {
+                    "REACT_APP_SERVER_URI": "https://localhost:5001"
+                },
+
+                //"customOptions": "--rm"
+                "command": "ls"
+            }
+            //"platform": "node"
+        }
+    ]
+}

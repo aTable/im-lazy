@@ -49,6 +49,13 @@ using MassTransit;
 using Your.Namespace.Api.HostedServices;
 using Your.Namespace.Api.StateMachines;
 using MassTransit.Saga;
+using Your.Namespace.Api.GraphSchema;
+using Your.Namespace.Api.DataLoader;
+using Your.Namespace.Api.Types;
+using Your.Namespace.Api.Speakers;
+using Your.Namespace.Api.Sessions;
+using Your.Namespace.Api.Tracks;
+using Your.Namespace.Api.Attendees;
 
 namespace Your.Namespace.Api
 {
@@ -72,7 +79,7 @@ namespace Your.Namespace.Api
             ConfigureHealthChecks(appSettings, services);
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AppSettings appSettings, Context context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AppSettings appSettings, IDbContextFactory<ApplicationDbContext> dbContextFactory)
         {
             if (env.IsDevelopment())
             {
@@ -81,7 +88,7 @@ namespace Your.Namespace.Api
                 IdentityModelEventSource.ShowPII = true;
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your.Namespace.Api v1"));
-                app.UsePlayground(queryPath: appSettings.GraphSettings.Path, uiPath: appSettings.GraphSettings.PlaygroundPath);
+                // TODO: app.UsePlayground(queryPath: appSettings.GraphSettings.Path, uiPath: appSettings.GraphSettings.PlaygroundPath);
             }
             else if (env.IsProduction())
             {
@@ -93,12 +100,14 @@ namespace Your.Namespace.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseWebSockets();
             app.UseCors(appSettings.CorsPolicyName);
 
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapGraphQL(path: appSettings.GraphSettings.Path);
                 endpoints.MapHealthChecks("/health", new HealthCheckOptions
                 {
                     ResponseWriter = async (context, report) =>
@@ -129,8 +138,6 @@ namespace Your.Namespace.Api
             });
 
             ConfigurePrometheus(app, appSettings);
-
-            app.UseGraphQL(path: appSettings.GraphSettings.Path);
         }
 
         private AppSettings ConfigureAppSettings(IServiceCollection services)
@@ -213,38 +220,68 @@ namespace Your.Namespace.Api
 
         private void ConfigureGraphQL(AppSettings appSettings, IServiceCollection services)
         {
-            services.AddQueryRequestInterceptor((ctx, builder, ct) =>
-            {
-                var identity = new ClaimsIdentity();
-                identity.AddClaim(new Claim(ClaimTypes.Country, "au"));
-                ctx.User.AddIdentity(identity);
-                return Task.CompletedTask;
-            });
+            // TODO graphql aspnet identity
+            //services.AddQueryRequestInterceptor((ctx, builder, ct) =>
+            //{
+            //    var identity = new ClaimsIdentity();
+            //    identity.AddClaim(new Claim(ClaimTypes.Country, "au"));
+            //    ctx.User.AddIdentity(identity);
+            //    return Task.CompletedTask;
+            //});
+
+            services
+    .AddGraphQLServer()
+    .AddQueryType(d => d.Name("Query"))
+        .AddTypeExtension<AttendeeQueries>()
+        .AddTypeExtension<SpeakerQueries>()
+        .AddTypeExtension<SessionQueries>()
+        .AddTypeExtension<TrackQueries>()
+        .AddTypeExtension<HealthQueries>()
+    .AddMutationType(d => d.Name("Mutation"))
+        .AddTypeExtension<AttendeeMutations>()
+        .AddTypeExtension<SessionMutations>()
+        .AddTypeExtension<SpeakerMutations>()
+        .AddTypeExtension<TrackMutations>()
+    .AddSubscriptionType(d => d.Name("Subscription"))
+        .AddTypeExtension<AttendeeSubscriptions>()
+        .AddTypeExtension<SessionSubscriptions>()
+    .AddType<AttendeeType>()
+    .AddType<SessionType>()
+    .AddType<SpeakerType>()
+    .AddType<TrackType>()
+    .AddGlobalObjectIdentification()
+    .AddQueryFieldToMutationPayloads()
+    .AddQueryableOffsetPagingProvider()
+    .AddQueryableCursorPagingProvider()
+    .AddFiltering()
+    .AddSorting()
+    .AddInMemorySubscriptions()
+    .AddDataLoader<SpeakerByIdDataLoader>()
+    .AddDataLoader<SessionByIdDataLoader>();
 
             //services.AddInMemorySubscriptionProvider();
-            services.AddGraphQL(sp => SchemaBuilder.New()
-                 // TODO: registering this seems to override all IntType to PaginationAmtType
-                 //.AddType(new PaginationAmountType(appSettings.MaxPageSize))
-                 .AddAuthorizeDirectiveType()
-                 .ModifyOptions(options =>
-                 {
+            //services.AddGraphQLServer(maxAllowedRequestSize: int.MaxValue)
+            //     // TODO: registering this seems to override all IntType to PaginationAmtType
+            //     //.AddType(new PaginationAmountType(appSettings.MaxPageSize))
+            //     .AddAuthorization()
+            //     .ModifyOptions(options =>
+            //     {
 
-                 })
-                 .AddServices(sp)
-                 .AddQueryType(d => d.Name("Query"))
-                 .AddMutationType(d => d.Name("Mutation"))
-                 .AddType<Artist>()
-                 .AddType<Album>()
-                 .AddType<Health>()
-                 //.AddSubscriptionType(d => d.Name("Subscription"))
-                 .AddType<HealthQueries>()
-                 .AddType<ArtistQueries>()
-                 .AddType<ArtistMutations>()
-                 .AddType<AlbumQueries>()
-                 .AddType<AlbumMutations>()
-                 //.AddType<ArtistSubscriptions>()
-                 .Create()
-            );
+            //     })
+            //     // TODO graphql DI .AddServices(sp)
+            //     .AddQueryType(d => d.Name("Query"))
+            //     .AddMutationType(d => d.Name("Mutation"))
+            //     .AddType<Artist>()
+            //     .AddType<Album>()
+            //     .AddType<Health>()
+            //     //.AddSubscriptionType(d => d.Name("Subscription"))
+            //     .AddType<HealthQueries>()
+            //     .AddType<ArtistQueries>()
+            //     .AddType<ArtistMutations>()
+            //     .AddType<AlbumQueries>()
+            //     .AddType<AlbumMutations>()
+            //.AddType<ArtistSubscriptions>()
+            ;
         }
 
         private void ConfigureWebServer(AppSettings appSettings, IServiceCollection services)
@@ -331,60 +368,56 @@ namespace Your.Namespace.Api
             });
             services.AddScoped<HttpClient>(provider => provider.GetService<IHttpClientFactory>().CreateClient("httpclient"));
 
-            var g = typeof(Startup).Assembly.GetName();
-
             services.AddMemoryCache(options => { });
-            var metricsPath = new PathString("/metrics");
-            services.AddOpenTelemetryTracing(builder =>
-            {
-                if (HostEnvironment.IsDevelopment())
-                    builder.AddConsoleExporter(options => options.Targets = ConsoleExporterOutputTargets.Debug);
-                builder
-                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(HostEnvironment.ApplicationName))
-                    .SetSampler(new AlwaysOnSampler())
-                    // .AddRequestCollector()
-                    .AddSource(nameof(WeatherForecastController), nameof(TestController))
-                    .AddHttpClientInstrumentation()
-                    .AddAspNetCoreInstrumentation((options) =>
-                    {
-                        options.RecordException = true;
-                        options.Filter = httpContext =>
-                        {
-                            return true;
-                            // return httpContext.Request.Path != metricsPath;
-                        };
-                        options.Enrich = (activity, eventName, rawObject) =>
-                        {
-                            if (eventName.Equals("OnStartActivity"))
-                            {
-                                if (rawObject is HttpRequest httpRequest)
-                                {
-                                    activity.SetTag("requestProtocol", httpRequest.Protocol);
-                                }
-                            }
-                            else if (eventName.Equals("OnStopActivity"))
-                            {
-                                if (rawObject is HttpResponse httpResponse)
-                                {
-                                    activity.SetTag("responseLength", httpResponse.ContentLength);
-                                }
-                            }
-                        };
-                    })
-                    .AddJaegerExporter();
-            });
+            //services.AddOpenTelemetryTracing(builder =>
+            //{
+            //    if (HostEnvironment.IsDevelopment())
+            //        builder.AddConsoleExporter(options => options.Targets = ConsoleExporterOutputTargets.Debug);
+            //    builder
+            //        .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(HostEnvironment.ApplicationName))
+            //        .SetSampler(new AlwaysOnSampler())
+            //        // .AddRequestCollector()
+            //        .AddSource(nameof(WeatherForecastController), nameof(TestController))
+            //        .AddHttpClientInstrumentation()
+            //        .AddAspNetCoreInstrumentation((options) =>
+            //        {
+            //            options.RecordException = true;
+            //            options.Filter = httpContext =>
+            //            {
+            //                return true;
+            //                // return httpContext.Request.Path != metricsPath;
+            //            };
+            //            options.Enrich = (activity, eventName, rawObject) =>
+            //            {
+            //                if (eventName.Equals("OnStartActivity"))
+            //                {
+            //                    if (rawObject is HttpRequest httpRequest)
+            //                    {
+            //                        activity.SetTag("requestProtocol", httpRequest.Protocol);
+            //                    }
+            //                }
+            //                else if (eventName.Equals("OnStopActivity"))
+            //                {
+            //                    if (rawObject is HttpResponse httpResponse)
+            //                    {
+            //                        activity.SetTag("responseLength", httpResponse.ContentLength);
+            //                    }
+            //                }
+            //            };
+            //        })
+            //        .AddJaegerExporter();
+            //});
 
             var connectionString = Configuration.GetConnectionString("ConnectionString");
-            services.AddDbContext<Context>(options => options.UseSqlite(connectionString));
-
-            services.AddMassTransit(x =>
+            //services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(connectionString), ServiceLifetime.Scoped, ServiceLifetime.Scoped);
+            services.AddPooledDbContextFactory<ApplicationDbContext>((services, options) =>
             {
-                x.SetKebabCaseEndpointNameFormatter();
+                options.SetKebabCaseEndpointNameFormatter();
                 // x.UsingInMemory((context, cfg) =>
                 // {
                 //     cfg.ConfigureEndpoints(context);
                 // });
-                x.UsingRabbitMq((context, cfg) =>
+                options.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host(
                         host: appSettings.RabbitMqSettings.Host,
@@ -405,9 +438,35 @@ namespace Your.Namespace.Api
                     });
                     cfg.ConfigureEndpoints(context);
                 });
+                options.UseSqlite(connectionString);
+                options.EnableDetailedErrors();
             });
-            services.AddMassTransitHostedService(waitUntilStarted: true);
-            services.AddHostedService<Worker>();
+
+            //services.AddMassTransit(x =>
+            //{
+            //    x.SetKebabCaseEndpointNameFormatter();
+            //    // x.UsingInMemory((context, cfg) =>
+            //    // {
+            //    //     cfg.ConfigureEndpoints(context);
+            //    // });
+            //    x.UsingRabbitMq((context, cfg) =>
+            //    {
+            //        cfg.Host(
+            //            host: appSettings.RabbitMqSettings.Host,
+            //            port: appSettings.RabbitMqSettings.Port,
+            //            virtualHost: appSettings.RabbitMqSettings.VirtualHost,
+            //            configure: hostConfigure =>
+            //            {
+            //                hostConfigure.Username(appSettings.RabbitMqSettings.Username);
+            //                hostConfigure.Password(appSettings.RabbitMqSettings.Password);
+            //            }
+            //        );
+            //        cfg.ConfigureEndpoints(context);
+            //    });
+            //    x.AddConsumer<MessageConsumer>();
+            //});
+            //services.AddMassTransitHostedService(waitUntilStarted: true);
+            //services.AddHostedService<Worker>();
 
             services.AddHostedService<StarterUpperHostedService>();
             services.AddSingleton<LongRunningStartupCheck>();

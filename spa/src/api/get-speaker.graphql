@@ -1,0 +1,8 @@
+query GetSpecificSpeakerById($id: ID!) {
+  speakerById(id: $id) {
+    id
+    name
+    bio
+    webSite
+  }
+}

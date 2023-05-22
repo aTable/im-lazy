@@ -1,0 +1,144 @@
+import React, { useState } from 'react'
+import { useQuery } from '@apollo/client'
+import { AlbumFinderDocument, MyRating, AlbumFinderQuery } from '../generated/graphql'
+
+interface IAlbumFinderProps {}
+
+const AlbumFinder = (props: IAlbumFinderProps) => {
+    const [albumNameFilter, setAlbumNameFilter] = useState('')
+    const [pageSize, setPageSize] = useState(5)
+    const { loading, error, data, fetchMore } = useQuery<AlbumFinderQuery>(AlbumFinderDocument, {
+        variables: {
+            name: albumNameFilter,
+            pageSize: pageSize,
+            cursor: null,
+        },
+    })
+
+    const loadMorePagination = () => {
+        fetchMore({
+            query: AlbumFinderDocument,
+            variables: {
+                name: albumNameFilter,
+                pageSize: pageSize,
+                cursor: data?.albums?.pageInfo.endCursor,
+            },
+            updateQuery: (previousResult: any, { fetchMoreResult }: any) => {
+                const newEdges = fetchMoreResult.albums.edges
+                const newNodes = fetchMoreResult.albums.nodes
+                const pageInfo = fetchMoreResult.albums.pageInfo
+
+                return newEdges.length
+                    ? {
+                          albums: {
+                              __typename: previousResult.albums.__typename,
+                              edges: [...previousResult.albums.edges, ...newEdges],
+                              nodes: [...previousResult.albums.nodes, ...newNodes],
+                              pageInfo,
+                              totalCount: fetchMoreResult.albums.totalCount,
+                          },
+                      }
+                    : previousResult
+            },
+        })
+    }
+
+    if (error) return <p>Errors broskie</p>
+
+    return (
+        <div className="container">
+            <h1>Album Finder</h1>
+
+            <form style={{ marginBottom: '2rem' }}>
+                <div className="form-group">
+                    <label htmlFor="albumName">Album Name</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="albumName"
+                        aria-describedby="albumNameFilterHelp"
+                        placeholder="Enter Album Name"
+                        onChange={(e) => setAlbumNameFilter(e.currentTarget.value)}
+                        value={albumNameFilter}
+                    />
+                    <small id="albumNameFilterHelp" className="form-text text-muted">
+                        The name of the album to find
+                    </small>
+                </div>
+                <div className="form-group">
+                    <label htmlFor="pageSize">Page Size</label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        id="pageSize"
+                        aria-describedby="pageSizeHelp"
+                        placeholder="Enter Artist Name"
+                        onChange={(e) => {
+                            if (isNaN(parseInt(e.currentTarget.value, 10))) setPageSize(5)
+                            else setPageSize(parseInt(e.currentTarget.value, 10))
+                        }}
+                        value={pageSize}
+                    />
+                    <small id="pageSizeHelp" className="form-text text-muted">
+                        The page size to find
+                    </small>
+                </div>
+                <button type="button" className="btn btn-primary">
+                    Find
+                </button>
+            </form>
+
+            <table className="table" style={{ opacity: loading ? 0.8 : 1 }}>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Released</th>
+                        <th>My Rating</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {data?.albums?.nodes?.map((x) => (
+                        <tr key={x?.id}>
+                            <td>
+                                <a
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    href={`https://www.youtube.com/results?search_query=${x?.name?.replaceAll(
+                                        ' ',
+                                        '+'
+                                    )}+${x?.name?.replaceAll(' ', '+')}`}
+                                >
+                                    {x?.name}
+                                </a>
+                            </td>
+                            <td>{x?.releaseDate}</td>
+                            <td className="text-center">
+                                {(() => {
+                                    if (!x || !x.myRating) return null
+                                    switch (x.myRating) {
+                                        case MyRating.None:
+                                            return <i className="bi bi-dash-lg" />
+                                        case MyRating.Okayish:
+                                            return <i className="bi bi-emoji-neutral" />
+                                        case MyRating.Legendary:
+                                            return <i className="bi bi-emoji-laughing" />
+                                    }
+                                })()}
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>
+                            <button className="btn btn-secondary" onClick={() => loadMorePagination()}>
+                                <i className="bi bi-caret-down" /> More
+                            </button>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    )
+}
+export default AlbumFinder

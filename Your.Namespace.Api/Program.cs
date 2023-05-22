@@ -25,11 +25,11 @@ namespace Your.Namespace.Api
 
             var host = CreateHostBuilder(args).Build();
 
-            var cancellationTokenSource = new CancellationTokenSource();
-            using (var scope = host.Services.CreateScope())
+            using (var scope = host.Services.CreateAsyncScope())
             {
                 var appSettings = scope.ServiceProvider.GetRequiredService<AppSettings>();
-                using (var context = scope.ServiceProvider.GetRequiredService<Your.Namespace.Api.DataAccess.Context>())
+                var contextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>();
+                using (var context = contextFactory.CreateDbContext())
                 {
                     if (appSettings.IsRunMigrations)
                         context.Database.Migrate();
